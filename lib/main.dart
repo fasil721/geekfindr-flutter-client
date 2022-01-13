@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/login_page.dart';
 
 void main() {
@@ -12,10 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const LoginPage(),
+      theme: AppTheme.light,
+      home: LoginPage(),
     );
   }
 }
