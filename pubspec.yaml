@@ -37,6 +37,7 @@ dependencies:
   lint: ^1.8.1
   get: ^4.6.1
   google_fonts: ^2.2.0
+  animate_do: ^2.1.0
 
 dev_dependencies:
   flutter_test:
