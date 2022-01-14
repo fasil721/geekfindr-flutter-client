@@ -2,30 +2,33 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/views/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+// ignore: must_be_immutable
+class SignUpPage extends StatefulWidget {
+  SignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _formkey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final userNameController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
+  final userNameFocusNode = FocusNode();
   bool isVisible = true;
-  final controller = Get.find<AppController>();
 
+  final controller = Get.find<AppController>();
   @override
   void dispose() {
     passwordFocusNode.dispose();
     emailFocusNode.dispose();
+    userNameFocusNode.dispose();
     super.dispose();
   }
 
@@ -34,12 +37,26 @@ class _LoginPageState extends State<LoginPage> {
     final Size size = MediaQuery.of(context).size;
     if (MediaQuery.of(context).viewInsets.bottom > 200) {
       isVisible = false;
-      controller.update(["image"]);
+      controller.update(["img"]);
     } else {
       isVisible = true;
-      controller.update(["image"]);
-    }
-    // print(MediaQuery.of(context).viewInsets.bottom);
+      controller.update(["img"]);
+    } //second name field
+    final userNameField = TextFormField(
+      focusNode: userNameFocusNode,
+      controller: userNameController,
+      keyboardType: TextInputType.name,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        prefixIcon: Icon(
+          Icons.account_circle,
+          color: Theme.of(context).backgroundColor,
+        ),
+        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        hintText: "User Name",
+        border: InputBorder.none,
+      ),
+    );
     final emailField = TextFormField(
       // onTap: () {
       //   isVisible = false;
@@ -95,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
           width: size.width * 0.3,
           child: Center(
             child: Text(
-              "Login",
+              "Sign Up",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: size.width * 0.04,
@@ -107,20 +124,17 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-
     return Scaffold(
       body: Stack(
         clipBehavior: Clip.antiAlias,
         children: [
           Positioned(
-            bottom: size.height * .25,
+            bottom: size.height * .32,
             child: RotationTransition(
               turns: const AlwaysStoppedAnimation(-45 / 360),
-              child: FadeInDown(
-                duration: const Duration(milliseconds: 1500),
-                delay: const Duration(milliseconds: 1500),
-                child: Hero(
-                  tag: "cont",
+              child: Hero(
+                tag: "con",
+                child: FadeInDown(
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xffB954FE),
@@ -148,73 +162,27 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           GetBuilder<AppController>(
-            id: "image",
+            id: "im",
             builder: (context) {
-              return AnimatedOpacity(
-                opacity: isVisible ? 1 : 0,
-                duration: const Duration(milliseconds: 200),
-                child: FadeInDown(
-                  duration: const Duration(milliseconds: 1500),
-                  delay: const Duration(milliseconds: 1500),
-                  child: Hero(
-                    tag: "img",
-                    child: Image.asset(
-                      'assets/images/pair.png',
-                      height: size.height * 0.4,
+              return SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
+                  child: AnimatedOpacity(
+                    opacity: isVisible ? 1 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Hero(
+                      tag: "im",
+                      child: FadeInDown(
+                        child: Image.asset(
+                          'assets/images/Pull.png',
+                          height: size.height * 0.28,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               );
             },
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FadeInDown(
-              duration: const Duration(milliseconds: 1500),
-              delay: const Duration(milliseconds: 1500),
-              child: Padding(
-                padding: isVisible
-                    ? EdgeInsets.zero
-                    : EdgeInsets.only(top: size.height * .15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: isVisible
-                      ? MainAxisAlignment.center
-                      : MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        "Don't have a account?",
-                        style: GoogleFonts.roboto(
-                          fontSize: size.width * 0.037,
-                          color: Colors.white.withOpacity(0.9),
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 22),
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.to(() => SignUpPage());
-                        },
-                        child: Text(
-                          "Sign Up",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.roboto(
-                            fontSize: size.width * 0.035,
-                            color: Colors.white.withOpacity(0.9),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
           Padding(
             padding: EdgeInsets.only(
@@ -225,8 +193,6 @@ class _LoginPageState extends State<LoginPage> {
             child: Form(
               key: _formkey,
               child: FadeInUp(
-                duration: const Duration(milliseconds: 1500),
-                delay: const Duration(milliseconds: 1500),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -235,14 +201,22 @@ class _LoginPageState extends State<LoginPage> {
                       padding:
                           EdgeInsets.symmetric(horizontal: size.height * 0.01),
                       child: Text(
-                        "Sign In",
+                        "Sign Up",
                         style: GoogleFonts.roboto(
                           fontWeight: FontWeight.bold,
                           fontSize: size.width * .075,
                         ),
                       ),
                     ),
-                    SizedBox(height: size.height * 0.02),
+                    SizedBox(height: size.height * 0.0175),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xffE7EAF0),
+                      ),
+                      child: userNameField,
+                    ),
+                    SizedBox(height: size.height * 0.0175),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -250,7 +224,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: emailField,
                     ),
-                    SizedBox(height: size.height * 0.02),
+                    SizedBox(height: size.height * 0.0175),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -258,14 +232,14 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: passwordField,
                     ),
-                    SizedBox(height: size.height * 0.02),
+                    SizedBox(height: size.height * 0.0175),
                     loginButton,
-                    SizedBox(height: size.height * 0.02),
+                    SizedBox(height: size.height * 0.0175),
                     Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: size.height * 0.005),
                       child: Text(
-                        "Or Sign In with social platform",
+                        "Or Sign up with social platform",
                         style: GoogleFonts.roboto(
                           fontSize: size.width * .036,
                           fontWeight: FontWeight.w500,
