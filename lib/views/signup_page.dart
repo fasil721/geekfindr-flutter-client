@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,16 +16,16 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final _formkey = GlobalKey<FormState>();
+  final formkey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final userNameController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
   final userNameFocusNode = FocusNode();
+  final controller = Get.find<AppController>();
   bool isVisible = true;
 
-  final controller = Get.find<AppController>();
   @override
   void dispose() {
     passwordFocusNode.dispose();
@@ -38,11 +39,12 @@ class _SignUpPageState extends State<SignUpPage> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = MediaQuery.textScaleFactorOf(context);
+    final orientation = MediaQuery.of(context).orientation;
     if (MediaQuery.of(context).viewInsets.bottom > 200) {
       isVisible = false;
     } else {
       isVisible = true;
-    } //second name field
+    }
     final userNameField = TextFormField(
       focusNode: userNameFocusNode,
       controller: userNameController,
@@ -59,10 +61,6 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
     final emailField = TextFormField(
-      // onTap: () {
-      //   isVisible = false;
-      //   controller.update(["image"]);
-      // },
       controller: emailController,
       focusNode: emailFocusNode,
       keyboardType: TextInputType.emailAddress,
@@ -79,10 +77,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
 
     final passwordField = TextFormField(
-      // onTap: () {
-      //   isVisible = false;
-      //   controller.update(["image"]);
-      // },
       controller: passwordController,
       focusNode: passwordFocusNode,
       obscureText: true,
@@ -105,8 +99,7 @@ class _SignUpPageState extends State<SignUpPage> {
       child: GestureDetector(
         onTap: () {
           SystemChannels.textInput.invokeMethod("TextInput.hide");
-          // isVisible = true;
-          // controller.update(["image"]);
+          Get.offAll(() => HomePage());
         },
         child: SizedBox(
           height: width * 0.118,
@@ -184,7 +177,7 @@ class _SignUpPageState extends State<SignUpPage> {
               bottom: height * 0.05,
             ),
             child: Form(
-              key: _formkey,
+              key: formkey,
               child: FadeInUpBig(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

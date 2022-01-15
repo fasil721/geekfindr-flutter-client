@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,31 +25,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Animation<double>? fadeInFadeOut;
   int duration = 2000;
   bool isVisible = true;
-  @override
-  void initState() {
-    super.initState();
-    animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-    fadeInFadeOut =
-        Tween<double>(begin: 0.0, end: 0.5).animate(animationController!);
-
-    animationController!.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        animationController!.reverse();
-      } else if (status == AnimationStatus.dismissed) {
-        animationController!.forward();
-      }
-    });
-    animationController!.forward();
-  }
 
   @override
   void dispose() {
+    super.dispose();
     passwordFocusNode.dispose();
     emailFocusNode.dispose();
-    super.dispose();
   }
 
   @override
@@ -62,12 +44,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     } else {
       isVisible = true;
     }
-    // print(MediaQuery.of(context).viewInsets.bottom);
     final emailField = TextFormField(
-      // onTap: () {
-      //   isVisible = false;
-      //   controller.update(["image"]);
-      // },
       controller: emailController,
       focusNode: emailFocusNode,
       keyboardType: TextInputType.emailAddress,
@@ -84,10 +61,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
 
     final passwordField = TextFormField(
-      // onTap: () {
-      //   isVisible = false;
-      //   controller.update(["image"]);
-      // },
       controller: passwordController,
       focusNode: passwordFocusNode,
       obscureText: true,
@@ -110,8 +83,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       child: GestureDetector(
         onTap: () {
           SystemChannels.textInput.invokeMethod("TextInput.hide");
-          // isVisible = true;
-          // controller.update(["image"]);
+          Get.offAll(() => HomePage());
         },
         child: SizedBox(
           height: height * 0.066,

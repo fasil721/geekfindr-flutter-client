@@ -18,7 +18,7 @@ class AppColor {
 // ignore: avoid_classes_with_only_static_members
 class AppTheme {
   static ThemeData light = lightTheme;
-  // static ThemeData dark = darkTheme;
+  static ThemeData dark = darkTheme;
 }
 
 ThemeData lightTheme = ThemeData(
@@ -40,21 +40,21 @@ ThemeData lightTheme = ThemeData(
   // ),
 );
 
-// ThemeData darkTheme = ThemeData(
-//   brightness: Brightness.dark,
-//   backgroundColor: AppColor.bodyColorDark,
-//   scaffoldBackgroundColor: AppColor.bodyColorDark,
-//   hintColor: AppColor.textColor,
-//   primaryColorLight: AppColor.buttonBackgroundColorDark,
-//   textTheme: const TextTheme(
-//     headline1: TextStyle(
-//       color: Colors.white,
-//       fontSize: 40,
-//       fontWeight: FontWeight.bold,
-//     ),
-//   ),
-//   buttonTheme: ButtonThemeData(
-//     buttonColor: AppColor.buttonColor,
-//     textTheme: ButtonTextTheme.primary,
-//   ),
-// );
+ThemeData darkTheme = ThemeData(
+  brightness: Brightness.dark,
+  backgroundColor: AppColor.bodyColorDark,
+  scaffoldBackgroundColor: AppColor.bodyColorDark,
+  hintColor: AppColor.textColor,
+  primaryColorLight: AppColor.buttonBackgroundColorDark,
+  textTheme: const TextTheme(
+    headline1: TextStyle(
+      color: Colors.white,
+      fontSize: 40,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+  buttonTheme: ButtonThemeData(
+    buttonColor: AppColor.buttonColor,
+    textTheme: ButtonTextTheme.primary,
+  ),
+);
