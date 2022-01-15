@@ -14,41 +14,40 @@ class _HomePageState extends State<HomePage> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = MediaQuery.textScaleFactorOf(context);
-    return AdvancedDrawer(
-      backdropColor: Colors.blueGrey,
-      controller: _advancedDrawerController,
-      animationCurve: Curves.easeInOut,
-      animationDuration: const Duration(milliseconds: 300),
-      animateChildDecoration: true,
-      rtlOpening: false,
-      disabledGestures: false,
-      childDecoration: const BoxDecoration(
-        // NOTICE: Uncomment if you want to add shadow behind the page.
-        // Keep in mind that it may cause animation jerks.
-        // boxShadow: <BoxShadow>[
-        //   BoxShadow(
-        //     color: Colors.black12,
-        //     blurRadius: 0.0,
-        //   ),
-        // ],
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-      ),
-      drawer: DrawerPage(),
+    return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xffE7EAF0),
-        appBar: AppBar(
-          elevation: 0,
-          toolbarHeight: 70,
-          leading: IconButton(
-            icon: Image.asset(
-              "assets/icons/hamburger.png",
-              height: height * .035,
-            ),
-            onPressed: () {
-              _advancedDrawerController.showDrawer();
-            },
+        body: AdvancedDrawer(
+          backdropColor: Colors.black.withOpacity(.9),
+          controller: _advancedDrawerController,
+          animationCurve: Curves.easeInOut,
+          animationDuration: const Duration(milliseconds: 300),
+          childDecoration: const BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 100.0,
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
-          backgroundColor: Colors.white,
+          drawer: const DrawerPage(),
+          child: Scaffold(
+            backgroundColor: const Color(0xffE7EAF0),
+            appBar: AppBar(
+              elevation: 0,
+              toolbarHeight: 60,
+              leading: IconButton(
+                icon: Image.asset(
+                  "assets/icons/hamburger.png",
+                  height: height * .035,
+                ),
+                onPressed: () {
+                  _advancedDrawerController.showDrawer();
+                },
+              ),
+              backgroundColor: Colors.white,
+            ),
+          ),
         ),
       ),
     );

@@ -39,6 +39,7 @@ dependencies:
   google_fonts: ^2.2.0
   animate_do: ^2.1.0
   flutter_advanced_drawer: ^1.3.0
+  bottom_navy_bar: ^6.0.0
 
 dev_dependencies:
   flutter_test:
