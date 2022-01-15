@@ -2,12 +2,13 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/views/login_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
 class SignUpPage extends StatefulWidget {
-  SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -34,13 +35,13 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final textFactor = MediaQuery.textScaleFactorOf(context);
     if (MediaQuery.of(context).viewInsets.bottom > 200) {
       isVisible = false;
-      controller.update(["img"]);
     } else {
       isVisible = true;
-      controller.update(["img"]);
     } //second name field
     final userNameField = TextFormField(
       focusNode: userNameFocusNode,
@@ -108,14 +109,14 @@ class _SignUpPageState extends State<SignUpPage> {
           // controller.update(["image"]);
         },
         child: SizedBox(
-          height: size.width * 0.118,
-          width: size.width * 0.3,
+          height: width * 0.118,
+          width: width * 0.3,
           child: Center(
             child: Text(
               "Sign Up",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: size.width * 0.04,
+                fontSize: textFactor * 15,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
@@ -129,12 +130,12 @@ class _SignUpPageState extends State<SignUpPage> {
         clipBehavior: Clip.antiAlias,
         children: [
           Positioned(
-            bottom: size.height * .32,
+            bottom: height * .32,
             child: RotationTransition(
               turns: const AlwaysStoppedAnimation(-45 / 360),
               child: Hero(
                 tag: "con",
-                child: FadeInDown(
+                child: FadeInDownBig(
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xffB954FE),
@@ -154,61 +155,52 @@ class _SignUpPageState extends State<SignUpPage> {
                         bottomLeft: Radius.circular(1000),
                       ),
                     ),
-                    height: size.height * .95,
-                    width: size.width * 1.5,
+                    height: height * .95,
+                    width: width * 1.5,
                   ),
                 ),
               ),
             ),
           ),
-          GetBuilder<AppController>(
-            id: "im",
-            builder: (context) {
-              return SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                  child: AnimatedOpacity(
-                    opacity: isVisible ? 1 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: Hero(
-                      tag: "im",
-                      child: FadeInDown(
-                        child: Image.asset(
-                          'assets/images/Pull.png',
-                          height: size.height * 0.28,
-                        ),
-                      ),
-                    ),
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(left: width * 0.1),
+              child: AnimatedOpacity(
+                opacity: isVisible ? 1 : 0,
+                duration: const Duration(milliseconds: 200),
+                child: FadeInDownBig(
+                  child: Image.asset(
+                    'assets/images/Pull.png',
+                    height: height * 0.28,
                   ),
                 ),
-              );
-            },
+              ),
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(
-              left: size.width * 0.075,
-              right: size.width * 0.2,
-              bottom: size.height * 0.05,
+              left: width * 0.075,
+              right: width * 0.2,
+              bottom: height * 0.05,
             ),
             child: Form(
               key: _formkey,
-              child: FadeInUp(
+              child: FadeInUpBig(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.height * 0.01),
+                      padding: EdgeInsets.symmetric(horizontal: width * .01),
                       child: Text(
                         "Sign Up",
                         style: GoogleFonts.roboto(
                           fontWeight: FontWeight.bold,
-                          fontSize: size.width * .075,
+                          fontSize: textFactor * 28,
                         ),
                       ),
                     ),
-                    SizedBox(height: size.height * 0.0175),
+                    SizedBox(height: height * 0.0175),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -216,7 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       child: userNameField,
                     ),
-                    SizedBox(height: size.height * 0.0175),
+                    SizedBox(height: height * 0.0175),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -224,7 +216,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       child: emailField,
                     ),
-                    SizedBox(height: size.height * 0.0175),
+                    SizedBox(height: height * 0.0175),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -232,30 +224,31 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       child: passwordField,
                     ),
-                    SizedBox(height: size.height * 0.0175),
+                    SizedBox(height: height * 0.0175),
                     loginButton,
-                    SizedBox(height: size.height * 0.0175),
+                    SizedBox(height: height * 0.0175),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.height * 0.005),
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.01),
                       child: Text(
                         "Or Sign up with social platform",
                         style: GoogleFonts.roboto(
-                          fontSize: size.width * .036,
+                          fontSize: textFactor * 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                    SizedBox(height: size.height * 0.02),
+                    SizedBox(height: height * 0.02),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Get.off(() => const LoginPage());
+                      },
                       child: Container(
                         margin: EdgeInsets.symmetric(
-                          horizontal: size.height * 0.005,
+                          horizontal: width * 0.01,
                         ),
                         child: Image.asset(
                           'assets/images/github.png',
-                          height: size.height * 0.04,
+                          height: height * 0.04,
                         ),
                       ),
                     )
