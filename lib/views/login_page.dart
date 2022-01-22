@@ -1,11 +1,18 @@
+import 'dart:collection';
+import 'dart:convert';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geek_findr/Api/user_model.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/views/home_page.dart';
+import 'package:geek_findr/main.dart';
 import 'package:geek_findr/views/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,11 +27,16 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final passwordController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
-  final controller = Get.find<AppController>();
-  AnimationController? animationController;
-  Animation<double>? fadeInFadeOut;
+   final controller = Get.find<AppController>();
   int duration = 2000;
   bool isVisible = true;
+  final userModel = UserModel();
+
+  // final productionUrl = "http://www.geekfindr-dev-app.xyz";
+  // final signUpUrl = "/api/v1/users/signup/ ";
+  // final signInUrl = "/api/v1/users/signin";
+  // final token =
+  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWU2OTNhYmE5MGQyZDg1YmJkODM4YWMiLCJlbWFpbCI6ImZhc2lsMUBnbWFpbC5jb20iLCJpYXQiOjE2NDI1ODU0MDAsImV4cCI6MTY0MjY3MTgwMH0.cZ0DOoliQS3pNy2i1R0ONqcFus9RVtWWeAFl3vB2kiE";
 
   @override
   void dispose() {
@@ -33,13 +45,40 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     emailFocusNode.dispose();
   }
 
+  Future<void> signIn() async {
+    userModel.email = emailController.text;
+    userModel.password = passwordController.text;
+    try {
+      final response = await post(
+        Uri.parse("http://www.geekfindr-dev-app.xyz/api/v1/users/signin"),
+        // headers: {"Authorization": "Bearer $token"},
+        body: userModel.toJsonSignIn(),
+      );
+      if (response.statusCode == 200) {
+        final jsonData =
+            Map<String, String>.from(json.decode(response.body) as Map);
+        controller.user = UserModel.fromJson(jsonData);
+        final pref = await SharedPreferences.getInstance();
+        pref.setBool("user", true);
+        Get.offAll(() => const MyApp());
+      }else if (response.statusCode == 400) {
+        final a = json.decode(response.body);
+        final b = a["errors"][0]["message"] as String;
+        Fluttertoast.showToast(msg: b);
+      }
+    } catch (e) {
+      print(e);
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = MediaQuery.textScaleFactorOf(context);
 
-    if (MediaQuery.of(context).viewInsets.bottom > 200) {
+    if (MediaQuery.of(context).viewInsets.bottom > 20) {
       isVisible = false;
     } else {
       isVisible = true;
@@ -50,7 +89,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-        border: InputBorder.none,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        filled: true,
+        fillColor: const Color(0xffE7EAF0),
         prefixIcon: Icon(
           Icons.mail,
           color: Theme.of(context).backgroundColor,
@@ -58,6 +102,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Email",
       ),
+      validator: (value) {
+        final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
+        if (value!.isEmpty) {
+          return "Please Enter Your Email";
+        }
+        if (!regex.hasMatch(value)) {
+          return "Please Enter a valid email";
+        }
+      },
     );
 
     final passwordField = TextFormField(
@@ -66,7 +119,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       obscureText: true,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
-        border: InputBorder.none,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        filled: true,
+        fillColor: const Color(0xffE7EAF0),
         prefixIcon: Icon(
           Icons.vpn_key,
           color: Theme.of(context).backgroundColor,
@@ -74,29 +132,45 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Password",
       ),
+      validator: (value) {
+        final regex = RegExp(r'^.{4,}$');
+        if (value!.isEmpty) {
+          return "Password is required for login";
+        }
+        if (!regex.hasMatch(value)) {
+          return "Enter Valid Password(Min. 6 Character)";
+        }
+      },
     );
 
-    final loginButton = Material(
-      elevation: 5,
-      borderRadius: BorderRadius.circular(40),
-      color: const Color(0xffB954FE),
-      child: GestureDetector(
-        onTap: () {
-          SystemChannels.textInput.invokeMethod("TextInput.hide");
-          Get.offAll(() => HomePage());
-        },
-        child: SizedBox(
-          height: height * 0.066,
-          width: width * 0.3,
-          child: Center(
-            child: Text(
-              "Login",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: textFactor * 15,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+    final loginButton = ElevatedButton(
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.all<double>(5),
+        backgroundColor:
+            MaterialStateProperty.all<Color>(const Color(0xffB954FE)),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+          ),
+        ),
+      ),
+      onPressed: () async {
+        SystemChannels.textInput.invokeMethod("TextInput.hide");
+        if (_formkey.currentState!.validate()) {
+          signIn();
+        }
+      },
+      child: SizedBox(
+        height: height * 0.06,
+        width: width * 0.25,
+        child: Center(
+          child: Text(
+            "Login",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: textFactor * 15,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -129,7 +203,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           color: Colors.grey.withOpacity(.7),
                           blurRadius: 5,
                           offset: const Offset(10, 0),
-                        )
+                        ),
                       ],
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(1000),
@@ -232,21 +306,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       ),
                     ),
                     SizedBox(height: height * 0.02),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color(0xffE7EAF0),
-                      ),
-                      child: emailField,
-                    ),
+                    emailField,
                     SizedBox(height: height * 0.02),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color(0xffE7EAF0),
-                      ),
-                      child: passwordField,
-                    ),
+                    passwordField,
                     SizedBox(height: height * 0.02),
                     loginButton,
                     SizedBox(height: height * 0.02),

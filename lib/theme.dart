@@ -22,6 +22,7 @@ class AppTheme {
 }
 
 ThemeData lightTheme = ThemeData(
+  colorScheme: const ColorScheme.light(),
   brightness: Brightness.light,
   backgroundColor: AppColor.iconColor,
   scaffoldBackgroundColor: AppColor.bodyColor,
@@ -42,6 +43,7 @@ ThemeData lightTheme = ThemeData(
 
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
+  colorScheme: const ColorScheme.dark(),
   backgroundColor: AppColor.bodyColorDark,
   scaffoldBackgroundColor: AppColor.bodyColorDark,
   hintColor: AppColor.textColor,

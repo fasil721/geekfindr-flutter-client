@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/views/login_page.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerPage extends StatelessWidget {
   const DrawerPage({Key? key}) : super(key: key);
@@ -42,8 +45,17 @@ class DrawerPage extends StatelessWidget {
           ),
           ListTile(
             onTap: () {},
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+          ),
+          ListTile(
+            onTap: () async {
+              final pref = await SharedPreferences.getInstance();
+              pref.setBool("user", false);
+              Get.offAll(() => const LoginPage());
+            },
             leading: Icon(Icons.settings),
-            title: Text('Settings'),
+            title: Text('Logout '),
           ),
           Spacer(),
           DefaultTextStyle(
@@ -55,7 +67,7 @@ class DrawerPage extends StatelessWidget {
               margin: const EdgeInsets.symmetric(
                 vertical: 16.0,
               ),
-              child: Text('Terms of Service | Privacy Policy'),
+              child: const Text('Terms of Service | Privacy Policy'),
             ),
           ),
         ],
