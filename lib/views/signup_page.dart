@@ -90,14 +90,28 @@ class _SignUpPageState extends State<SignUpPage> {
       keyboardType: TextInputType.name,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        filled: true,
+        fillColor: const Color(0xffE7EAF0),
         prefixIcon: Icon(
           Icons.account_circle,
           color: Theme.of(context).backgroundColor,
         ),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "User Name",
-        border: InputBorder.none,
       ),
+      validator: (value) {
+        final regex = RegExp(r'^.{4,}$');
+        if (value!.isEmpty) {
+          return "Username is required ";
+        }
+        if (!regex.hasMatch(value)) {
+          return "Enter Min. 4 Character";
+        }
+      },
     );
     final emailField = TextFormField(
       controller: emailController,
@@ -105,7 +119,12 @@ class _SignUpPageState extends State<SignUpPage> {
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-        border: InputBorder.none,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        filled: true,
+        fillColor: const Color(0xffE7EAF0),
         prefixIcon: Icon(
           Icons.mail,
           color: Theme.of(context).backgroundColor,
@@ -113,6 +132,15 @@ class _SignUpPageState extends State<SignUpPage> {
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Email",
       ),
+      validator: (value) {
+        final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
+        if (value!.isEmpty) {
+          return "Please Enter Your Email";
+        }
+        if (!regex.hasMatch(value)) {
+          return "Please Enter a valid email";
+        }
+      },
     );
 
     final passwordField = TextFormField(
@@ -121,7 +149,12 @@ class _SignUpPageState extends State<SignUpPage> {
       obscureText: true,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
-        border: InputBorder.none,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        filled: true,
+        fillColor: const Color(0xffE7EAF0),
         prefixIcon: Icon(
           Icons.vpn_key,
           color: Theme.of(context).backgroundColor,
@@ -129,6 +162,15 @@ class _SignUpPageState extends State<SignUpPage> {
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Password",
       ),
+      validator: (value) {
+        final regex = RegExp(r'^.{4,}$');
+        if (value!.isEmpty) {
+          return "Password is required";
+        }
+        if (!regex.hasMatch(value)) {
+          return "Enter Valid Password(Min. 4 Character)";
+        }
+      },
     );
 
     final loginButton = ElevatedButton(
@@ -144,7 +186,9 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
       onPressed: () {
         SystemChannels.textInput.invokeMethod("TextInput.hide");
-        signUp();
+        if (formkey.currentState!.validate()) {
+          signUp();
+        }
       },
       child: SizedBox(
         height: height * 0.06,
@@ -238,29 +282,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     SizedBox(height: height * 0.0175),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color(0xffE7EAF0),
-                      ),
-                      child: userNameField,
-                    ),
+                    userNameField,
                     SizedBox(height: height * 0.0175),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color(0xffE7EAF0),
-                      ),
-                      child: emailField,
-                    ),
+                    emailField,
                     SizedBox(height: height * 0.0175),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color(0xffE7EAF0),
-                      ),
-                      child: passwordField,
-                    ),
+                    passwordField,
                     SizedBox(height: height * 0.0175),
                     loginButton,
                     SizedBox(height: height * 0.0175),
