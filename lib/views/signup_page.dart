@@ -1,13 +1,11 @@
 import 'dart:convert';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/Api/user_model.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/main.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +21,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final formkey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final userNameController = TextEditingController();
@@ -73,18 +70,68 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  void validator() {
+    String? emailError;
+    String? passwordError;
+    String? usernameError;
+    final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
+    final regexpass = RegExp(r'^.{4,}$');
+
+    if (!regex.hasMatch(emailController.text)) {
+      emailError = "Please Enter a valid email";
+    }
+    if (emailController.text.isEmpty) {
+      emailError = "Please Enter Your Email";
+    }
+    if (!regexpass.hasMatch(passwordController.text)) {
+      passwordError = "Enter Valid Password(Min. 4 Character)";
+    }
+    if (passwordController.text.isEmpty) {
+      passwordError = "Please Enter Your Password";
+    }
+    if (!regexpass.hasMatch(userNameController.text)) {
+      usernameError = "Enter username(Min. 4 Character)";
+    }
+    if (userNameController.text.isEmpty) {
+      usernameError = "Please Enter Your username";
+    }
+
+    if (emailError != null || passwordError != null || usernameError != null) {
+      Get.defaultDialog(
+        title: "Validation",
+        content: Column(
+          children: [
+            if (usernameError != null) Text(usernameError),
+            if (emailError != null) Text(emailError),
+            if (passwordError != null) Text(passwordError),
+          ],
+        ),
+        confirm: ElevatedButton(
+          onPressed: () {
+            passwordFocusNode.unfocus();
+            emailFocusNode.unfocus();
+            Get.back();
+          },
+          child: const Text("ok"),
+        ),
+      );
+    }
+    if (emailError == null && passwordError == null && usernameError == null) {
+      signUp();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = MediaQuery.textScaleFactorOf(context);
-    final orientation = MediaQuery.of(context).orientation;
     if (MediaQuery.of(context).viewInsets.bottom > 200) {
       isVisible = false;
     } else {
       isVisible = true;
     }
-    final userNameField = TextFormField(
+    final userNameField = TextField(
       focusNode: userNameFocusNode,
       controller: userNameController,
       keyboardType: TextInputType.name,
@@ -103,17 +150,8 @@ class _SignUpPageState extends State<SignUpPage> {
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "User Name",
       ),
-      validator: (value) {
-        final regex = RegExp(r'^.{4,}$');
-        if (value!.isEmpty) {
-          return "Username is required ";
-        }
-        if (!regex.hasMatch(value)) {
-          return "Enter Min. 4 Character";
-        }
-      },
     );
-    final emailField = TextFormField(
+    final emailField = TextField(
       controller: emailController,
       focusNode: emailFocusNode,
       keyboardType: TextInputType.emailAddress,
@@ -132,18 +170,9 @@ class _SignUpPageState extends State<SignUpPage> {
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Email",
       ),
-      validator: (value) {
-        final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
-        if (value!.isEmpty) {
-          return "Please Enter Your Email";
-        }
-        if (!regex.hasMatch(value)) {
-          return "Please Enter a valid email";
-        }
-      },
     );
 
-    final passwordField = TextFormField(
+    final passwordField = TextField(
       controller: passwordController,
       focusNode: passwordFocusNode,
       obscureText: true,
@@ -162,15 +191,6 @@ class _SignUpPageState extends State<SignUpPage> {
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Password",
       ),
-      validator: (value) {
-        final regex = RegExp(r'^.{4,}$');
-        if (value!.isEmpty) {
-          return "Password is required";
-        }
-        if (!regex.hasMatch(value)) {
-          return "Enter Valid Password(Min. 4 Character)";
-        }
-      },
     );
 
     final loginButton = ElevatedButton(
@@ -186,9 +206,7 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
       onPressed: () {
         SystemChannels.textInput.invokeMethod("TextInput.hide");
-        if (formkey.currentState!.validate()) {
-          signUp();
-        }
+        validator();
       },
       child: SizedBox(
         height: height * 0.06,
@@ -264,59 +282,56 @@ class _SignUpPageState extends State<SignUpPage> {
               right: width * 0.2,
               bottom: height * 0.05,
             ),
-            child: Form(
-              key: formkey,
-              child: FadeInUpBig(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * .01),
-                      child: Text(
-                        "Sign Up",
-                        style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.bold,
-                          fontSize: textFactor * 28,
-                        ),
+            child: FadeInUpBig(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * .01),
+                    child: Text(
+                      "Sign Up",
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.bold,
+                        fontSize: textFactor * 28,
                       ),
                     ),
-                    SizedBox(height: height * 0.0175),
-                    userNameField,
-                    SizedBox(height: height * 0.0175),
-                    emailField,
-                    SizedBox(height: height * 0.0175),
-                    passwordField,
-                    SizedBox(height: height * 0.0175),
-                    loginButton,
-                    SizedBox(height: height * 0.0175),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.01),
-                      child: Text(
-                        "Or Sign up with social platform",
-                        style: GoogleFonts.roboto(
-                          fontSize: textFactor * 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  ),
+                  SizedBox(height: height * 0.0175),
+                  userNameField,
+                  SizedBox(height: height * 0.0175),
+                  emailField,
+                  SizedBox(height: height * 0.0175),
+                  passwordField,
+                  SizedBox(height: height * 0.0175),
+                  loginButton,
+                  SizedBox(height: height * 0.0175),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.01),
+                    child: Text(
+                      "Or Sign up with social platform",
+                      style: GoogleFonts.roboto(
+                        fontSize: textFactor * 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(height: height * 0.02),
-                    GestureDetector(
-                      onTap: () {
-                        Get.off(() => const LoginPage());
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: width * 0.01,
-                        ),
-                        child: Image.asset(
-                          'assets/images/github.png',
-                          height: height * 0.04,
-                        ),
+                  ),
+                  SizedBox(height: height * 0.02),
+                  GestureDetector(
+                    onTap: () {
+                      Get.off(() => const LoginPage());
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: width * 0.01,
                       ),
-                    )
-                  ],
-                ),
+                      child: Image.asset(
+                        'assets/images/github.png',
+                        height: height * 0.04,
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),

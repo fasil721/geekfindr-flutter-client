@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:geek_findr/Api/user_model.dart';
 import 'package:geek_findr/views/drawer_page.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,6 +16,9 @@ class _HomePageState extends State<HomePage> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = MediaQuery.textScaleFactorOf(context);
+    final box = Hive.box('usermodel');
+    final user = box.get("user") as UserModel;
+    print(user.email);
     return SafeArea(
       child: Scaffold(
         body: AdvancedDrawer(
@@ -36,6 +41,7 @@ class _HomePageState extends State<HomePage> {
             appBar: AppBar(
               elevation: 0,
               toolbarHeight: 60,
+              // title: Text(user.username!),
               leading: IconButton(
                 icon: Image.asset(
                   "assets/icons/hamburger.png",
@@ -43,6 +49,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 onPressed: () {
                   _advancedDrawerController.showDrawer();
+              
                 },
               ),
               backgroundColor: Colors.white,

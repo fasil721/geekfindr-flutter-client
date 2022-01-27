@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:geek_findr/main.dart';
 import 'package:geek_findr/views/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,21 +22,20 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
-  final _formkey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
-   final controller = Get.find<AppController>();
+  final controller = Get.find<AppController>();
   int duration = 2000;
   bool isVisible = true;
   final userModel = UserModel();
-
-  // final productionUrl = "http://www.geekfindr-dev-app.xyz";
-  // final signUpUrl = "/api/v1/users/signup/ ";
-  // final signInUrl = "/api/v1/users/signin";
-  // final token =
-  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWU2OTNhYmE5MGQyZDg1YmJkODM4YWMiLCJlbWFpbCI6ImZhc2lsMUBnbWFpbC5jb20iLCJpYXQiOjE2NDI1ODU0MDAsImV4cCI6MTY0MjY3MTgwMH0.cZ0DOoliQS3pNy2i1R0ONqcFus9RVtWWeAFl3vB2kiE";
+  @override
+  void initState() {
+    super.initState();
+    passwordFocusNode.unfocus();
+    emailFocusNode.unfocus();
+  }
 
   @override
   void dispose() {
@@ -49,24 +50,73 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     try {
       final response = await post(
         Uri.parse("http://www.geekfindr-dev-app.xyz/api/v1/users/signin"),
-        // headers: {"Authorization": "Bearer $token"},
+        // heresponse.statusCodeaders: {"Authorization": "Bearer $token"},
         body: userModel.toJsonSignIn(),
       );
+      print(response.statusCode);
       if (response.statusCode == 200) {
         final jsonData =
             Map<String, String>.from(json.decode(response.body) as Map);
-        controller.user = UserModel.fromJson(jsonData);
+        final user = UserModel.fromJson(jsonData);
+        final box = Hive.box('usermodel');
+        await box.put("user", user);
         final pref = await SharedPreferences.getInstance();
         pref.setBool("user", true);
         Get.offAll(() => const MyApp());
-      }else if (response.statusCode == 400) {
-        final a = json.decode(response.body);
+      } else if (response.statusCode == 400) {
+        final a = json.decode(response.body) as Map;
         final b = a["errors"][0]["message"] as String;
         Fluttertoast.showToast(msg: b);
       }
+    } on HttpException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on PlatformException {
+      Fluttertoast.showToast(msg: "Invalid Format");
     } catch (e) {
       print(e);
-      return;
+    }
+  }
+
+  void validator() {
+    String? emailError;
+    String? passwordError;
+    final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
+    final regexpass = RegExp(r'^.{4,}$');
+
+    if (!regex.hasMatch(emailController.text)) {
+      emailError = "Please Enter a valid email";
+    }
+    if (emailController.text.isEmpty) {
+      emailError = "Please Enter Your Email";
+    }
+    if (!regexpass.hasMatch(passwordController.text)) {
+      passwordError = "Enter Valid Password(Min. 4 Character)";
+    }
+    if (passwordController.text.isEmpty) {
+      passwordError = "Please Enter Your Password";
+    }
+
+    if (emailError != null || passwordError != null) {
+      Get.defaultDialog(
+        title: "Validation",
+        content: Column(
+          children: [
+            if (emailError != null) Text(emailError),
+            if (passwordError != null) Text(passwordError),
+          ],
+        ),
+        confirm: ElevatedButton(
+          onPressed: () {
+            passwordFocusNode.unfocus();
+            emailFocusNode.unfocus();
+            Get.back();
+          },
+          child: const Text("ok"),
+        ),
+      );
+    }
+    if (emailError == null && passwordError == null) {
+      signIn();
     }
   }
 
@@ -81,7 +131,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     } else {
       isVisible = true;
     }
-    final emailField = TextFormField(
+    final emailField = TextField(
       controller: emailController,
       focusNode: emailFocusNode,
       keyboardType: TextInputType.emailAddress,
@@ -100,18 +150,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Email",
       ),
-      validator: (value) {
-        final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
-        if (value!.isEmpty) {
-          return "Please Enter Your Email";
-        }
-        if (!regex.hasMatch(value)) {
-          return "Please Enter a valid email";
-        }
-      },
     );
 
-    final passwordField = TextFormField(
+    final passwordField = TextField(
       controller: passwordController,
       focusNode: passwordFocusNode,
       obscureText: true,
@@ -130,15 +171,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Password",
       ),
-      validator: (value) {
-        final regex = RegExp(r'^.{4,}$');
-        if (value!.isEmpty) {
-          return "Password is required for login";
-        }
-        if (!regex.hasMatch(value)) {
-          return "Enter Valid Password(Min. 6 Character)";
-        }
-      },
     );
 
     final loginButton = ElevatedButton(
@@ -154,9 +186,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       ),
       onPressed: () async {
         SystemChannels.textInput.invokeMethod("TextInput.hide");
-        if (_formkey.currentState!.validate()) {
-          signIn();
-        }
+        validator();
       },
       child: SizedBox(
         height: height * 0.06,
@@ -186,30 +216,27 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               child: FadeInDownBig(
                 // duration: Duration(milliseconds: ),
                 // delay: const Duration(milliseconds: 1000),
-                child: Hero(
-                  tag: "cont",
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xffB954FE),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(.7),
-                          blurRadius: 5,
-                          offset: const Offset(0, 7),
-                        ),
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(.7),
-                          blurRadius: 5,
-                          offset: const Offset(10, 0),
-                        ),
-                      ],
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(1000),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xffB954FE),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(.7),
+                        blurRadius: 5,
+                        offset: const Offset(0, 7),
                       ),
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(.7),
+                        blurRadius: 5,
+                        offset: const Offset(10, 0),
+                      ),
+                    ],
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(1000),
                     ),
-                    height: height * .95,
-                    width: width * 1.5,
                   ),
+                  height: height * .95,
+                  width: width * 1.5,
                 ),
               ),
             ),
@@ -229,112 +256,111 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FadeInDownBig(
-              // duration: Duration(milliseconds: duration),
-              // delay: const Duration(milliseconds: 1500),
-              child: Padding(
-                padding: isVisible
-                    ? EdgeInsets.zero
-                    : EdgeInsets.only(top: height * .15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: isVisible
-                      ? MainAxisAlignment.center
-                      : MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.045),
-                      child: Text(
-                        "Don't have a account?",
-                        style: GoogleFonts.roboto(
-                          fontSize: textFactor * 14,
-                          color: Colors.white.withOpacity(0.9),
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.to(() => const SignUpPage());
-                        },
-                        child: Text(
-                          "Sign Up",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.roboto(
-                            fontSize: textFactor * 15,
-                            color: Colors.white.withOpacity(0.9),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.centerRight,
+          //   child: FadeInDownBig(
+          //     // duration: Duration(milliseconds: duration),
+          //     // delay: const Duration(milliseconds: 1500),
+          //     child: Padding(
+          //       padding: isVisible
+          //           ? EdgeInsets.zero
+          //           : EdgeInsets.only(top: height * .15),
+          //       child: Column(
+          //         crossAxisAlignment: CrossAxisAlignment.end,
+          //         mainAxisAlignment: isVisible
+          //             ? MainAxisAlignment.center
+          //             : MainAxisAlignment.start,
+          //         children: [
+          //           Padding(
+          //             padding: EdgeInsets.symmetric(horizontal: width * 0.045),
+          //             child: Text(
+          //               "Don't have a account?",
+          //               style: GoogleFonts.roboto(
+          //                 fontSize: textFactor * 14,
+          //                 color: Colors.white.withOpacity(0.9),
+          //                 fontWeight: FontWeight.normal,
+          //               ),
+          //             ),
+          //           ),
+          //           const SizedBox(height: 5),
+          //           Padding(
+          //             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+          //             child: GestureDetector(
+          //               onTap: () {
+          //                 Get.to(() => const SignUpPage());
+          //               },
+          //               child: Text(
+          //                 "Sign Up",
+          //                 textAlign: TextAlign.center,
+          //                 style: GoogleFonts.roboto(
+          //                   fontSize: textFactor * 15,
+          //                   color: Colors.white.withOpacity(0.9),
+          //                   fontWeight: FontWeight.bold,
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Padding(
             padding: EdgeInsets.only(
               left: width * 0.075,
               right: width * 0.2,
               bottom: height * 0.05,
             ),
-            child: Form(
-              key: _formkey,
-              child: FadeInUpBig(
-                // duration: Duration(milliseconds: duration),
-                // delay: const Duration(milliseconds: 1500),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.01),
-                      child: Text(
-                        "Sign In",
-                        style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.bold,
-                          fontSize: textFactor * 28,
-                        ),
+            child: FadeInUpBig(
+              // duration: Duration(milliseconds: duration),
+              // delay: const Duration(milliseconds: 1500),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.01),
+                    child: Text(
+                      "Sign In",
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.bold,
+                        fontSize: textFactor * 28,
                       ),
                     ),
-                    SizedBox(height: height * 0.02),
-                    emailField,
-                    SizedBox(height: height * 0.02),
-                    passwordField,
-                    SizedBox(height: height * 0.02),
-                    loginButton,
-                    SizedBox(height: height * 0.02),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.01),
-                      child: Text(
-                        "Or Sign In with social platform",
-                        style: GoogleFonts.roboto(
-                          fontSize: textFactor * 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  ),
+                  SizedBox(height: height * 0.02),
+                  emailField,
+                  SizedBox(height: height * 0.02),
+                  passwordField,
+                  SizedBox(height: height * 0.02),
+                  loginButton,
+                  SizedBox(height: height * 0.02),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.01),
+                    child: Text(
+                      "Or Sign In with social platform",
+                      style: GoogleFonts.roboto(
+                        fontSize: textFactor * 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(height: height * 0.02),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: width * 0.01,
-                        ),
-                        child: Image.asset(
-                          'assets/images/github.png',
-                          height: height * 0.04,
-                        ),
+                  ),
+                  SizedBox(height: height * 0.02),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => const SignUpPage());
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: width * 0.01,
                       ),
-                    )
-                  ],
-                ),
+                      child: Image.asset(
+                        'assets/images/github.png',
+                        height: height * 0.04,
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
