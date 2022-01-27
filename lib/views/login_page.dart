@@ -84,16 +84,16 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     final regexpass = RegExp(r'^.{4,}$');
 
     if (!regex.hasMatch(emailController.text)) {
-      emailError = "Please Enter a valid email";
+      emailError = "Enter a valid email";
     }
     if (emailController.text.isEmpty) {
-      emailError = "Please Enter Your Email";
+      emailError = "Enter Your Email";
     }
     if (!regexpass.hasMatch(passwordController.text)) {
       passwordError = "Enter Valid Password(Min. 4 Character)";
     }
     if (passwordController.text.isEmpty) {
-      passwordError = "Please Enter Your Password";
+      passwordError = "Enter Your Password";
     }
 
     if (emailError != null || passwordError != null) {
@@ -101,8 +101,21 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         title: "Validation",
         content: Column(
           children: [
-            if (emailError != null) Text(emailError),
-            if (passwordError != null) Text(passwordError),
+            if (emailError != null)
+              Text(
+                emailError,
+                style: GoogleFonts.roboto(
+                  color: Colors.red,
+                ),
+              ),
+            const SizedBox(height: 5),
+            if (passwordError != null)
+              Text(
+                passwordError,
+                style: GoogleFonts.roboto(
+                  color: Colors.red,
+                ),
+              ),
           ],
         ),
         confirm: ElevatedButton(

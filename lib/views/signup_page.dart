@@ -30,6 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final controller = Get.find<AppController>();
   bool isVisible = true;
   final userModel = UserModel();
+
   @override
   void dispose() {
     passwordFocusNode.dispose();
@@ -42,6 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
     userModel.username = userNameController.text;
     userModel.email = emailController.text;
     userModel.password = passwordController.text;
+
     try {
       print(userModel.toJsonSignUp());
       final response = await post(
@@ -78,22 +80,22 @@ class _SignUpPageState extends State<SignUpPage> {
     final regexpass = RegExp(r'^.{4,}$');
 
     if (!regex.hasMatch(emailController.text)) {
-      emailError = "Please Enter a valid email";
+      emailError = "Enter a valid email";
     }
     if (emailController.text.isEmpty) {
-      emailError = "Please Enter Your Email";
+      emailError = "Enter Your Email";
     }
     if (!regexpass.hasMatch(passwordController.text)) {
       passwordError = "Enter Valid Password(Min. 4 Character)";
     }
     if (passwordController.text.isEmpty) {
-      passwordError = "Please Enter Your Password";
+      passwordError = "Enter Your Password";
     }
     if (!regexpass.hasMatch(userNameController.text)) {
       usernameError = "Enter username(Min. 4 Character)";
     }
     if (userNameController.text.isEmpty) {
-      usernameError = "Please Enter Your username";
+      usernameError = "Enter Your username";
     }
 
     if (emailError != null || passwordError != null || usernameError != null) {
@@ -101,9 +103,29 @@ class _SignUpPageState extends State<SignUpPage> {
         title: "Validation",
         content: Column(
           children: [
-            if (usernameError != null) Text(usernameError),
-            if (emailError != null) Text(emailError),
-            if (passwordError != null) Text(passwordError),
+            if (usernameError != null)
+              Text(
+                usernameError,
+                style: GoogleFonts.roboto(
+                  color: Colors.red,
+                ),
+              ),
+            const SizedBox(height: 5),
+            if (emailError != null)
+              Text(
+                emailError,
+                style: GoogleFonts.roboto(
+                  color: Colors.red,
+                ),
+              ),
+            const SizedBox(height: 5),
+            if (passwordError != null)
+              Text(
+                passwordError,
+                style: GoogleFonts.roboto(
+                  color: Colors.red,
+                ),
+              ),
           ],
         ),
         confirm: ElevatedButton(
@@ -126,11 +148,13 @@ class _SignUpPageState extends State<SignUpPage> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = MediaQuery.textScaleFactorOf(context);
+
     if (MediaQuery.of(context).viewInsets.bottom > 200) {
       isVisible = false;
     } else {
       isVisible = true;
     }
+
     final userNameField = TextField(
       focusNode: userNameFocusNode,
       controller: userNameController,
@@ -151,6 +175,7 @@ class _SignUpPageState extends State<SignUpPage> {
         hintText: "User Name",
       ),
     );
+
     final emailField = TextField(
       controller: emailController,
       focusNode: emailFocusNode,
@@ -224,6 +249,7 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+
     return Scaffold(
       body: Stack(
         clipBehavior: Clip.antiAlias,
