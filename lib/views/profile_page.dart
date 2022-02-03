@@ -1,39 +1,39 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:geek_findr/Services/user_model.dart';
+import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/models/user_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({Key? key}) : super(key: key);
-  final box = Hive.box<UserModel>('usermodel');
+  final box = Hive.box('usermodel');
 
-  Future<void> makePatchRequest() async {
-    final url = Uri.parse('https://jsonplaceholder.typicode.com/posts/1');
-    final headers = {"Content-type": "application/json"};
-    const json = '{"userId": "Hai"}';
-    final response = await patch(url, headers: headers, body: json);
-    if (kDebugMode) {
-      print('Status code: ${response.statusCode}');
-      print('Body: ${response.body}');
+  Future<void> updatedata() async {
+    final user = box.get("user") as UserModel;
+    const url = "$prodUrl/api/v1/profiles/my-profile";
+    try {
+      await http.patch(
+        Uri.parse(url),
+        headers: {"Authorization": "Bearer ${user.token}"},
+        body: {
+          "bio": "gasdas",
+        },
+      );
+    } catch (e) {
+      print(e);
     }
   }
 
   Future<void> getData() async {
-    final user = box.get("user") ;
-    const url = "http://www.geekfindr-dev-app.xyz/api/v1/profiles/my-profile/";
-    print(user!.username);
+    final user = box.get("user") as UserModel;
+    const url = "$prodUrl/api/v1/profiles/my-profile/";
     try {
-      final response = await patch(
+      final response = await http.get(
         Uri.parse(url),
         headers: {"Authorization": "Bearer ${user.token}"},
-        body: {
-          "bio": "data",
-        },
       );
+
       print(response.body);
     } catch (e) {
       print(e);
@@ -49,7 +49,8 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffB954FE),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
+          await updatedata();
           getData();
         },
       ),

@@ -8,32 +8,41 @@ class UserModel {
 
   @HiveField(1)
   String? password;
-  
-  @HiveField(5)
-  String? avatar;
 
   @HiveField(2)
-  String? id;
+  String? avatar;
 
   @HiveField(3)
-  String? token;
+  String? id;
 
   @HiveField(4)
+  String? token;
+
+  @HiveField(5)
   String? username;
+
+  @HiveField(6)
+  String? createdAt;
+
+  @HiveField(7)
+  String? updatedAt;
 
   UserModel({
     this.email,
-    this.password,
+    this.username,
     this.avatar,
+    this.createdAt,
+    this.updatedAt,
     this.id,
     this.token,
-    this.username,
   });
-  
+
   factory UserModel.fromJson(Map<String, String> json) => UserModel(
         email: json["email"],
         username: json["username"],
         avatar: json["avatar"],
+        createdAt: json["createdAt"],
+        updatedAt: json["updatedAt"],
         id: json["id"],
         token: json["token"],
       );

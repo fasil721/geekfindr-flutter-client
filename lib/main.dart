@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:geek_findr/Services/user_model.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/login_page.dart';

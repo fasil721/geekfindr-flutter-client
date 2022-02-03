@@ -4,9 +4,10 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/Services/user_model.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/main.dart';
+import 'package:geek_findr/models/user_model.dart';
+import 'package:geek_findr/services/user_services.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,7 +32,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final userNameFocusNode = FocusNode();
   final controller = Get.find<AppController>();
   bool isVisible = true;
-  final userModel = UserModel();
 
   @override
   void dispose() {
@@ -39,37 +39,6 @@ class _SignUpPageState extends State<SignUpPage> {
     emailFocusNode.dispose();
     userNameFocusNode.dispose();
     super.dispose();
-  }
-
-  Future<void> signUp() async {
-    userModel.username = userNameController.text;
-    userModel.email = emailController.text;
-    userModel.password = passwordController.text;
-
-    try {
-      final response = await post(
-        Uri.parse("http://www.geekfindr-dev-app.xyz/api/v1/users/signup/"),
-        body: userModel.toJsonSignUp(),
-      );
-      if (response.statusCode == 201) {
-        final jsonData =
-            Map<String, String>.from(json.decode(response.body) as Map);
-        final user = UserModel.fromJson(jsonData);
-        final box = Hive.box('usermodel');
-        await box.put("user", user);
-        final pref = await SharedPreferences.getInstance();
-        await pref.setBool("user", true);
-        Get.offAll(() => const MyApp());
-      } else if (response.statusCode == 400) {
-        final a = json.decode(response.body);
-        final err = a["errors"][0]["message"] as String;
-        Fluttertoast.showToast(msg: err);
-      }
-    } on HttpException {
-      Fluttertoast.showToast(msg: "No Internet");
-    } on PlatformException {
-      Fluttertoast.showToast(msg: "Invalid Format");
-    }
   }
 
   void validator() {
@@ -139,7 +108,11 @@ class _SignUpPageState extends State<SignUpPage> {
       );
     }
     if (emailError == null && passwordError == null && usernameError == null) {
-      signUp();
+      signUp(
+        email: emailController.text,
+        password: passwordController.text,
+        username: userNameController.text,
+      );
     }
   }
 
