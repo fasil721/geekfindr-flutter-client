@@ -1,21 +1,12 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/main.dart';
-import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/services/user_services.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-// ignore: must_be_immutable
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
@@ -108,7 +99,7 @@ class _SignUpPageState extends State<SignUpPage> {
       );
     }
     if (emailError == null && passwordError == null && usernameError == null) {
-      signUp(
+      userSignUp(
         email: emailController.text,
         password: passwordController.text,
         username: userNameController.text,

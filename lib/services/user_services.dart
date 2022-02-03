@@ -12,7 +12,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> signIn({required String email, required String password}) async {
+Future<void> userSignIn({
+  required String email,
+  required String password,
+}) async {
   final userModel = UserModel();
   userModel.email = email;
   userModel.password = password;
@@ -44,7 +47,7 @@ Future<void> signIn({required String email, required String password}) async {
   }
 }
 
-Future<void> signUp({
+Future<void> userSignUp({
   required String email,
   required String password,
   required String username,
@@ -56,7 +59,7 @@ Future<void> signUp({
 
   try {
     final response = await http.post(
-      Uri.parse("http://www.geekfindr-dev-app.xyz/api/v1/users/signup/"),
+      Uri.parse("$prodUrl/api/v1/users/signup/"),
       body: userModel.toJsonSignUp(),
     );
     if (response.statusCode == 201) {
@@ -77,5 +80,7 @@ Future<void> signUp({
     Fluttertoast.showToast(msg: "No Internet");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
+  } catch (e) {
+    Fluttertoast.showToast(msg: e.toString());
   }
 }

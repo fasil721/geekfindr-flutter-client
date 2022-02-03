@@ -1,21 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/main.dart';
-import 'package:geek_findr/models/error_model.dart';
-import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/services/user_services.dart';
 import 'package:geek_findr/views/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -98,7 +88,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       );
     }
     if (emailError == null && passwordError == null) {
-      signIn(email: emailController.text, password: passwordController.text);
+      userSignIn(
+        email: emailController.text,
+        password: passwordController.text,
+      );
     }
   }
 
