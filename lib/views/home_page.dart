@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:geek_findr/Api/user_model.dart';
 import 'package:geek_findr/views/drawer_page.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,12 +11,11 @@ class _HomePageState extends State<HomePage> {
   final _advancedDrawerController = AdvancedDrawerController();
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    // final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = MediaQuery.textScaleFactorOf(context);
-    final box = Hive.box('usermodel');
-    final user = box.get("user") as UserModel;
-    print(user.email);
+    // final textFactor = MediaQuery.textScaleFactorOf(context);
+    // final box = Hive.box('usermodel');
+    // final user = box.get("user") as UserModel;
     return SafeArea(
       child: Scaffold(
         body: AdvancedDrawer(
@@ -49,7 +46,6 @@ class _HomePageState extends State<HomePage> {
                 ),
                 onPressed: () {
                   _advancedDrawerController.showDrawer();
-              
                 },
               ),
               backgroundColor: Colors.white,

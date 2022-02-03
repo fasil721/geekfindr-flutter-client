@@ -4,7 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/Api/user_model.dart';
+import 'package:geek_findr/Services/user_model.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/main.dart';
 import 'package:geek_findr/views/signup_page.dart';
@@ -27,9 +27,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
   final controller = Get.find<AppController>();
-  int duration = 2000;
   bool isVisible = true;
   final userModel = UserModel();
+
   @override
   void initState() {
     super.initState();
@@ -50,10 +50,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     try {
       final response = await post(
         Uri.parse("http://www.geekfindr-dev-app.xyz/api/v1/users/signin"),
-        // heresponse.statusCodeaders: {"Authorization": "Bearer $token"},
         body: userModel.toJsonSignIn(),
       );
-      print(response.statusCode);
       if (response.statusCode == 200) {
         final jsonData =
             Map<String, String>.from(json.decode(response.body) as Map);

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:geek_findr/Api/user_model.dart';
+import 'package:geek_findr/Services/user_model.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/login_page.dart';
+import 'package:geek_findr/views/profile_page.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -51,11 +52,9 @@ class _MyAppState extends State<MyApp> {
       color: Colors.green,
     ),
     Container(
-      color: Colors.green,
+      color: Colors.red,
     ),
-    Container(
-      color: Colors.blue,
-    ),
+    ProfilePage()
   ];
 
   @override
@@ -70,8 +69,11 @@ class _MyAppState extends State<MyApp> {
           ),
           bottomNavigationBar: SalomonBottomBar(
             curve: Curves.ease,
+            unselectedItemColor: const Color(0xffB954FE),
             duration: const Duration(milliseconds: 300),
-            margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            itemPadding:
+                const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             currentIndex: currentIndex,
             onTap: (index) {
               currentIndex = index;
@@ -79,24 +81,24 @@ class _MyAppState extends State<MyApp> {
             },
             items: [
               SalomonBottomBarItem(
-                icon: const Icon(Icons.apps),
+                icon: const Icon(Icons.home),
                 title: const Text('Home'),
-                selectedColor: Colors.red,
+                selectedColor: const Color(0xffB954FE),
               ),
               SalomonBottomBarItem(
-                icon: const Icon(Icons.people),
-                title: const Text('Users'),
-                selectedColor: Colors.purpleAccent,
-              ),
-              SalomonBottomBarItem(
-                icon: const Icon(Icons.message),
+                icon: const Icon(Icons.message_outlined),
                 title: const Text('Messages'),
-                selectedColor: Colors.pink,
+                selectedColor: const Color(0xffB954FE),
               ),
               SalomonBottomBarItem(
-                icon: const Icon(Icons.settings),
-                title: const Text('Settings'),
-                selectedColor: Colors.green,
+                icon: const Icon(Icons.search_outlined),
+                title: const Text('Search'),
+                selectedColor: const Color(0xffB954FE),
+              ),
+              SalomonBottomBarItem(
+                icon: const Icon(Icons.person),
+                title: const Text('Profile'),
+                selectedColor: const Color(0xffB954FE),
               ),
             ],
           ),

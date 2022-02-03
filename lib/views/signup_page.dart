@@ -1,14 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/Api/user_model.dart';
+import 'package:geek_findr/Services/user_model.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/main.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,30 +47,28 @@ class _SignUpPageState extends State<SignUpPage> {
     userModel.password = passwordController.text;
 
     try {
-      print(userModel.toJsonSignUp());
       final response = await post(
         Uri.parse("http://www.geekfindr-dev-app.xyz/api/v1/users/signup/"),
-        // headers: {"Authorization": "Bearer $token"},
         body: userModel.toJsonSignUp(),
       );
-      print(response.statusCode);
       if (response.statusCode == 201) {
         final jsonData =
             Map<String, String>.from(json.decode(response.body) as Map);
-        controller.user = UserModel.fromJson(jsonData);
-        Get.offAll(() => const MyApp());
+        final user = UserModel.fromJson(jsonData);
+        final box = Hive.box('usermodel');
+        await box.put("user", user);
         final pref = await SharedPreferences.getInstance();
         await pref.setBool("user", true);
+        Get.offAll(() => const MyApp());
       } else if (response.statusCode == 400) {
         final a = json.decode(response.body);
         final err = a["errors"][0]["message"] as String;
         Fluttertoast.showToast(msg: err);
-      } else {
-        print(response.body);
       }
-    } catch (e) {
-      print(e);
-      return;
+    } on HttpException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on PlatformException {
+      Fluttertoast.showToast(msg: "Invalid Format");
     }
   }
 
