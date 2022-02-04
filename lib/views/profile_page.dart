@@ -186,8 +186,8 @@ class ProfilePage extends StatelessWidget {
                   height: height * 0.02,
                 ),
                 Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
                   height: height * 0.05,
-                  width: width * 0.85,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(width: 1.2, color: Colors.grey),
@@ -227,6 +227,36 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Bio",
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 15,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Biofdgdgdddddddsdsgdf",
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 15,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
