@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/user_services.dart';
 import 'package:geek_findr/views/login_page.dart';
@@ -185,8 +186,7 @@ class _SignUpPageState extends State<SignUpPage> {
     final loginButton = ElevatedButton(
       style: ButtonStyle(
         elevation: MaterialStateProperty.all<double>(5),
-        backgroundColor:
-            MaterialStateProperty.all<Color>(const Color(0xffB954FE)),
+        backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40),
@@ -222,31 +222,28 @@ class _SignUpPageState extends State<SignUpPage> {
             bottom: height * .32,
             child: RotationTransition(
               turns: const AlwaysStoppedAnimation(-45 / 360),
-              child: Hero(
-                tag: "con",
-                child: FadeInDownBig(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xffB954FE),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(.7),
-                          blurRadius: 5,
-                          offset: const Offset(0, 7),
-                        ),
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(.7),
-                          blurRadius: 5,
-                          offset: const Offset(10, 0),
-                        )
-                      ],
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(1000),
+              child: FadeInDownBig(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(.7),
+                        blurRadius: 5,
+                        offset: const Offset(0, 7),
                       ),
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(.7),
+                        blurRadius: 5,
+                        offset: const Offset(10, 0),
+                      )
+                    ],
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(1000),
                     ),
-                    height: height * .95,
-                    width: width * 1.5,
                   ),
+                  height: height * .95,
+                  width: width * 1.5,
                 ),
               ),
             ),

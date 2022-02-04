@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/user_services.dart';
 import 'package:geek_findr/views/signup_page.dart';
@@ -152,7 +153,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       style: ButtonStyle(
         elevation: MaterialStateProperty.all<double>(5),
         backgroundColor:
-            MaterialStateProperty.all<Color>(const Color(0xffB954FE)),
+            MaterialStateProperty.all<Color>(primaryColor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40),
@@ -193,7 +194,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 // delay: const Duration(milliseconds: 1000),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xffB954FE),
+                    color:primaryColor,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(.7),
@@ -231,55 +232,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ),
             ),
           ),
-          // Align(
-          //   alignment: Alignment.centerRight,
-          //   child: FadeInDownBig(
-          //     // duration: Duration(milliseconds: duration),
-          //     // delay: const Duration(milliseconds: 1500),
-          //     child: Padding(
-          //       padding: isVisible
-          //           ? EdgeInsets.zero
-          //           : EdgeInsets.only(top: height * .15),
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.end,
-          //         mainAxisAlignment: isVisible
-          //             ? MainAxisAlignment.center
-          //             : MainAxisAlignment.start,
-          //         children: [
-          //           Padding(
-          //             padding: EdgeInsets.symmetric(horizontal: width * 0.045),
-          //             child: Text(
-          //               "Don't have a account?",
-          //               style: GoogleFonts.roboto(
-          //                 fontSize: textFactor * 14,
-          //                 color: Colors.white.withOpacity(0.9),
-          //                 fontWeight: FontWeight.normal,
-          //               ),
-          //             ),
-          //           ),
-          //           const SizedBox(height: 5),
-          //           Padding(
-          //             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          //             child: GestureDetector(
-          //               onTap: () {
-          //                 Get.to(() => const SignUpPage());
-          //               },
-          //               child: Text(
-          //                 "Sign Up",
-          //                 textAlign: TextAlign.center,
-          //                 style: GoogleFonts.roboto(
-          //                   fontSize: textFactor * 15,
-          //                   color: Colors.white.withOpacity(0.9),
-          //                   fontWeight: FontWeight.bold,
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
+         
           Padding(
             padding: EdgeInsets.only(
               left: width * 0.075,

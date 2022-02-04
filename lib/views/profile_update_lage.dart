@@ -9,17 +9,26 @@ import 'package:geek_findr/models/user_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:numberpicker/numberpicker.dart';
 
-class ProfileUpatePage extends StatelessWidget {
+class ProfileUpatePage extends StatefulWidget {
   ProfileUpatePage({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileUpatePage> createState() => _ProfileUpatePageState();
+}
+
+class _ProfileUpatePageState extends State<ProfileUpatePage> {
   final bioController = TextEditingController();
+
   final box = Hive.box('usermodel');
+
   Future<void> updatedata() async {
     final user = box.get("user") as UserModel;
     const url = "$prodUrl/api/v1/profiles/my-profile";
     final body = {
       "bio": "hai all",
-      "organizations": ["hello", ""],
+      "organizations": ["hello", "whats up"],
       "skills": ["coding"],
     };
     try {
@@ -31,8 +40,6 @@ class ProfileUpatePage extends StatelessWidget {
         },
         body: json.encode(body),
       );
-      print(response.statusCode);
-      print(response.body);
       if (response.statusCode == 422) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());
@@ -62,6 +69,8 @@ class ProfileUpatePage extends StatelessWidget {
       print(e);
     }
   }
+
+  int _currentValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +127,7 @@ class ProfileUpatePage extends StatelessWidget {
             icon: const Icon(
               Icons.check,
               size: 26,
-              color: roseColor,
+              color: primaryColor,
             ),
           ),
           const SizedBox(
@@ -137,6 +146,11 @@ class ProfileUpatePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                   child: Image.network(
                     "${user.avatar!}&s=120",
+                    // loadingBuilder: (context, error, stackTrace) => Container(
+                    //   color: Colors.blue,
+                    //   height: 130,
+                    //   width: 130,
+                    // ),
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.blue,
                       height: 130,
@@ -195,7 +209,78 @@ class ProfileUpatePage extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: bioField,
-                )
+                ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Text(
+                      "Experience",
+                      style: GoogleFonts.roboto(
+                        fontSize: textFactor * 15,
+                        color: Colors.black.withOpacity(0.99),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.005,
+                ),
+                Container(
+                  height: height * .07,
+                  alignment: Alignment.topCenter,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0.9, color: Colors.grey),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: DropdownButton<String>(
+                    items: <String>['6 Months', '1 Year', '2 Year', '3 Year']
+                        .map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      print(value);
+                    },
+                  ),
+                ),
+                Container(
+                  child: Center(
+                    child: NumberPicker(
+                      value: _currentValue,
+                      minValue: 0,
+                      maxValue: 15,
+                      itemHeight: 30,
+                      // decoration: BoxDecoration(
+                      //   borderRadius: BorderRadius.circular(16),
+                      //   border: Border.all(color: Colors.black26),
+                      // ),
+                      onChanged: (value) => setState(() {
+                        _currentValue = value;
+                        print(value);
+                      }),
+                    ),
+                  ),
+                ),
+                // DropdownButton<String>(
+                //   items: <String>['6 Months', '1 Year', '2 Year', '3 Year']
+                //       .map((String value) {
+                //     return DropdownMenuItem<String>(
+                //       value: value,
+                //       child: Text(value),
+                //     );
+                //   }).toList(),
+                //   onChanged: (value) {
+                //     print(value);
+                //   },
+                // )
               ],
             ),
           ),
