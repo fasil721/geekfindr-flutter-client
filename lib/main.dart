@@ -7,7 +7,6 @@ import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:geek_findr/views/profile_page.dart';
-import 'package:geek_findr/views/profile_page2.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -55,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     Container(
       color: Colors.red,
     ),
-    ProfilePage2()
+    ProfilePage()
   ];
 
   @override
