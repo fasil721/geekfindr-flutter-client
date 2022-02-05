@@ -96,14 +96,12 @@ Future<UserProfileModel?> getUserProfileData() async {
       Uri.parse(url),
       headers: {"Authorization": "Bearer ${user.token}"},
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final jsonData =
           Map<String, dynamic>.from(json.decode(response.body) as Map);
       final userData = UserProfileModel.fromJson(jsonData);
       return userData;
     } else {
-      print(response.body);
       Fluttertoast.showToast(msg: "Something went wrong");
     }
   } on HttpException {
@@ -112,5 +110,35 @@ Future<UserProfileModel?> getUserProfileData() async {
     Fluttertoast.showToast(msg: "Invalid Format");
   } catch (e) {
     Fluttertoast.showToast(msg: e.toString());
+  }
+}
+
+Future<void> updateProfileData(Map<String, dynamic> body) async {
+  final user = box.get("user") as UserModel;
+  const url = "$prodUrl/api/v1/profiles/my-profile";
+
+  try {
+    final response = await http.patch(
+      Uri.parse(url),
+      headers: {
+        "Authorization": "Bearer ${user.token}",
+        "Content-Type": "application/json"
+      },
+      body: json.encode(body),
+    );
+    if (response.statusCode == 422) {
+      final errorJson = json.decode(response.body) as Map;
+      final err = ErrorModel.fromJson(errorJson.cast());
+      for (final element in err.errors!) {
+        Fluttertoast.showToast(msg: element.message!);
+      }
+    }
+    if (response.statusCode == 200) {
+      Get.back();
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
   }
 }

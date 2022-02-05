@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/user_services.dart';
+import 'package:geek_findr/views/profile_update_page.dart';
 import 'package:geek_findr/views/widgets/profile_about_view.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -54,9 +56,9 @@ class _ProfilePageState extends State<ProfilePage>
                         margin: EdgeInsets.only(top: height * .17),
                         height: height,
                         width: width,
-                        decoration:const BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: secondaryColor,
-                          borderRadius:  BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                             topRight: Radius.circular(30),
                             topLeft: Radius.circular(30),
                           ),
@@ -132,7 +134,9 @@ class _ProfilePageState extends State<ProfilePage>
                                       ),
                                     ),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () => Get.to(
+                                    () => ProfileUpatePage(userData: userData),
+                                  ),
                                   child: SizedBox(
                                     height: height * 0.058,
                                     width: width * 0.21,
