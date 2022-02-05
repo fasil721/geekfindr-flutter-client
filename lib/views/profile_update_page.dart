@@ -230,6 +230,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                           TextField(
                             controller: orgController,
                             decoration: InputDecoration(
+                              hintText: "Type here",
                               iconColor: primaryColor,
                               icon: IconButton(
                                 onPressed: () {
@@ -317,6 +318,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                             controller: sklController,
                             decoration: InputDecoration(
                               iconColor: primaryColor,
+                              hintText: "Type here",
                               icon: IconButton(
                                 onPressed: () {
                                   if (sklController.text.isNotEmpty) {

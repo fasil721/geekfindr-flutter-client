@@ -56,7 +56,6 @@ class _ProfilePageState extends State<ProfilePage>
               backgroundColor: secondaryColor,
               body: SafeArea(
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
                   child: Stack(
                     children: [
                       SizedBox(
@@ -363,8 +362,9 @@ class _ProfilePageState extends State<ProfilePage>
                   width: double.infinity,
                   height: 10,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.grey,),
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey,
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
