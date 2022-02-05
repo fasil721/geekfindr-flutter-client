@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:numberpicker/numberpicker.dart';
 
 class ProfileUpatePage extends StatefulWidget {
-  ProfileUpatePage({Key? key}) : super(key: key);
+  const ProfileUpatePage({Key? key}) : super(key: key);
 
   @override
   State<ProfileUpatePage> createState() => _ProfileUpatePageState();
