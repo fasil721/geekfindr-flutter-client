@@ -6,11 +6,14 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/main.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/models/user_model.dart';
+import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+final box = Hive.box('usermodel');
 
 Future<void> userSignIn({
   required String email,
@@ -75,6 +78,33 @@ Future<void> userSignUp({
       final errorJson = json.decode(response.body) as Map;
       final error = ErrorModel.fromJson(errorJson.cast());
       Fluttertoast.showToast(msg: error.errors!.first.message!);
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  } catch (e) {
+    Fluttertoast.showToast(msg: e.toString());
+  }
+}
+
+Future<UserProfileModel?> getUserProfileData() async {
+  final user = box.get("user") as UserModel;
+  const url = "$prodUrl/api/v1/profiles/my-profile/";
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {"Authorization": "Bearer ${user.token}"},
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final jsonData =
+          Map<String, dynamic>.from(json.decode(response.body) as Map);
+      final userData = UserProfileModel.fromJson(jsonData);
+      return userData;
+    } else {
+      print(response.body);
+      Fluttertoast.showToast(msg: "Something went wrong");
     }
   } on HttpException {
     Fluttertoast.showToast(msg: "No Internet");

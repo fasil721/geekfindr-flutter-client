@@ -223,12 +223,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             child: FadeInDownBig(
               // duration: Duration(milliseconds: duration),
               // delay: const Duration(milliseconds: 1000),
-              child: Hero(
-                tag: "img",
-                child: Image.asset(
-                  'assets/images/pair.png',
-                  height: height * 0.4,
-                ),
+              child: Image.asset(
+                'assets/images/pair.png',
+                height: height * 0.4,
               ),
             ),
           ),

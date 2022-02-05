@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/models/user_model.dart';
+import 'package:geek_findr/models/user_profile_model.dart';
+import 'package:geek_findr/services/user_services.dart';
 import 'package:geek_findr/views/profile_update_lage.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -229,35 +231,52 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Bio",
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 15,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.w600,
-                          ),
+                FutureBuilder<UserProfileModel?>(
+                  future: getUserProfileData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      final userData = snapshot.data;
+                      print(userData!.email);
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Biofdgdgdddddddsdsgdf",
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 15,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.w400,
-                          ),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Bio",
+                                style: GoogleFonts.poppins(
+                                  fontSize: textFactor * 15,
+                                  color: Colors.black.withOpacity(0.8),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                userData.bio!,
+                                style: GoogleFonts.poppins(
+                                  fontSize: textFactor * 15,
+                                  color: Colors.black.withOpacity(0.8),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
+                      );
+                    }
+                    return Container();
+                  },
                 ),
               ],
             ),

@@ -46,7 +46,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
         final a = <Error>[];
       }
       if (response.statusCode == 200) {
-        getData();
+        
       }
     } on HttpException {
       Fluttertoast.showToast(msg: "No Internet");
@@ -55,20 +55,6 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
     }
   }
 
-  Future<void> getData() async {
-    final user = box.get("user") as UserModel;
-    const url = "$prodUrl/api/v1/profiles/my-profile/";
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {"Authorization": "Bearer ${user.token}"},
-      );
-
-      print(response.body);
-    } catch (e) {
-      print(e);
-    }
-  }
 
   int _currentValue = 0;
 
