@@ -36,31 +36,27 @@ class _ProfilePageState extends State<ProfilePage>
           final userData = snapshot.data;
           if (userData != null) {
             return Scaffold(
-              backgroundColor: primaryColor,
+              backgroundColor: secondaryColor,
               body: SafeArea(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Stack(
                     children: [
+                      SizedBox(
+                        height: height * 0.2,
+                        width: width,
+                        child: Image.asset(
+                          "assets/images/back.jpg",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                       Container(
-                        margin: EdgeInsets.only(top: height * .15),
+                        margin: EdgeInsets.only(top: height * .17),
                         height: height,
                         width: width,
-                        decoration: BoxDecoration(
+                        decoration:const BoxDecoration(
                           color: secondaryColor,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(.7),
-                              blurRadius: 5,
-                              offset: const Offset(0, 7),
-                            ),
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(.7),
-                              blurRadius: 5,
-                              offset: const Offset(10, 0),
-                            ),
-                          ],
-                          borderRadius: const BorderRadius.only(
+                          borderRadius:  BorderRadius.only(
                             topRight: Radius.circular(30),
                             topLeft: Radius.circular(30),
                           ),
@@ -193,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     Text(
                                       "10",
                                       style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 18,
+                                        fontSize: textFactor * 17,
                                         color: Colors.black.withOpacity(0.8),
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -201,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     Text(
                                       "  Posts  ",
                                       style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 15,
+                                        fontSize: textFactor * 13,
                                         color: Colors.black.withOpacity(0.8),
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -221,7 +217,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     Text(
                                       "10.k",
                                       style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 18,
+                                        fontSize: textFactor * 17,
                                         color: Colors.black.withOpacity(0.8),
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -229,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     Text(
                                       " Followers",
                                       style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 15,
+                                        fontSize: textFactor * 13,
                                         color: Colors.black.withOpacity(0.8),
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -249,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     Text(
                                       "1.9k",
                                       style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 18,
+                                        fontSize: textFactor * 17,
                                         color: Colors.black.withOpacity(0.8),
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -257,7 +253,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     Text(
                                       "Followings",
                                       style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 14,
+                                        fontSize: textFactor * 13,
                                         color: Colors.black.withOpacity(0.8),
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -301,7 +297,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           ),
                           SizedBox(
-                            height: 500,
+                            height: height,
                             width: width,
                             child: TabBarView(
                               controller: tabController,
@@ -349,7 +345,7 @@ class CirclePainter extends BoxPainter {
     paint.color = color;
     final circleOffset = Offset(
       configuration.size!.width / 2,
-      configuration.size!.height - radius,
+      configuration.size!.height - 2 * radius,
     );
     canvas.drawCircle(offset + circleOffset, radius, paint);
   }
