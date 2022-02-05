@@ -95,38 +95,96 @@ class _ProfilePageState extends State<ProfilePage>
                           SizedBox(
                             height: height * 0.01,
                           ),
-                          Text(
-                            userData.username!,
-                            style: GoogleFonts.poppins(
-                              fontSize: textFactor * 25,
-                              color: Colors.black.withOpacity(0.9),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            "Mobile Developer",
-                            style: GoogleFonts.roboto(
-                              fontSize: textFactor * 15,
-                              color: Colors.black.withOpacity(0.6),
-                              fontWeight: FontWeight.normal,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      userData.username!,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: textFactor * 25,
+                                        color: Colors.black.withOpacity(0.9),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Mobile Developer",
+                                      style: GoogleFonts.roboto(
+                                        fontSize: textFactor * 15,
+                                        color: Colors.black.withOpacity(0.6),
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                    elevation:
+                                        MaterialStateProperty.all<double>(5),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                      primaryColor,
+                                    ),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                  child: SizedBox(
+                                    height: height * 0.058,
+                                    width: width * 0.21,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.edit_outlined,
+                                          size: 18,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.01,
+                                        ),
+                                        Text(
+                                          "Edit Profile",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: textFactor * 12,
+                                            color:
+                                                Colors.white.withOpacity(0.95),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
                             height: height * 0.015,
                           ),
                           Container(
-                            // margin: const EdgeInsets.symmetric(
-                            //   horizontal: 20,
-                            //   vertical: 10,
-                            // ),
-                            // padding: const EdgeInsets.symmetric(
-                            //   horizontal: 20,
-                            //   vertical: 10,
-                            // ),
-                            // decoration: BoxDecoration(
-                            //   borderRadius: BorderRadius.circular(15),
-                            //   color: Colors.white,
-                            // ),
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white.withOpacity(0.9),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -153,7 +211,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 Container(
                                   color: Colors.grey,
                                   margin: const EdgeInsets.symmetric(
-                                      horizontal: 25),
+                                    horizontal: 25,
+                                  ),
                                   height: 20,
                                   width: 1.5,
                                 ),
@@ -180,7 +239,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 Container(
                                   color: Colors.grey,
                                   margin: const EdgeInsets.symmetric(
-                                      horizontal: 25),
+                                    horizontal: 25,
+                                  ),
                                   height: 20,
                                   width: 1.5,
                                 ),
@@ -207,52 +267,8 @@ class _ProfilePageState extends State<ProfilePage>
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: height * 0.015,
-                          ),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              elevation: MaterialStateProperty.all<double>(5),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                primaryColor,
-                              ),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                            onPressed: () {},
-                            child: SizedBox(
-                              height: height * 0.058,
-                              width: width * 0.25,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.edit_outlined,
-                                    size: 18,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    width: width * 0.01,
-                                  ),
-                                  Text(
-                                    "Edit Profile",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: textFactor * 14,
-                                      color: Colors.white.withOpacity(0.95),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: TabBar(
@@ -263,6 +279,11 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 unselectedLabelColor: Colors.grey,
                                 controller: tabController,
+                                labelStyle: GoogleFonts.roboto(
+                                  fontSize: textFactor * 14,
+                                  color: Colors.black.withOpacity(0.8),
+                                  fontWeight: FontWeight.w600,
+                                ),
                                 indicator: const CircleTabIndicator(
                                   color: primaryColor,
                                   radius: 4,
