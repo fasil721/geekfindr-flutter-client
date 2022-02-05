@@ -89,6 +89,7 @@ Future<void> userSignUp({
 }
 
 Future<UserProfileModel?> getUserProfileData() async {
+  await Future.delayed(const Duration(seconds: 2));
   final user = box.get("user") as UserModel;
   const url = "$prodUrl/api/v1/profiles/my-profile/";
   try {

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
+
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/user_services.dart';
 import 'package:geek_findr/views/profile_update_page.dart';
 import 'package:geek_findr/views/widgets/profile_about_view.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -27,10 +29,23 @@ class _ProfilePageState extends State<ProfilePage>
       future: getUserProfileData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
+          return Scaffold(
             backgroundColor: secondaryColor,
-            body: Center(
-              child: CircularProgressIndicator(),
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (BuildContext ctx, index) {
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.white,
+                      period: const Duration(milliseconds: 1000),
+                      child: box(),
+                    );
+                  },
+                ),
+              ),
             ),
           );
         }
@@ -324,6 +339,49 @@ class _ProfilePageState extends State<ProfilePage>
         }
         return Container();
       },
+    );
+  }
+
+  Widget box() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration:
+                const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 10,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.grey,),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: 150,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey,
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

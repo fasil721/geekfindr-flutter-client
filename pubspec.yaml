@@ -46,6 +46,8 @@ dependencies:
   hive: ^2.0.5
   hive_flutter: ^1.1.0
   readmore: ^2.1.0
+  loading_indicator: ^3.0.2
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
