@@ -20,9 +20,11 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   final orgItems = <String>[];
   final orgController = TextEditingController();
   final sklController = TextEditingController();
-  final roleController = TextEditingController();
   final skillsItems = <String>[];
   TextEditingController? bioController;
+  TextEditingController? roleController;
+  TextEditingController? gitController;
+  TextEditingController? linkController;
 
   @override
   void initState() {
@@ -31,6 +33,23 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
       text: widget.userData.bio == null || widget.userData.bio!.isEmpty
           ? ""
           : widget.userData.bio,
+    );
+    roleController = TextEditingController(
+      text: widget.userData.role == null || widget.userData.role!.isEmpty
+          ? ""
+          : widget.userData.role,
+    );
+    gitController = TextEditingController(
+      text: widget.userData.socials!.first["github"] == null ||
+              widget.userData.socials!.first["github"]!.isEmpty
+          ? ""
+          : widget.userData.socials!.first["github"],
+    );
+    linkController = TextEditingController(
+      text: widget.userData.socials!.last["linkedin"] == null ||
+              widget.userData.socials!.last["linkedin"]!.isEmpty
+          ? ""
+          : widget.userData.socials!.last["linkedin"],
     );
     if (widget.userData.organizations!.isNotEmpty) {
       for (final i in widget.userData.organizations!) {
@@ -51,7 +70,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
 
-    final bioField = TextFormField(
+    final bioField = TextField(
       controller: bioController,
       textInputAction: TextInputAction.newline,
       keyboardType: TextInputType.multiline,
@@ -97,14 +116,12 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
               final userprofilemodel = UserProfileModel();
               userprofilemodel.bio = bioController!.text;
               userprofilemodel.organizations = orgItems;
-              userprofilemodel.role = roleController.text;
-              print(userprofilemodel.toJson());
-              final Map<String, dynamic> body = {
-                "bio": bioController!.text,
-                "organizations": orgItems,
-                "role": roleController.text,
-              };
-              updateUserProfileData(body);
+              userprofilemodel.role = roleController!.text;
+              userprofilemodel.socials = [
+                {"github": gitController!.text},
+                {"linkedin": linkController!.text}
+              ];
+              updateUserProfileData(userprofilemodel.toJson());
             },
             icon: const Icon(
               Icons.check,
@@ -160,7 +177,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 3),
                     child: Text(
-                      "Role / Posision",
+                      "Role / Position",
                       style: GoogleFonts.roboto(
                         fontSize: textFactor * 16,
                         color: Colors.black.withOpacity(0.99),
@@ -290,6 +307,9 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                             controller: orgController,
                             decoration: InputDecoration(
                               hintText: "Type here",
+                              hintStyle: TextStyle(
+                                fontSize: textFactor * 15,
+                              ),
                               iconColor: primaryColor,
                               icon: IconButton(
                                 onPressed: () {
@@ -313,6 +333,49 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     },
                   ),
                 ),
+                // SizedBox(
+                //   height: height * 0.02,
+                // ),
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Padding(
+                //     padding: const EdgeInsets.symmetric(horizontal: 3),
+                //     child: Text(
+                //       "Experience",
+                //       style: GoogleFonts.roboto(
+                //         fontSize: textFactor * 16,
+                //         color: Colors.black.withOpacity(0.99),
+                //         fontWeight: FontWeight.w500,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: height * 0.005,
+                // ),
+                // Container(
+                //   alignment: Alignment.topCenter,
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(10),
+                //     border: Border.all(width: 0.9, color: Colors.grey),
+                //   ),
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                //   child: TextField(
+                //     decoration: InputDecoration(
+                //       // hintText: "ex: frontend developer",
+                //       hintStyle: TextStyle(
+                //         fontSize: textFactor * 15,
+                //       ),
+                //       iconColor: primaryColor,
+                //       border: InputBorder.none,
+                //       focusedBorder: InputBorder.none,
+                //       enabledBorder: InputBorder.none,
+                //       errorBorder: InputBorder.none,
+                //       disabledBorder: InputBorder.none,
+                //     ),
+                //   ),
+                // ),
                 SizedBox(
                   height: height * 0.02,
                 ),
@@ -321,12 +384,44 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 3),
                     child: Text(
-                      "Skills",
+                      "Social links",
                       style: GoogleFonts.roboto(
-                        fontSize: textFactor * 15,
+                        fontSize: textFactor * 16,
                         color: Colors.black.withOpacity(0.99),
                         fontWeight: FontWeight.w500,
                       ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.005,
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0.9, color: Colors.grey),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: TextField(
+                    controller: gitController,
+                    decoration: InputDecoration(
+                      hintText: "github url",
+                      focusColor: Colors.black,
+                      hintStyle: TextStyle(
+                        fontSize: textFactor * 15,
+                      ),
+                      icon: const ImageIcon(
+                        AssetImage('assets/images/github.png'),
+                        color: Colors.black,
+                      ),
+                      iconColor: primaryColor,
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
                     ),
                   ),
                 ),
@@ -341,65 +436,116 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   ),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: GetBuilder<AppController>(
-                    id: "skl",
-                    builder: (controller) {
-                      return Column(
-                        children: [
-                          if (skillsItems.isNotEmpty)
-                            ...skillsItems.map(
-                              (e) => Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      skillsItems.remove(e);
-                                      controller.update(["skl"]);
-                                    },
-                                    icon: const Icon(
-                                      Icons.close,
-                                      size: 22,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                  SizedBox(width: width * 0.04),
-                                  Text(
-                                    e,
-                                    style: GoogleFonts.roboto(
-                                      fontSize: textFactor * 16,
-                                      color: Colors.black.withOpacity(0.99),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          TextField(
-                            controller: sklController,
-                            decoration: InputDecoration(
-                              iconColor: primaryColor,
-                              hintText: "Type here",
-                              icon: IconButton(
-                                onPressed: () {
-                                  if (sklController.text.isNotEmpty) {
-                                    skillsItems.add(sklController.text);
-                                    sklController.clear();
-                                    controller.update(["skl"]);
-                                  }
-                                },
-                                icon: const Icon(Icons.add),
-                              ),
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                  child: TextField(
+                    controller: linkController,
+                    decoration: InputDecoration(
+                      hintText: "linkedin url",
+                      hintStyle: TextStyle(
+                        fontSize: textFactor * 15,
+                      ),
+                      iconColor: primaryColor,
+                      icon: const ImageIcon(
+                        AssetImage('assets/images/linkedin.png'),
+                        color: Colors.blue,
+                      ),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                    ),
                   ),
                 ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Padding(
+                //     padding: const EdgeInsets.symmetric(horizontal: 3),
+                //     child: Text(
+                //       "Skills",
+                //       style: GoogleFonts.roboto(
+                //         fontSize: textFactor * 15,
+                //         color: Colors.black.withOpacity(0.99),
+                //         fontWeight: FontWeight.w500,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: height * 0.01,
+                // ),
+                // Container(
+                //   alignment: Alignment.topCenter,
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(10),
+                //     border: Border.all(width: 0.9, color: Colors.grey),
+                //   ),
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                //   child: GetBuilder<AppController>(
+                //     id: "skl",
+                //     builder: (controller) {
+                //       return Column(
+                //         children: [
+                //           if (skillsItems.isNotEmpty)
+                //             ...skillsItems.map(
+                //               (e) => Row(
+                //                 children: [
+                //                   IconButton(
+                //                     onPressed: () {
+                //                       skillsItems.remove(e);
+                //                       controller.update(["skl"]);
+                //                     },
+                //                     icon: const Icon(
+                //                       Icons.close,
+                //                       size: 22,
+                //                       color: Colors.red,
+                //                     ),
+                //                   ),
+                //                   SizedBox(width: width * 0.04),
+                //                   Text(
+                //                     e,
+                //                     style: GoogleFonts.roboto(
+                //                       fontSize: textFactor * 16,
+                //                       color: Colors.black.withOpacity(0.99),
+                //                       fontWeight: FontWeight.w500,
+                //                     ),
+                //                   )
+                //                 ],
+                //               ),
+                //             ),
+                //           TextField(
+                //             controller: sklController,
+                //             decoration: InputDecoration(
+                //               iconColor: primaryColor,
+                //               hintText: "Type here",
+                //               hintStyle: TextStyle(
+                //                 fontSize: textFactor * 15,
+                //               ),
+                //               icon: IconButton(
+                //                 onPressed: () {
+                //                   if (sklController.text.isNotEmpty) {
+                //                     skillsItems.add(sklController.text);
+                //                     sklController.clear();
+                //                     controller.update(["skl"]);
+                //                   }
+                //                 },
+                //                 icon: const Icon(Icons.add),
+                //               ),
+                //               border: InputBorder.none,
+                //               focusedBorder: InputBorder.none,
+                //               enabledBorder: InputBorder.none,
+                //               errorBorder: InputBorder.none,
+                //               disabledBorder: InputBorder.none,
+                //             ),
+                //           ),
+                //         ],
+                //       );
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ),

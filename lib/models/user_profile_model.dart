@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class UserProfileModel {
   UserProfileModel({
     this.email,
@@ -32,7 +34,7 @@ class UserProfileModel {
   List<dynamic>? education;
   List<dynamic>? works;
   List<String>? skills;
-  List<Social>? socials;
+  List<Map<String, String>>? socials;
   String? createdAt;
   String? updatedAt;
   String? bio;
@@ -58,9 +60,9 @@ class UserProfileModel {
         bio: json["bio"] as String,
         createdAt: json["createdAt"] as String,
         updatedAt: json["updatedAt"] as String,
-        socials: List<Social>.from(
+        socials: List<Map<String, String>>.from(
           (json["socials"] as List)
-              .map((x) => Social.fromJson(Map<String, String>.from(x as Map))),
+              .map((x) => Map<String, String>.from(x as Map)),
         ),
         education:
             List<dynamic>.from((json["education"] as List).map((x) => x)),
@@ -71,29 +73,8 @@ class UserProfileModel {
   Map<String, dynamic> toJson() => {
         "bio": bio,
         "organizations": List<String>.from(organizations!.map((x) => x)),
-        // "experience": experience,
-        // "socials":
-        // List<Map<String, String>>.from(socials!.map((x) => x.toJson())),
+        //  "experience": experience,
+        "socials": List<Map<String, String>>.from(socials!.cast()),
         "role": role,
-      };
-}
-
-class Social {
-  Social({
-    this.github,
-    this.linkedin,
-  });
-
-  String? github;
-  String? linkedin;
-
-  factory Social.fromJson(Map<String, String> json) => Social(
-        github: json["github"],
-        linkedin: json["linkedin"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "github": github,
-        "linkedin": linkedin,
       };
 }
