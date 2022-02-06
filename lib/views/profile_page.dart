@@ -50,7 +50,9 @@ class _ProfilePageState extends State<ProfilePage>
         }
         if (snapshot.connectionState == ConnectionState.done) {
           final userData = snapshot.data;
+
           if (userData != null) {
+            print(userData.role);
             return Scaffold(
               backgroundColor: secondaryColor,
               body: SafeArea(
@@ -126,7 +128,9 @@ class _ProfilePageState extends State<ProfilePage>
                                         ),
                                       ),
                                       Text(
-                                        "Mobile Developer",
+                                        userData.role == null
+                                            ? ""
+                                            : userData.role!,
                                         style: GoogleFonts.roboto(
                                           fontSize: textFactor * 15,
                                           color: Colors.black.withOpacity(0.6),

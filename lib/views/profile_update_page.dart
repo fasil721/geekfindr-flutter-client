@@ -20,6 +20,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   final orgItems = <String>[];
   final orgController = TextEditingController();
   final sklController = TextEditingController();
+  final roleController = TextEditingController();
   final skillsItems = <String>[];
   TextEditingController? bioController;
 
@@ -64,6 +65,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
         disabledBorder: InputBorder.none,
       ),
     );
+
     return Scaffold(
       backgroundColor: secondaryColor,
       appBar: AppBar(
@@ -92,10 +94,15 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
         actions: [
           IconButton(
             onPressed: () {
+              final userprofilemodel = UserProfileModel();
+              userprofilemodel.bio = bioController!.text;
+              userprofilemodel.organizations = orgItems;
+              userprofilemodel.role = roleController.text;
+              print(userprofilemodel.toJson());
               final Map<String, dynamic> body = {
                 "bio": bioController!.text,
                 "organizations": orgItems,
-                "skills": skillsItems,
+                "role": roleController.text,
               };
               updateUserProfileData(body);
             },
@@ -121,6 +128,12 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   borderRadius: BorderRadius.circular(100),
                   child: Image.network(
                     "${user.avatar!}&s=120",
+                    // loadingBuilder: (context, child, loadingProgress) =>
+                    //     const SizedBox(
+                    //   height: 120,
+                    //   width: 120,
+                    //   child: Center(child: CircularProgressIndicator()),
+                    // ),
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.blue,
                       height: 130,
@@ -137,6 +150,50 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     fontSize: textFactor * 22,
                     color: Colors.black.withOpacity(0.9),
                     fontWeight: FontWeight.normal,
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Text(
+                      "Role / Posision",
+                      style: GoogleFonts.roboto(
+                        fontSize: textFactor * 16,
+                        color: Colors.black.withOpacity(0.99),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.005,
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0.9, color: Colors.grey),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: TextField(
+                    controller: roleController,
+                    decoration: InputDecoration(
+                      hintText: "ex: frontend developer",
+                      hintStyle: TextStyle(
+                        fontSize: textFactor * 15,
+                      ),
+                      iconColor: primaryColor,
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                    ),
                   ),
                 ),
                 SizedBox(

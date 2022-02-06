@@ -55,6 +55,7 @@ class UserProfileModel {
         followingCount: json["followingCount"] as int,
         experience: json["experience"] as String,
         role: json["role"] as String,
+        bio: json["bio"] as String,
         createdAt: json["createdAt"] as String,
         updatedAt: json["updatedAt"] as String,
         socials: List<Social>.from(
@@ -70,9 +71,9 @@ class UserProfileModel {
   Map<String, dynamic> toJson() => {
         "bio": bio,
         "organizations": List<String>.from(organizations!.map((x) => x)),
-        "experience": experience,
-        "socials":
-            List<Map<String, String>>.from(socials!.map((x) => x.toJson())),
+        // "experience": experience,
+        // "socials":
+        // List<Map<String, String>>.from(socials!.map((x) => x.toJson())),
         "role": role,
       };
 }

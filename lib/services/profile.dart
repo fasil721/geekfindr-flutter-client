@@ -63,6 +63,8 @@ Future<void> updateUserProfileData(Map<String, dynamic> body) async {
     }
   } on HttpException {
     Fluttertoast.showToast(msg: "No Internet");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
   }
