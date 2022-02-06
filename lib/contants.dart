@@ -4,7 +4,6 @@ const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
 const secondaryColor = Color(0xffE7EAF0);
 double textfactorfind(double val) {
-  print(val);
   if (val == 0.85) {
     return val + 0.1;
   } else if (val == 1.00) {
@@ -21,3 +20,9 @@ double textfactorfind(double val) {
     return val;
   }
 }
+
+final a = [
+  {"school": ""},
+  {"ug": ""},
+  {"pg": ""}
+];

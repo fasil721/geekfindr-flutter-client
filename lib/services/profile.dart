@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -34,8 +33,8 @@ Future<UserProfileModel?> getUserProfileData() async {
     Fluttertoast.showToast(msg: "No Internet");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
-  } catch (e) {
-    Fluttertoast.showToast(msg: e.toString());
+    // } catch (e) {
+    //   Fluttertoast.showToast(msg: e.toString());
   }
 }
 
