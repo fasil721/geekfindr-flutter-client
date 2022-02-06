@@ -3,7 +3,7 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
-import 'package:geek_findr/services/user_services.dart';
+import 'package:geek_findr/services/profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -341,34 +341,6 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     },
                   ),
                 ),
-                // Center(
-                //   child: NumberPicker(
-                //     value: _currentValue,
-                //     minValue: 0,
-                //     maxValue: 15,
-                //     itemHeight: 30,
-                //     // decoration: BoxDecoration(
-                //     //   borderRadius: BorderRadius.circular(16),
-                //     //   border: Border.all(color: Colors.black26),
-                //     // ),
-                //     onChanged: (value) => setState(() {
-                //       _currentValue = value;
-                //       print(value);
-                //     }),
-                //   ),
-                // ),
-                // DropdownButton<String>(
-                //   items: <String>['6 Months', '1 Year', '2 Year', '3 Year']
-                //       .map((String value) {
-                //     return DropdownMenuItem<String>(
-                //       value: value,
-                //       child: Text(value),
-                //     );
-                //   }).toList(),
-                //   onChanged: (value) {
-                //     print(value);
-                //   },
-                // )
               ],
             ),
           ),

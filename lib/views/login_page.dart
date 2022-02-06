@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/user_services.dart';
+import 'package:geek_findr/services/auth.dart';
 import 'package:geek_findr/views/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

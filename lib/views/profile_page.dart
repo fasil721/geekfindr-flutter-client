@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/models/user_profile_model.dart';
+import 'package:geek_findr/services/profile.dart';
+import 'package:geek_findr/views/profile_update_page.dart';
+import 'package:geek_findr/views/widgets/profile_about_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-
-import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/models/user_profile_model.dart';
-import 'package:geek_findr/services/user_services.dart';
-import 'package:geek_findr/views/profile_update_page.dart';
-import 'package:geek_findr/views/widgets/profile_about_view.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -58,13 +57,14 @@ class _ProfilePageState extends State<ProfilePage>
                 child: SingleChildScrollView(
                   child: Stack(
                     children: [
-                      SizedBox(
+                      Container(
+                        color: primaryColor,
                         height: height * 0.2,
                         width: width,
-                        child: Image.asset(
-                          "assets/images/back.jpg",
-                          fit: BoxFit.cover,
-                        ),
+                        // child: Image.asset(
+                        //   "assets/images/back.jpg",
+                        //   fit: BoxFit.cover,
+                        // ),
                       ),
                       Container(
                         margin: EdgeInsets.only(top: height * .17),

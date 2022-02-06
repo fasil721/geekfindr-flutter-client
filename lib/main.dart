@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     Container(
       color: Colors.red,
     ),
-    ProfilePage()
+    const ProfilePage()
   ];
 
   @override
