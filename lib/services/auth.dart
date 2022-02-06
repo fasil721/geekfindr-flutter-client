@@ -40,12 +40,12 @@ Future<void> userSignIn({
       final error = ErrorModel.fromJson(errorJson.cast());
       Fluttertoast.showToast(msg: error.errors!.first.message!);
     }
-  } on HttpException catch (e) {
-    Fluttertoast.showToast(msg: e.message);
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
   } on SocketException {
     Fluttertoast.showToast(msg: "No internet connection");
-  } on PlatformException catch (e) {
-    Fluttertoast.showToast(msg: e.code);
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
   } catch (e) {
     Fluttertoast.showToast(msg: e.toString());
   }
@@ -82,6 +82,8 @@ Future<void> userSignUp({
     }
   } on HttpException {
     Fluttertoast.showToast(msg: "No Internet");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No internet connection");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
   } catch (e) {

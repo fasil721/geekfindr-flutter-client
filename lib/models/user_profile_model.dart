@@ -54,7 +54,7 @@ class UserProfileModel {
         socials: List<dynamic>.from((json["socials"] as List).map((x) => x)),
         createdAt: json["createdAt"] as String,
         updatedAt: json["updatedAt"] as String,
-        bio: json["bio"] as String,
+        bio: json["bio"] as String?,
         id: json["id"] as String,
       );
 

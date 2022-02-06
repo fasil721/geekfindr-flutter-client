@@ -11,7 +11,7 @@ class ProfileAboutView extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = MediaQuery.textScaleFactorOf(context);
+    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 20,
@@ -43,7 +43,7 @@ class ProfileAboutView extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: ReadMoreText(
-                userData.bio!,
+                userData.bio == null ? "" : userData.bio!,
                 style: GoogleFonts.poppins(
                   fontSize: textFactor * 15,
                   color: Colors.black.withOpacity(0.8),

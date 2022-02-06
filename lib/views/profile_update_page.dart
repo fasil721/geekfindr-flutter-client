@@ -27,7 +27,9 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   void initState() {
     super.initState();
     bioController = TextEditingController(
-      text: widget.userData.bio!.isEmpty ? "" : widget.userData.bio,
+      text: widget.userData.bio == null || widget.userData.bio!.isEmpty
+          ? ""
+          : widget.userData.bio,
     );
     if (widget.userData.organizations!.isNotEmpty) {
       for (final i in widget.userData.organizations!) {
@@ -46,7 +48,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
     final user = box.get("user") as UserModel;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = MediaQuery.textScaleFactorOf(context);
+    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
 
     final bioField = TextFormField(
       controller: bioController,

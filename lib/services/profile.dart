@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 
 final box = Hive.box('usermodel');
 Future<UserProfileModel?> getUserProfileData() async {
-  await Future.delayed(const Duration(seconds: 2));
+  // await Future.delayed(const Duration(seconds: 2));
   final user = box.get("user") as UserModel;
   const url = "$prodUrl/api/v1/profiles/my-profile/";
   try {

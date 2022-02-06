@@ -52,11 +52,6 @@ class _ProfilePageState extends State<ProfilePage>
           final userData = snapshot.data;
           if (userData != null) {
             return Scaffold(
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  print(textfactorfind(MediaQuery.textScaleFactorOf(context)));
-                },
-              ),
               backgroundColor: secondaryColor,
               body: SafeArea(
                 child: SingleChildScrollView(
@@ -228,7 +223,7 @@ class _ProfilePageState extends State<ProfilePage>
                                           ),
                                         ),
                                         Text(
-                                          "Postsssssi",
+                                          "Postsssss",
                                           style: GoogleFonts.poppins(
                                             fontSize: textFactor * 13,
                                             color:

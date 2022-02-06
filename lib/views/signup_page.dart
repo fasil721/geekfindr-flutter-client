@@ -113,7 +113,6 @@ class _SignUpPageState extends State<SignUpPage> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-
     if (MediaQuery.of(context).viewInsets.bottom > 200) {
       isVisible = false;
     } else {
@@ -138,6 +137,9 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "User Name",
+        hintStyle: TextStyle(
+          fontSize: textFactor * 14,
+        ),
       ),
     );
 
@@ -159,6 +161,9 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Email",
+        hintStyle: TextStyle(
+          fontSize: textFactor * 14,
+        ),
       ),
     );
 
@@ -180,6 +185,9 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Password",
+        hintStyle: TextStyle(
+          fontSize: textFactor * 14,
+        ),
       ),
     );
 
@@ -215,11 +223,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print(textfactorfind(MediaQuery.textScaleFactorOf(context)));
-        },
-      ),
       body: Stack(
         clipBehavior: Clip.antiAlias,
         children: [

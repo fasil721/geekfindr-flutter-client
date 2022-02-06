@@ -125,6 +125,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Email",
+        hintStyle: TextStyle(
+          fontSize: textFactor * 14,
+        ),
       ),
     );
 
@@ -146,6 +149,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Password",
+        hintStyle: TextStyle(
+          fontSize: textFactor * 14,
+        ),
       ),
     );
 
