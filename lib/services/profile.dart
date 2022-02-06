@@ -39,7 +39,7 @@ Future<UserProfileModel?> getUserProfileData() async {
   }
 }
 
-Future<void> updateProfileData(Map<String, dynamic> body) async {
+Future<void> updateUserProfileData(Map<String, dynamic> body) async {
   final user = box.get("user") as UserModel;
   const url = "$prodUrl/api/v1/profiles/my-profile";
 

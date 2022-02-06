@@ -95,7 +95,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                 "organizations": orgItems,
                 "skills": skillsItems,
               };
-              updateProfileData(body);
+              updateUserProfileData(body);
             },
             icon: const Icon(
               Icons.check,

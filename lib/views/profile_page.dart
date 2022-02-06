@@ -22,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage>
     final tabController = TabController(length: 2, vsync: this);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = MediaQuery.textScaleFactorOf(context);
+    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
 
     return FutureBuilder<UserProfileModel?>(
       future: getUserProfileData(),
@@ -52,6 +52,11 @@ class _ProfilePageState extends State<ProfilePage>
           final userData = snapshot.data;
           if (userData != null) {
             return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  print(textfactorfind(MediaQuery.textScaleFactorOf(context)));
+                },
+              ),
               backgroundColor: secondaryColor,
               body: SafeArea(
                 child: SingleChildScrollView(
@@ -112,26 +117,29 @@ class _ProfilePageState extends State<ProfilePage>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      userData.username!,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 25,
-                                        color: Colors.black.withOpacity(0.9),
-                                        fontWeight: FontWeight.w600,
+                                FittedBox(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        userData.username!,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: textFactor * 25,
+                                          color: Colors.black.withOpacity(0.9),
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "Mobile Developer",
-                                      style: GoogleFonts.roboto(
-                                        fontSize: textFactor * 15,
-                                        color: Colors.black.withOpacity(0.6),
-                                        fontWeight: FontWeight.normal,
+                                      Text(
+                                        "Mobile Developer",
+                                        style: GoogleFonts.roboto(
+                                          fontSize: textFactor * 15,
+                                          color: Colors.black.withOpacity(0.6),
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 ElevatedButton(
                                   style: ButtonStyle(
@@ -166,14 +174,18 @@ class _ProfilePageState extends State<ProfilePage>
                                         SizedBox(
                                           width: width * 0.01,
                                         ),
-                                        Text(
-                                          "Edit Profile",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: textFactor * 12,
-                                            color:
-                                                Colors.white.withOpacity(0.95),
-                                            fontWeight: FontWeight.bold,
+                                        Flexible(
+                                          child: FittedBox(
+                                            child: Text(
+                                              "Edit Profile",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: textFactor * 12,
+                                                color: Colors.white
+                                                    .withOpacity(0.95),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -202,25 +214,31 @@ class _ProfilePageState extends State<ProfilePage>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      "10",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 17,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                Expanded(
+                                  child: FittedBox(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "100",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: textFactor * 17,
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Postsssssi",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: textFactor * 13,
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      "  Posts  ",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 13,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                                 Container(
                                   color: Colors.grey,
@@ -230,25 +248,31 @@ class _ProfilePageState extends State<ProfilePage>
                                   height: 20,
                                   width: 1.5,
                                 ),
-                                Column(
-                                  children: [
-                                    Text(
-                                      "10.k",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 17,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                Expanded(
+                                  child: FittedBox(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "100",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: textFactor * 17,
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          " Followers",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: textFactor * 13,
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      " Followers",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 13,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                                 Container(
                                   color: Colors.grey,
@@ -258,25 +282,31 @@ class _ProfilePageState extends State<ProfilePage>
                                   height: 20,
                                   width: 1.5,
                                 ),
-                                Column(
-                                  children: [
-                                    Text(
-                                      "1.9k",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 17,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                Expanded(
+                                  child: FittedBox(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "10",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: textFactor * 17,
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Followings",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: textFactor * 12,
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      "Followings",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 13,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ],
                             ),

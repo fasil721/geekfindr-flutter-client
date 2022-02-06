@@ -48,6 +48,7 @@ dependencies:
   readmore: ^2.1.0
   loading_indicator: ^3.0.2
   shimmer: ^2.0.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

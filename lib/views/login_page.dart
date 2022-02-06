@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = MediaQuery.textScaleFactorOf(context);
+    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
 
     if (MediaQuery.of(context).viewInsets.bottom > 20) {
       isVisible = false;
@@ -152,8 +152,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     final loginButton = ElevatedButton(
       style: ButtonStyle(
         elevation: MaterialStateProperty.all<double>(5),
-        backgroundColor:
-            MaterialStateProperty.all<Color>(primaryColor),
+        backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40),
@@ -194,7 +193,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 // delay: const Duration(milliseconds: 1000),
                 child: Container(
                   decoration: BoxDecoration(
-                    color:primaryColor,
+                    color: primaryColor,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(.7),
@@ -229,7 +228,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ),
             ),
           ),
-         
           Padding(
             padding: EdgeInsets.only(
               left: width * 0.075,

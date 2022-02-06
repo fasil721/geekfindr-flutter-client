@@ -112,7 +112,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = MediaQuery.textScaleFactorOf(context);
+    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
 
     if (MediaQuery.of(context).viewInsets.bottom > 200) {
       isVisible = false;
@@ -215,6 +215,11 @@ class _SignUpPageState extends State<SignUpPage> {
     );
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print(textfactorfind(MediaQuery.textScaleFactorOf(context)));
+        },
+      ),
       body: Stack(
         clipBehavior: Clip.antiAlias,
         children: [
