@@ -25,7 +25,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   TextEditingController? roleController;
   TextEditingController? gitController;
   TextEditingController? linkController;
-
+  TextEditingController? stdyController;
   @override
   void initState() {
     super.initState();
@@ -57,6 +57,15 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
       gitController = TextEditingController(text: "");
       linkController = TextEditingController(text: "");
     }
+    if (widget.userData.education != null &&
+        widget.userData.education!.isNotEmpty) {
+      final key = widget.userData.education!.first.keys.first;
+      final value = widget.userData.education!.first.values.first;
+      studyType = key;
+      stdyController = TextEditingController(text: value);
+    } else {
+      stdyController = TextEditingController(text: "");
+    }
 
     if (widget.userData.organizations!.isNotEmpty) {
       for (final i in widget.userData.organizations!) {
@@ -86,6 +95,17 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
       {"github": gitController!.text},
       {"linkedin": linkController!.text}
     ];
+    if (studyType != null) {
+      userprofilemodel.education = [
+        {studyType!: stdyController!.text},
+      ];
+    } else {
+      userprofilemodel.education = [];
+    }
+    userprofilemodel.education = [
+      {studyType!: stdyController!.text},
+    ];
+
     updateUserProfileData(userprofilemodel.toJson());
   }
 
@@ -104,6 +124,9 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
     "11"
   ];
   final longList = <String>["Month", "Year"];
+  final studyList = <String>["School", "Bachelors", "Masters"];
+  String? studyType;
+
   String? num;
   String? long;
   @override
@@ -368,49 +391,74 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     },
                   ),
                 ),
-                // SizedBox(
-                //   height: height * 0.02,
-                // ),
-                // Align(
-                //   alignment: Alignment.centerLeft,
-                //   child: Padding(
-                //     padding: const EdgeInsets.symmetric(horizontal: 3),
-                //     child: Text(
-                //       "Experience",
-                //       style: GoogleFonts.roboto(
-                //         fontSize: textFactor * 16,
-                //         color: Colors.black.withOpacity(0.99),
-                //         fontWeight: FontWeight.w500,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: height * 0.005,
-                // ),
-                // Container(
-                //   alignment: Alignment.topCenter,
-                //   decoration: BoxDecoration(
-                //     borderRadius: BorderRadius.circular(10),
-                //     border: Border.all(width: 0.9, color: Colors.grey),
-                //   ),
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                //   child: TextField(
-                //     decoration: InputDecoration(
-                //       // hintText: "ex: frontend developer",
-                //       hintStyle: TextStyle(
-                //         fontSize: textFactor * 15,
-                //       ),
-                //       iconColor: primaryColor,
-                //       border: InputBorder.none,
-                //       focusedBorder: InputBorder.none,
-                //       enabledBorder: InputBorder.none,
-                //       errorBorder: InputBorder.none,
-                //       disabledBorder: InputBorder.none,
-                //     ),
-                //   ),
-                // ),
+                SizedBox(
+                  height: height * 0.01,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Text(
+                      "Education",
+                      style: GoogleFonts.roboto(
+                        fontSize: textFactor * 15,
+                        color: Colors.black.withOpacity(0.99),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.01,
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0.9, color: Colors.grey),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: TextField(
+                    controller: stdyController,
+                    decoration: InputDecoration(
+                      hintText: "Ex: st. Joseph collage",
+                      hintStyle: GoogleFonts.roboto(
+                        fontSize: textFactor * 15,
+                      ),
+                      icon: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          isDense: true,
+                          value: studyType,
+                          items: studyList
+                              .map(
+                                (e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(
+                                    e,
+                                    style: TextStyle(
+                                      fontSize: textFactor * 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    studyType = e;
+                                    setState(() {});
+                                  },
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: height * 0.02,
                 ),
@@ -419,7 +467,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 3),
                     child: Text(
-                      "Experence",
+                      "Experience",
                       style: GoogleFonts.roboto(
                         fontSize: textFactor * 16,
                         color: Colors.black.withOpacity(0.99),

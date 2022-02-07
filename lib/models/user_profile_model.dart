@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class UserProfileModel {
   UserProfileModel({
     this.email,
@@ -31,7 +29,7 @@ class UserProfileModel {
   List<dynamic>? followers;
   List<dynamic>? following;
   String? experience;
-  List<dynamic>? education;
+  List<Map<String, String>>? education;
   List<dynamic>? works;
   List<String>? skills;
   List<Map<String, String>>? socials;
@@ -64,8 +62,10 @@ class UserProfileModel {
           (json["socials"] as List)
               .map((x) => Map<String, String>.from(x as Map)),
         ),
-        education:
-            List<dynamic>.from((json["education"] as List).map((x) => x)),
+        education: List<Map<String, String>>.from(
+          (json["education"] as List)
+              .map((x) => Map<String, String>.from(x as Map)),
+        ),
         skills: List<String>.from((json["skills"] as List).map((x) => x)),
         works: List<dynamic>.from((json["works"] as List).map((x) => x)),
       );
@@ -74,6 +74,7 @@ class UserProfileModel {
         "bio": bio,
         "organizations": List<String>.from(organizations!.map((x) => x)),
         "experience": experience,
+        "education": List<Map<String, String>>.from(education!.cast()),
         "socials": List<Map<String, String>>.from(socials!.cast()),
         "role": role,
       };
