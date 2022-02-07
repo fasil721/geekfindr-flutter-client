@@ -73,7 +73,7 @@ class UserProfileModel {
   Map<String, dynamic> toJson() => {
         "bio": bio,
         "organizations": List<String>.from(organizations!.map((x) => x)),
-        //  "experience": experience,
+        "experience": experience,
         "socials": List<Map<String, String>>.from(socials!.cast()),
         "role": role,
       };

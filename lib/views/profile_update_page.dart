@@ -68,8 +68,44 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
         skillsItems.add(i);
       }
     }
+    if (widget.userData.experience!.isNotEmpty) {
+      final a = widget.userData.experience!.split(" ");
+      num = a.first;
+      long = a.last;
+    }
   }
 
+  void updateData() {
+    final userprofilemodel = UserProfileModel();
+    userprofilemodel.bio = bioController!.text;
+    userprofilemodel.organizations = orgItems;
+    userprofilemodel.role = roleController!.text;
+    userprofilemodel.experience =
+        num != null && long != null ? "${num!} ${long!}" : "";
+    userprofilemodel.socials = [
+      {"github": gitController!.text},
+      {"linkedin": linkController!.text}
+    ];
+    updateUserProfileData(userprofilemodel.toJson());
+  }
+
+  final numList = <String>[
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11"
+  ];
+  final longList = <String>["Month", "Year"];
+  String? num;
+  String? long;
   @override
   Widget build(BuildContext context) {
     final user = box.get("user") as UserModel;
@@ -120,15 +156,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
         actions: [
           IconButton(
             onPressed: () {
-              final userprofilemodel = UserProfileModel();
-              userprofilemodel.bio = bioController!.text;
-              userprofilemodel.organizations = orgItems;
-              userprofilemodel.role = roleController!.text;
-              userprofilemodel.socials = [
-                {"github": gitController!.text},
-                {"linkedin": linkController!.text}
-              ];
-              updateUserProfileData(userprofilemodel.toJson());
+              updateData();
             },
             icon: const Icon(
               Icons.check,
@@ -383,6 +411,90 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                 //     ),
                 //   ),
                 // ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Text(
+                      "Experence",
+                      style: GoogleFonts.roboto(
+                        fontSize: textFactor * 16,
+                        color: Colors.black.withOpacity(0.99),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.01,
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0.9, color: Colors.grey),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: num,
+                          // isExpanded: true,
+                          items: numList
+                              .map(
+                                (e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(
+                                    e,
+                                    style: TextStyle(
+                                      fontSize: textFactor * 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    num = e;
+                                    setState(() {});
+                                  },
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: long,
+                          items: longList
+                              .map(
+                                (e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(
+                                    e,
+                                    style: TextStyle(
+                                      fontSize: textFactor * 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    long = e;
+                                    setState(() {});
+                                  },
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(
                   height: height * 0.02,
                 ),
