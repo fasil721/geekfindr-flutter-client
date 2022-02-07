@@ -39,18 +39,25 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
           ? ""
           : widget.userData.role,
     );
-    gitController = TextEditingController(
-      text: widget.userData.socials!.first["github"] == null ||
-              widget.userData.socials!.first["github"]!.isEmpty
-          ? ""
-          : widget.userData.socials!.first["github"],
-    );
-    linkController = TextEditingController(
-      text: widget.userData.socials!.last["linkedin"] == null ||
-              widget.userData.socials!.last["linkedin"]!.isEmpty
-          ? ""
-          : widget.userData.socials!.last["linkedin"],
-    );
+    if (widget.userData.socials != null &&
+        widget.userData.socials!.isNotEmpty) {
+      gitController = TextEditingController(
+        text: widget.userData.socials!.first["github"] == null ||
+                widget.userData.socials!.first["github"]!.isEmpty
+            ? ""
+            : widget.userData.socials!.first["github"],
+      );
+      linkController = TextEditingController(
+        text: widget.userData.socials!.last["linkedin"] == null ||
+                widget.userData.socials!.last["linkedin"]!.isEmpty
+            ? ""
+            : widget.userData.socials!.last["linkedin"],
+      );
+    } else {
+      gitController = TextEditingController(text: "");
+      linkController = TextEditingController(text: "");
+    }
+
     if (widget.userData.organizations!.isNotEmpty) {
       for (final i in widget.userData.organizations!) {
         orgItems.add(i);

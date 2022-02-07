@@ -52,7 +52,6 @@ class _ProfilePageState extends State<ProfilePage>
           final userData = snapshot.data;
 
           if (userData != null) {
-            print(userData.role);
             return Scaffold(
               backgroundColor: secondaryColor,
               body: SafeArea(

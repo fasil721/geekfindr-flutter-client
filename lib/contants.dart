@@ -21,8 +21,4 @@ double textfactorfind(double val) {
   }
 }
 
-final a = [
-  {"school": ""},
-  {"ug": ""},
-  {"pg": ""}
-];
+final a = [];
