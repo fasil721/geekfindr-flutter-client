@@ -14,6 +14,9 @@ final box = Hive.box('usermodel');
 Future<void> postImage() async {
   final user = box.get("user") as UserModel;
   final imagePicker = ImagePicker();
+  const getUrl =
+      "$prodUrl/api/v1/uploads/signed-url?fileType=image&fileSubType=jpg";
+  const postUrl = "$prodUrl/api/v1/posts/";
 
   final image = await imagePicker.pickImage(source: ImageSource.camera);
   if (image != null) {
@@ -38,11 +41,9 @@ Future<void> postImage() async {
       ),
     );
 
-    const url =
-        "$prodUrl/api/v1/uploads/signed-url?fileType=image&fileSubType=jpg";
     try {
       final response1 = await http.get(
-        Uri.parse(url),
+        Uri.parse(getUrl),
         headers: {"Authorization": "Bearer ${user.token}"},
       );
       final jsonData = json.decode(response1.body) as Map;
@@ -51,12 +52,28 @@ Future<void> postImage() async {
         Uri.parse(data.url!),
         body: croppedFile!.readAsBytesSync(),
         headers: {"Content-Type": "image/jpg"},
-        // encoding: Encoding.getByName("utf-8"),
       );
-  print(croppedFile.readAsBytesSync());
+
+      final postImage = PostImage();
+      postImage.description = "hai guys";
+      postImage.isOrganization = false;
+      postImage.isProject = false;
+      postImage.mediaUrl = data.key;
+      postImage.mediaType = "image";
+      final response3 = await http.post(
+        Uri.parse(postUrl),
+        body: json.encode(postImage.toJson()),
+        headers: {
+          "Authorization": "Bearer ${user.token}",
+          "Content-Type": "application/json"
+        },
+      );
+      final jsonData2 = json.decode(response3.body) as Map;
+      final data2 = PostImage.fromJson(jsonData2.cast());
+      print(croppedFile.readAsBytesSync());
       print(response2.statusCode);
-      print(data.key);
-    
+      print(response3.statusCode);
+      print(data2.toJson());
     } on HttpException {
       Fluttertoast.showToast(msg: "No Internet");
     } on SocketException {
@@ -84,5 +101,62 @@ class Signedurl {
   Map<String, dynamic> toJson() => {
         "key": key,
         "url": url,
+      };
+}
+
+class PostImage {
+  String? mediaType;
+  bool? isProject;
+  String? mediaUrl;
+  String? description;
+  bool? isOrganization;
+  String? owner;
+  int? likeCount;
+  List<dynamic>? comments;
+  List<dynamic>? teamJoinRequests;
+  String? createdAt;
+  String? updatedAt;
+  String? id;
+
+  PostImage({
+    this.mediaType,
+    this.owner,
+    this.isProject,
+    this.mediaUrl,
+    this.description,
+    this.likeCount,
+    this.comments,
+    this.teamJoinRequests,
+    this.isOrganization,
+    this.createdAt,
+    this.updatedAt,
+    this.id,
+  });
+
+  factory PostImage.fromJson(Map<String, dynamic> json) => PostImage(
+        mediaType: json["mediaType"] as String,
+        owner: json["owner"] as String,
+        isProject: json["isProject"] as bool,
+        mediaUrl: json["mediaURL"] as String,
+        description: json["description"] as String,
+        likeCount: json["likeCount"] as int,
+        comments: List<dynamic>.from(
+          (json["comments"] as List).map((x) => x),
+        ),
+        teamJoinRequests: List<dynamic>.from(
+          (json["teamJoinRequests"] as List).map((x) => x),
+        ),
+        isOrganization: json["isOrganization"] as bool,
+        createdAt: json["createdAt"] as String,
+        updatedAt: json["updatedAt"] as String,
+        id: json["id"] as String,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "mediaType": mediaType,
+        "isProject": isProject,
+        "mediaURL": mediaUrl,
+        "description": description,
+        "isOrganization": isOrganization,
       };
 }
