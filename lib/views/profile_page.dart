@@ -59,7 +59,9 @@ class _ProfilePageState extends State<ProfilePage>
                 return Scaffold(
                   backgroundColor: Colors.white,
                   appBar: AppBar(
+                    leadingWidth: 70,
                     elevation: 0,
+                    toolbarHeight: 71,
                     backgroundColor: primaryColor,
                     // title: Center(
                     //   child: Text(
@@ -73,18 +75,19 @@ class _ProfilePageState extends State<ProfilePage>
                     // ),
                     actions: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () => Get.to(
+                          () => ProfileUpatePage(userData: userData),
+                        ),
                         icon: const Icon(
                           Icons.edit,
-                          color: secondaryColor,
                         ),
-                      )
+                      ),
+                      const SizedBox(width: 12)
                     ],
                     leading: IconButton(
                       onPressed: () {},
                       icon: const Icon(
                         Icons.more_vert,
-                        color: secondaryColor,
                       ),
                     ),
                   ),
@@ -212,11 +215,11 @@ class _ProfilePageState extends State<ProfilePage>
                                     //       ),
                                     //     ),
                                     //   ),
-                                    //   onPressed: () => Get.to(
-                                    //     () => ProfileUpatePage(
-                                    //       userData: userData,
-                                    //     ),
+                                    // onPressed: () => Get.to(
+                                    //   () => ProfileUpatePage(
+                                    //     userData: userData,
                                     //   ),
+                                    // ),
                                     //   child: SizedBox(
                                     //     height: height * 0.058,
                                     //     width: width * 0.21,
