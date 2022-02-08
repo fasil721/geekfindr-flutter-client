@@ -160,3 +160,33 @@ class PostImage {
         "isOrganization": isOrganization,
       };
 }
+
+Future<List<PostImage>> getMyImages() async {
+  final user = box.get("user") as UserModel;
+  const url = "$prodUrl/api/v1/posts/my-posts";
+
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {"Authorization": "Bearer ${user.token}"},
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List;
+      final data = jsonData
+          .map((e) => PostImage.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
+      // print(data.first.toJson());
+      return data;
+    }
+
+    return [];
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  }
+  return [];
+}

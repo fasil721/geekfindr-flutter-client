@@ -15,14 +15,14 @@ class _HomePageState extends State<HomePage> {
   final imagePicker = ImagePicker();
   String? imagePath;
 
-  Future imgFromcamara() async {
-    final image = await imagePicker.pickImage(source: ImageSource.camera);
-    if (image != null) {
-      imagePath = image.path;
-      setState(() {});
-      print(File(image.path));
-    }
-  }
+  // Future imgFromcamara() async {
+  //   final image = await imagePicker.pickImage(source: ImageSource.camera);
+  //   if (image != null) {
+  //     imagePath = image.path;
+  //     setState(() {});
+  //     print(File(image.path));
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +35,9 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-           // imgFromcamara();
-             postImage();
+            // imgFromcamara();
+            // postImage();
+            getMyImages();
           },
         ),
         body: AdvancedDrawer(
@@ -55,26 +56,46 @@ class _HomePageState extends State<HomePage> {
           ),
           drawer: const DrawerPage(),
           child: Scaffold(
-            backgroundColor: const Color(0xffE7EAF0),
-            appBar: AppBar(
-              elevation: 0,
-              toolbarHeight: 60,
-              // title: Text(user.username!),
-              leading: IconButton(
-                icon: Image.asset(
-                  "assets/icons/hamburger.png",
-                  height: height * .035,
+              backgroundColor: const Color(0xffE7EAF0),
+              appBar: AppBar(
+                elevation: 0,
+                toolbarHeight: 60,
+                // title: Text(user.username!),
+                leading: IconButton(
+                  icon: Image.asset(
+                    "assets/icons/hamburger.png",
+                    height: height * .035,
+                  ),
+                  onPressed: () {
+                    _advancedDrawerController.showDrawer();
+                  },
                 ),
-                onPressed: () {
-                  _advancedDrawerController.showDrawer();
-                },
+                backgroundColor: Colors.white,
               ),
-              backgroundColor: Colors.white,
-            ),
-            body: imagePath != null
-                ? Image.file(File(imagePath!))
-                : const SizedBox(),
-          ),
+              body: FutureBuilder<List<PostImage>>(
+                future: getMyImages(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    final data = snapshot.data;
+
+                    print(data!.first.toJson());
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Image.network(data.first.mediaUrl!),
+                          Image.network(data.last.mediaUrl!),
+                        ],
+                      ),
+                    );
+                  }
+                  return const SizedBox();
+                },
+              )),
         ),
       ),
     );
