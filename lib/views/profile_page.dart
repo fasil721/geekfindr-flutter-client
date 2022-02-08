@@ -95,18 +95,7 @@ class _ProfilePageState extends State<ProfilePage>
                     child: SingleChildScrollView(
                       child: Stack(
                         children: [
-                          // Container(
-                          //   margin: EdgeInsets.only(top: height * .17),
-                          //   height: height,
-                          //   width: width,
-                          //   decoration: const BoxDecoration(
-                          //     color: secondaryColor,
-                          //     borderRadius: BorderRadius.only(
-                          //       topRight: Radius.circular(30),
-                          //       topLeft: Radius.circular(30),
-                          //     ),
-                          //   ),
-                          // ),
+                         
                           ClipPath(
                             clipper: ConvexClipPath(),
                             child: Container(
@@ -127,10 +116,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   ),
                                 ],
                               ),
-                              // child: Image.asset(
-                              //   "assets/images/back.jpg",
-                              //   fit: BoxFit.cover,
-                              // ),
+                             
                             ),
                           ),
                           Column(
@@ -197,62 +183,7 @@ class _ProfilePageState extends State<ProfilePage>
                                         ],
                                       ),
                                     ),
-                                    // ElevatedButton(
-                                    //   style: ButtonStyle(
-                                    //     elevation:
-                                    //         MaterialStateProperty.all<double>(
-                                    //       5,
-                                    //     ),
-                                    //     backgroundColor:
-                                    //         MaterialStateProperty.all<Color>(
-                                    //       primaryColor,
-                                    //     ),
-                                    //     shape: MaterialStateProperty.all<
-                                    //         RoundedRectangleBorder>(
-                                    //       RoundedRectangleBorder(
-                                    //         borderRadius:
-                                    //             BorderRadius.circular(10),
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // onPressed: () => Get.to(
-                                    //   () => ProfileUpatePage(
-                                    //     userData: userData,
-                                    //   ),
-                                    // ),
-                                    //   child: SizedBox(
-                                    //     height: height * 0.058,
-                                    //     width: width * 0.21,
-                                    //     child: Row(
-                                    //       mainAxisAlignment:
-                                    //           MainAxisAlignment.center,
-                                    //       children: [
-                                    //         const Icon(
-                                    //           Icons.edit_outlined,
-                                    //           size: 18,
-                                    //           color: Colors.white,
-                                    //         ),
-                                    //         SizedBox(
-                                    //           width: width * 0.01,
-                                    //         ),
-                                    //         Flexible(
-                                    //           child: FittedBox(
-                                    //             child: Text(
-                                    //               "Edit Profile",
-                                    //               textAlign: TextAlign.center,
-                                    //               style: TextStyle(
-                                    //                 fontSize: textFactor * 12,
-                                    //                 color: Colors.white
-                                    //                     .withOpacity(0.95),
-                                    //                 fontWeight: FontWeight.bold,
-                                    //               ),
-                                    //             ),
-                                    //           ),
-                                    //         ),
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // ),
+                          
                                   ],
                                 ),
                               ),
