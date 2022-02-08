@@ -68,25 +68,27 @@ class _ProfilePageState extends State<ProfilePage>
                     child: SingleChildScrollView(
                       child: Stack(
                         children: [
-                          ClipPath(
-                            clipper: ConvexClipPath(),
-                            child: Container(
-                              height: height * 0.19,
-                              width: width,
-                              decoration: BoxDecoration(
-                                color: primaryColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(.7),
-                                    blurRadius: 15,
-                                    offset: const Offset(10, 10),
-                                  ),
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(.7),
-                                    blurRadius: 15,
-                                    offset: const Offset(10, 10),
-                                  ),
-                                ],
+                          CustomPaint(
+                            child: ClipPath(
+                              clipper: ConvexClipPath(),
+                              child: Container(
+                                height: height * 0.19,
+                                width: width,
+                                decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(.7),
+                                      blurRadius: 15,
+                                      offset: const Offset(10, 10),
+                                    ),
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(.7),
+                                      blurRadius: 15,
+                                      offset: const Offset(10, 10),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -123,35 +125,24 @@ class _ProfilePageState extends State<ProfilePage>
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 25),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                child: Column(
                                   children: [
-                                    FittedBox(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            userData.username!,
-                                            style: GoogleFonts.poppins(
-                                              fontSize: textFactor * 25,
-                                              color:
-                                                  Colors.black.withOpacity(0.9),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          Text(
-                                            userData.role == null
-                                                ? ""
-                                                : userData.role!,
-                                            style: GoogleFonts.roboto(
-                                              fontSize: textFactor * 15,
-                                              color:
-                                                  Colors.black.withOpacity(0.6),
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ],
+                                    Text(
+                                      userData.username!,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: textFactor * 25,
+                                        color: Colors.black.withOpacity(0.9),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Text(
+                                      userData.role == null
+                                          ? ""
+                                          : userData.role!,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: textFactor * 15,
+                                        color: Colors.black.withOpacity(0.6),
+                                        fontWeight: FontWeight.normal,
                                       ),
                                     ),
                                   ],
@@ -370,4 +361,23 @@ class ConvexClipPath extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+class BoxShadowPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path();
+    // here are my custom shapes
+    path.moveTo(size.width, size.height * 0.14);
+    path.lineTo(size.width, size.height * 1.0);
+    path.lineTo(size.width - (size.width * 0.99), size.height);
+    path.close();
+
+    canvas.drawShadow(path, Colors.black45, 3.0, false);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
 }

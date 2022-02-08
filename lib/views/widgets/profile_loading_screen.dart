@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/contants.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LoadingProfilePage extends StatelessWidget {
@@ -8,7 +7,6 @@ class LoadingProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: secondaryColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -16,7 +14,7 @@ class LoadingProfilePage extends StatelessWidget {
             itemCount: 10,
             itemBuilder: (BuildContext ctx, index) {
               return Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
+                baseColor: Colors.grey.withOpacity(0.3),
                 highlightColor: Colors.white,
                 period: const Duration(milliseconds: 1000),
                 child: box(),
