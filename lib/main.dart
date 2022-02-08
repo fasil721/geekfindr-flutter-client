@@ -16,7 +16,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
-  await Hive.openBox('usermodel');
+  await Hive.openBox<UserModel>('usermodel');
   final pref = await SharedPreferences.getInstance();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

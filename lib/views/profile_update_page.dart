@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/models/user_model.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class ProfileUpatePage extends StatefulWidget {
   const ProfileUpatePage({Key? key, required this.userData}) : super(key: key);
@@ -16,7 +15,7 @@ class ProfileUpatePage extends StatefulWidget {
 }
 
 class _ProfileUpatePageState extends State<ProfileUpatePage> {
-  final box = Hive.box('usermodel');
+final box = Boxes.getInstance();
   final orgItems = <String>[];
   final orgController = TextEditingController();
   final sklController = TextEditingController();
@@ -128,7 +127,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   String? long;
   @override
   Widget build(BuildContext context) {
-    final user = box.get("user") as UserModel;
+    final user = box.get("user") ;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
@@ -199,7 +198,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: Image.network(
-                    "${user.avatar!}&s=120",
+                    "${user!.avatar!}&s=120",
                     // loadingBuilder: (context, child, loadingProgress) =>
                     //     const SizedBox(
                     //   height: 120,

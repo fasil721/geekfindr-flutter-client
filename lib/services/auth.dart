@@ -4,16 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/main.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/models/user_model.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-final box = Hive.box('usermodel');
-
+final box = Boxes.getInstance();
 Future<void> userSignIn({
   required String email,
   required String password,
@@ -30,7 +29,6 @@ Future<void> userSignIn({
       final jsonData =
           Map<String, String>.from(json.decode(response.body) as Map);
       final user = UserModel.fromJson(jsonData);
-      final box = Hive.box('usermodel');
       await box.put("user", user);
       final pref = await SharedPreferences.getInstance();
       pref.setBool("user", true);
@@ -70,7 +68,6 @@ Future<void> userSignUp({
       final jsonData =
           Map<String, String>.from(json.decode(response.body) as Map);
       final user = UserModel.fromJson(jsonData);
-      final box = Hive.box('usermodel');
       await box.put("user", user);
       final pref = await SharedPreferences.getInstance();
       await pref.setBool("user", true);

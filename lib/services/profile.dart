@@ -4,23 +4,23 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
-final box = Hive.box('usermodel');
+final box = Boxes.getInstance();
 final controller = Get.find<AppController>();
 Future<UserProfileModel?> getUserProfileData() async {
   // await Future.delayed(const Duration(seconds: 2));
-  final user = box.get("user") as UserModel;
+  final user = box.get("user");
   const url = "$prodUrl/api/v1/profiles/my-profile/";
   try {
     final response = await http.get(
       Uri.parse(url),
-      headers: {"Authorization": "Bearer ${user.token}"},
+      headers: {"Authorization": "Bearer ${user!.token}"},
     );
     if (response.statusCode == 200) {
       final jsonData =
@@ -45,13 +45,13 @@ Future<UserProfileModel?> getUserProfileData() async {
 }
 
 Future<void> updateUserProfileData(Map<String, dynamic> body) async {
-  final user = box.get("user") as UserModel;
+  final user = box.get("user");
   const url = "$prodUrl/api/v1/profiles/my-profile";
   try {
     final response = await http.patch(
       Uri.parse(url),
       headers: {
-        "Authorization": "Bearer ${user.token}",
+        "Authorization": "Bearer ${user!.token}",
         "Content-Type": "application/json"
       },
       body: json.encode(body),
@@ -73,7 +73,7 @@ Future<void> updateUserProfileData(Map<String, dynamic> body) async {
     Fluttertoast.showToast(msg: "No Internet");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
-  } catch ( e) {
+  } catch (e) {
     Fluttertoast.showToast(msg: e.toString());
   }
 }

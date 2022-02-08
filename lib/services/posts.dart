@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/user_model.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-final box = Hive.box('usermodel');
+final box = Boxes.getInstance();
 Future<void> postImage() async {
-  final user = box.get("user") as UserModel;
+  final user = box.get("user");
   final imagePicker = ImagePicker();
   const getUrl =
       "$prodUrl/api/v1/uploads/signed-url?fileType=image&fileSubType=jpg";
@@ -44,22 +44,23 @@ Future<void> postImage() async {
     try {
       final response1 = await http.get(
         Uri.parse(getUrl),
-        headers: {"Authorization": "Bearer ${user.token}"},
+        headers: {"Authorization": "Bearer ${user!.token}"},
       );
       final jsonData = json.decode(response1.body) as Map;
       final data = Signedurl.fromJson(jsonData.cast());
+
       final response2 = await http.put(
         Uri.parse(data.url!),
         body: croppedFile!.readAsBytesSync(),
-        headers: {"Content-Type": "image/jpg"},
       );
 
       final postImage = PostImage();
-      postImage.description = "hai guys";
+      postImage.description = "hi";
       postImage.isOrganization = false;
       postImage.isProject = false;
       postImage.mediaUrl = data.key;
       postImage.mediaType = "image";
+
       final response3 = await http.post(
         Uri.parse(postUrl),
         body: json.encode(postImage.toJson()),

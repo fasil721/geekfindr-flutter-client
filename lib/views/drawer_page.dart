@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -53,7 +54,7 @@ class DrawerPage extends StatelessWidget {
             onTap: () async {
               final pref = await SharedPreferences.getInstance();
               pref.setBool("user", false);
-              final box = Hive.box('usermodel');
+              final box = Boxes.getInstance();
               await box.delete("user");
               Get.offAll(() => const LoginPage());
             },

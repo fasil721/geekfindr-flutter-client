@@ -63,15 +63,6 @@ class _ProfilePageState extends State<ProfilePage>
                       child: Stack(
                         children: [
                           Container(
-                            color: primaryColor,
-                            height: height * 0.2,
-                            width: width,
-                            // child: Image.asset(
-                            //   "assets/images/back.jpg",
-                            //   fit: BoxFit.cover,
-                            // ),
-                          ),
-                          Container(
                             margin: EdgeInsets.only(top: height * .17),
                             height: height,
                             width: width,
@@ -83,10 +74,22 @@ class _ProfilePageState extends State<ProfilePage>
                               ),
                             ),
                           ),
+                          ClipPath(
+                            clipper: ConvexClipPath(),
+                            child: Container(
+                              color: primaryColor,
+                              height: height * 0.3,
+                              width: width,
+                              // child: Image.asset(
+                              //   "assets/images/back.jpg",
+                              //   fit: BoxFit.cover,
+                              // ),
+                            ),
+                          ),
                           Column(
                             children: [
                               SizedBox(
-                                height: height * .07,
+                                height: height * .0925,
                               ),
                               Container(
                                 decoration: BoxDecoration(
@@ -100,8 +103,9 @@ class _ProfilePageState extends State<ProfilePage>
                                   borderRadius: BorderRadius.circular(100),
                                   child: Image.network(
                                     "${userData.avatar!}&s=${height * 0.15}",
-                                    errorBuilder: (context, error, stackTrace) =>
-                                        Container(
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
                                       color: Colors.blue,
                                       height: 130,
                                       width: 130,
@@ -113,9 +117,11 @@ class _ProfilePageState extends State<ProfilePage>
                                 height: height * 0.01,
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 25),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     FittedBox(
                                       child: Column(
@@ -126,7 +132,8 @@ class _ProfilePageState extends State<ProfilePage>
                                             userData.username!,
                                             style: GoogleFonts.poppins(
                                               fontSize: textFactor * 25,
-                                              color: Colors.black.withOpacity(0.9),
+                                              color:
+                                                  Colors.black.withOpacity(0.9),
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -136,7 +143,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                 : userData.role!,
                                             style: GoogleFonts.roboto(
                                               fontSize: textFactor * 15,
-                                              color: Colors.black.withOpacity(0.6),
+                                              color:
+                                                  Colors.black.withOpacity(0.6),
                                               fontWeight: FontWeight.normal,
                                             ),
                                           ),
@@ -146,7 +154,9 @@ class _ProfilePageState extends State<ProfilePage>
                                     ElevatedButton(
                                       style: ButtonStyle(
                                         elevation:
-                                            MaterialStateProperty.all<double>(5),
+                                            MaterialStateProperty.all<double>(
+                                          5,
+                                        ),
                                         backgroundColor:
                                             MaterialStateProperty.all<Color>(
                                           primaryColor,
@@ -154,12 +164,15 @@ class _ProfilePageState extends State<ProfilePage>
                                         shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
                                         ),
                                       ),
                                       onPressed: () => Get.to(
-                                        () => ProfileUpatePage(userData: userData),
+                                        () => ProfileUpatePage(
+                                          userData: userData,
+                                        ),
                                       ),
                                       child: SizedBox(
                                         height: height * 0.058,
@@ -224,8 +237,8 @@ class _ProfilePageState extends State<ProfilePage>
                                               "100",
                                               style: GoogleFonts.poppins(
                                                 fontSize: textFactor * 17,
-                                                color:
-                                                    Colors.black.withOpacity(0.8),
+                                                color: Colors.black
+                                                    .withOpacity(0.8),
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
@@ -233,8 +246,8 @@ class _ProfilePageState extends State<ProfilePage>
                                               "Postsssss",
                                               style: GoogleFonts.poppins(
                                                 fontSize: textFactor * 13,
-                                                color:
-                                                    Colors.black.withOpacity(0.8),
+                                                color: Colors.black
+                                                    .withOpacity(0.8),
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
@@ -258,8 +271,8 @@ class _ProfilePageState extends State<ProfilePage>
                                               "100",
                                               style: GoogleFonts.poppins(
                                                 fontSize: textFactor * 17,
-                                                color:
-                                                    Colors.black.withOpacity(0.8),
+                                                color: Colors.black
+                                                    .withOpacity(0.8),
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
@@ -267,8 +280,8 @@ class _ProfilePageState extends State<ProfilePage>
                                               " Followers",
                                               style: GoogleFonts.poppins(
                                                 fontSize: textFactor * 13,
-                                                color:
-                                                    Colors.black.withOpacity(0.8),
+                                                color: Colors.black
+                                                    .withOpacity(0.8),
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
@@ -292,8 +305,8 @@ class _ProfilePageState extends State<ProfilePage>
                                               "10",
                                               style: GoogleFonts.poppins(
                                                 fontSize: textFactor * 17,
-                                                color:
-                                                    Colors.black.withOpacity(0.8),
+                                                color: Colors.black
+                                                    .withOpacity(0.8),
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
@@ -301,8 +314,8 @@ class _ProfilePageState extends State<ProfilePage>
                                               "Followings",
                                               style: GoogleFonts.poppins(
                                                 fontSize: textFactor * 12,
-                                                color:
-                                                    Colors.black.withOpacity(0.8),
+                                                color: Colors.black
+                                                    .withOpacity(0.8),
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
@@ -314,7 +327,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 15),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: TabBar(
@@ -371,7 +385,7 @@ class _ProfilePageState extends State<ProfilePage>
             return Container();
           },
         );
-      }
+      },
     );
   }
 
@@ -445,4 +459,26 @@ class CirclePainter extends BoxPainter {
     );
     canvas.drawCircle(offset + circleOffset, radius, paint);
   }
+}
+
+class ConvexClipPath extends CustomClipper<Path> {
+  double factor = 60;
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.lineTo(0, size.height - size.height * (factor / 100));
+    path.quadraticBezierTo(
+      size.width / 2,
+      size.height - size.height * ((factor - 35) / 100),
+      size.width,
+      size.height - size.height * (factor / 100),
+    );
+    path.lineTo(size.width, 0);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
