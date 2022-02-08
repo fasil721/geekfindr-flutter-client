@@ -49,9 +49,7 @@ class ProfileAboutView extends StatelessWidget {
                 trimMode: TrimMode.Line,
               ),
             ),
-            SizedBox(height: height * 0.002),
-            const Divider(thickness: 1.5),
-            SizedBox(height: height * 0.002),
+            SizedBox(height: height * 0.01),
             expationPanelWidget(
               img: "assets/icons/office.png",
               width: width,

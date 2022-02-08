@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'widgets/profile_loading_screen.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -32,29 +34,10 @@ class _ProfilePageState extends State<ProfilePage>
           future: getUserProfileData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Scaffold(
-                backgroundColor: secondaryColor,
-                body: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ListView.builder(
-                      itemCount: 10,
-                      itemBuilder: (BuildContext ctx, index) {
-                        return Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.white,
-                          period: const Duration(milliseconds: 1000),
-                          child: box(),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              );
+              return const LoadingProfilePage();
             }
             if (snapshot.connectionState == ConnectionState.done) {
               final userData = snapshot.data;
-
               if (userData != null) {
                 return Scaffold(
                   backgroundColor: Colors.white,
@@ -63,16 +46,6 @@ class _ProfilePageState extends State<ProfilePage>
                     elevation: 0,
                     toolbarHeight: 71,
                     backgroundColor: primaryColor,
-                    // title: Center(
-                    //   child: Text(
-                    //     "Profile",
-                    //     style: GoogleFonts.roboto(
-                    //       fontSize: textFactor * 23,
-                    //       color: Colors.white.withOpacity(0.9),
-                    //       fontWeight: FontWeight.w400,
-                    //     ),
-                    //   ),
-                    // ),
                     actions: [
                       IconButton(
                         onPressed: () => Get.to(
@@ -95,7 +68,6 @@ class _ProfilePageState extends State<ProfilePage>
                     child: SingleChildScrollView(
                       child: Stack(
                         children: [
-                         
                           ClipPath(
                             clipper: ConvexClipPath(),
                             child: Container(
@@ -116,7 +88,6 @@ class _ProfilePageState extends State<ProfilePage>
                                   ),
                                 ],
                               ),
-                             
                             ),
                           ),
                           Column(
@@ -183,21 +154,16 @@ class _ProfilePageState extends State<ProfilePage>
                                         ],
                                       ),
                                     ),
-                          
                                   ],
                                 ),
-                              ),
-                              SizedBox(
-                                height: height * 0.005,
                               ),
                               Container(
                                 margin: const EdgeInsets.symmetric(
                                   horizontal: 20,
-                                  vertical: 10,
+                                  vertical: 15,
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
-                                  // color: Colors.white.withOpacity(0.9),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -353,50 +319,6 @@ class _ProfilePageState extends State<ProfilePage>
           },
         );
       },
-    );
-  }
-
-  Widget box() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-      child: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration:
-                const BoxDecoration(shape: BoxShape.circle, color: Colors.grey),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: 150,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.grey,
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
     );
   }
 }
