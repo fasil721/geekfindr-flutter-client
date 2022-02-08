@@ -14,12 +14,8 @@ class ProfileAboutView extends StatelessWidget {
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return Container(
       margin: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 10,
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 10,
+        horizontal: 25,
+        vertical: 20,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),

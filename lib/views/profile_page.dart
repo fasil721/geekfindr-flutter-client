@@ -57,29 +57,73 @@ class _ProfilePageState extends State<ProfilePage>
 
               if (userData != null) {
                 return Scaffold(
-                  backgroundColor: secondaryColor,
+                  backgroundColor: Colors.white,
+                  appBar: AppBar(
+                    elevation: 0,
+                    backgroundColor: primaryColor,
+                    // title: Center(
+                    //   child: Text(
+                    //     "Profile",
+                    //     style: GoogleFonts.roboto(
+                    //       fontSize: textFactor * 23,
+                    //       color: Colors.white.withOpacity(0.9),
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    // ),
+                    actions: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.edit,
+                          color: secondaryColor,
+                        ),
+                      )
+                    ],
+                    leading: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.more_vert,
+                        color: secondaryColor,
+                      ),
+                    ),
+                  ),
                   body: SafeArea(
                     child: SingleChildScrollView(
                       child: Stack(
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(top: height * .17),
-                            height: height,
-                            width: width,
-                            decoration: const BoxDecoration(
-                              color: secondaryColor,
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(30),
-                                topLeft: Radius.circular(30),
-                              ),
-                            ),
-                          ),
+                          // Container(
+                          //   margin: EdgeInsets.only(top: height * .17),
+                          //   height: height,
+                          //   width: width,
+                          //   decoration: const BoxDecoration(
+                          //     color: secondaryColor,
+                          //     borderRadius: BorderRadius.only(
+                          //       topRight: Radius.circular(30),
+                          //       topLeft: Radius.circular(30),
+                          //     ),
+                          //   ),
+                          // ),
                           ClipPath(
                             clipper: ConvexClipPath(),
                             child: Container(
-                              color: primaryColor,
-                              height: height * 0.3,
+                              height: height * 0.19,
                               width: width,
+                              decoration: BoxDecoration(
+                                color: primaryColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(.7),
+                                    blurRadius: 15,
+                                    offset: const Offset(10, 10),
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(.7),
+                                    blurRadius: 15,
+                                    offset: const Offset(10, 10),
+                                  ),
+                                ],
+                              ),
                               // child: Image.asset(
                               //   "assets/images/back.jpg",
                               //   fit: BoxFit.cover,
@@ -89,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage>
                           Column(
                             children: [
                               SizedBox(
-                                height: height * .0925,
+                                height: height * .03,
                               ),
                               Container(
                                 decoration: BoxDecoration(
@@ -120,8 +164,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 25),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     FittedBox(
                                       child: Column(
@@ -151,108 +194,102 @@ class _ProfilePageState extends State<ProfilePage>
                                         ],
                                       ),
                                     ),
-                                    ElevatedButton(
-                                      style: ButtonStyle(
-                                        elevation:
-                                            MaterialStateProperty.all<double>(
-                                          5,
-                                        ),
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                          primaryColor,
-                                        ),
-                                        shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () => Get.to(
-                                        () => ProfileUpatePage(
-                                          userData: userData,
-                                        ),
-                                      ),
-                                      child: SizedBox(
-                                        height: height * 0.058,
-                                        width: width * 0.21,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Icon(
-                                              Icons.edit_outlined,
-                                              size: 18,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(
-                                              width: width * 0.01,
-                                            ),
-                                            Flexible(
-                                              child: FittedBox(
-                                                child: Text(
-                                                  "Edit Profile",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontSize: textFactor * 12,
-                                                    color: Colors.white
-                                                        .withOpacity(0.95),
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                    // ElevatedButton(
+                                    //   style: ButtonStyle(
+                                    //     elevation:
+                                    //         MaterialStateProperty.all<double>(
+                                    //       5,
+                                    //     ),
+                                    //     backgroundColor:
+                                    //         MaterialStateProperty.all<Color>(
+                                    //       primaryColor,
+                                    //     ),
+                                    //     shape: MaterialStateProperty.all<
+                                    //         RoundedRectangleBorder>(
+                                    //       RoundedRectangleBorder(
+                                    //         borderRadius:
+                                    //             BorderRadius.circular(10),
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    //   onPressed: () => Get.to(
+                                    //     () => ProfileUpatePage(
+                                    //       userData: userData,
+                                    //     ),
+                                    //   ),
+                                    //   child: SizedBox(
+                                    //     height: height * 0.058,
+                                    //     width: width * 0.21,
+                                    //     child: Row(
+                                    //       mainAxisAlignment:
+                                    //           MainAxisAlignment.center,
+                                    //       children: [
+                                    //         const Icon(
+                                    //           Icons.edit_outlined,
+                                    //           size: 18,
+                                    //           color: Colors.white,
+                                    //         ),
+                                    //         SizedBox(
+                                    //           width: width * 0.01,
+                                    //         ),
+                                    //         Flexible(
+                                    //           child: FittedBox(
+                                    //             child: Text(
+                                    //               "Edit Profile",
+                                    //               textAlign: TextAlign.center,
+                                    //               style: TextStyle(
+                                    //                 fontSize: textFactor * 12,
+                                    //                 color: Colors.white
+                                    //                     .withOpacity(0.95),
+                                    //                 fontWeight: FontWeight.bold,
+                                    //               ),
+                                    //             ),
+                                    //           ),
+                                    //         ),
+                                    //       ],
+                                    //     ),
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                               ),
                               SizedBox(
-                                height: height * 0.015,
+                                height: height * 0.005,
                               ),
                               Container(
                                 margin: const EdgeInsets.symmetric(
                                   horizontal: 20,
                                   vertical: 10,
                                 ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 10,
-                                ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
-                                  color: Colors.white.withOpacity(0.9),
+                                  // color: Colors.white.withOpacity(0.9),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Expanded(
-                                      child: FittedBox(
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              "100",
-                                              style: GoogleFonts.poppins(
-                                                fontSize: textFactor * 17,
-                                                color: Colors.black
-                                                    .withOpacity(0.8),
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "100",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: textFactor * 17,
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            Text(
-                                              "Postsssss",
-                                              style: GoogleFonts.poppins(
-                                                fontSize: textFactor * 13,
-                                                color: Colors.black
-                                                    .withOpacity(0.8),
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                          ),
+                                          Text(
+                                            "Posts",
+                                            style: GoogleFonts.roboto(
+                                              fontSize: textFactor * 13,
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     Container(
@@ -264,29 +301,27 @@ class _ProfilePageState extends State<ProfilePage>
                                       width: 1.5,
                                     ),
                                     Expanded(
-                                      child: FittedBox(
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              "100",
-                                              style: GoogleFonts.poppins(
-                                                fontSize: textFactor * 17,
-                                                color: Colors.black
-                                                    .withOpacity(0.8),
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "100",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: textFactor * 17,
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            Text(
-                                              " Followers",
-                                              style: GoogleFonts.poppins(
-                                                fontSize: textFactor * 13,
-                                                color: Colors.black
-                                                    .withOpacity(0.8),
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                          ),
+                                          Text(
+                                            " Followers",
+                                            style: GoogleFonts.roboto(
+                                              fontSize: textFactor * 13,
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     Container(
@@ -298,29 +333,27 @@ class _ProfilePageState extends State<ProfilePage>
                                       width: 1.5,
                                     ),
                                     Expanded(
-                                      child: FittedBox(
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              "10",
-                                              style: GoogleFonts.poppins(
-                                                fontSize: textFactor * 17,
-                                                color: Colors.black
-                                                    .withOpacity(0.8),
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "10",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: textFactor * 17,
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            Text(
-                                              "Followings",
-                                              style: GoogleFonts.poppins(
-                                                fontSize: textFactor * 12,
-                                                color: Colors.black
-                                                    .withOpacity(0.8),
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                          ),
+                                          Text(
+                                            "Followings",
+                                            style: GoogleFonts.roboto(
+                                              fontSize: textFactor * 12,
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -462,14 +495,14 @@ class CirclePainter extends BoxPainter {
 }
 
 class ConvexClipPath extends CustomClipper<Path> {
-  double factor = 60;
+  double factor = 25;
   @override
   Path getClip(Size size) {
     final path = Path();
     path.lineTo(0, size.height - size.height * (factor / 100));
     path.quadraticBezierTo(
       size.width / 2,
-      size.height - size.height * ((factor - 35) / 100),
+      size.height - size.height * ((factor + 40) / 100),
       size.width,
       size.height - size.height * (factor / 100),
     );
