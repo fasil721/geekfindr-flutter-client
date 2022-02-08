@@ -53,10 +53,10 @@ Future<void> postImage() async {
         headers: {"Content-Type": "image/jpg"},
         // encoding: Encoding.getByName("utf-8"),
       );
-
-      print(croppedFile.readAsBytesSync());
+  print(croppedFile.readAsBytesSync());
       print(response2.statusCode);
       print(data.key);
+    
     } on HttpException {
       Fluttertoast.showToast(msg: "No Internet");
     } on SocketException {
