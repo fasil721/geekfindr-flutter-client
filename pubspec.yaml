@@ -49,6 +49,8 @@ dependencies:
   loading_indicator: ^3.0.2
   shimmer: ^2.0.0
   auto_size_text: ^3.0.0
+  image_picker: ^0.8.4+6
+  image_cropper: ^1.4.1
 
 dev_dependencies:
   flutter_test:

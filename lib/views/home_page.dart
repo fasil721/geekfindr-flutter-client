@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/drawer_page.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,6 +12,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _advancedDrawerController = AdvancedDrawerController();
+  final imagePicker = ImagePicker();
+  String? imagePath;
+
+  Future imgFromcamara() async {
+    final image = await imagePicker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      imagePath = image.path;
+      setState(() {});
+      print(File(image.path));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // final width = MediaQuery.of(context).size.width;
@@ -18,6 +33,12 @@ class _HomePageState extends State<HomePage> {
     // final user = box.get("user") as UserModel;
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+           // imgFromcamara();
+             postImage();
+          },
+        ),
         body: AdvancedDrawer(
           backdropColor: Colors.black.withOpacity(.9),
           controller: _advancedDrawerController,
@@ -50,6 +71,9 @@ class _HomePageState extends State<HomePage> {
               ),
               backgroundColor: Colors.white,
             ),
+            body: imagePath != null
+                ? Image.file(File(imagePath!))
+                : const SizedBox(),
           ),
         ),
       ),

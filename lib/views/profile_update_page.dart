@@ -102,9 +102,6 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
     } else {
       userprofilemodel.education = [];
     }
-    userprofilemodel.education = [
-      {studyType!: stdyController!.text},
-    ];
 
     updateUserProfileData(userprofilemodel.toJson());
   }
