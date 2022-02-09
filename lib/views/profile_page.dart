@@ -5,11 +5,10 @@ import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/profile_update_page.dart';
 import 'package:geek_findr/views/widgets/profile_about_view.dart';
+import 'package:geek_findr/views/widgets/profile_loading_screen.dart';
+import 'package:geek_findr/views/widgets/user_posts.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
-
-import 'widgets/profile_loading_screen.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -20,9 +19,21 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with TickerProviderStateMixin {
+  TabController? tabController;
+  int currentIndex = 0;
+  final controller = Get.find<AppController>();
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(
+      initialIndex: currentIndex,
+      length: 2,
+      vsync: this,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final tabController = TabController(length: 2, vsync: this);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
@@ -79,13 +90,15 @@ class _ProfilePageState extends State<ProfilePage>
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(.7),
-                                      blurRadius: 15,
-                                      offset: const Offset(10, 10),
+                                      blurRadius: 115,
+                                      spreadRadius: 105,
+                                      offset: const Offset(-300, -300),
                                     ),
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(.7),
-                                      blurRadius: 15,
-                                      offset: const Offset(10, 10),
+                                      blurRadius: 105,
+                                      spreadRadius: 105,
+                                      offset: const Offset(400, 500),
                                     ),
                                   ],
                                 ),
@@ -273,6 +286,11 @@ class _ProfilePageState extends State<ProfilePage>
                                       radius: 4,
                                     ),
                                     isScrollable: true,
+                                    onTap: (index) {
+                                      currentIndex = index;
+                                      tabController!.animateTo(index);
+                                      controller.update(["tabs"]);
+                                    },
                                     tabs: const [
                                       Tab(
                                         text: "About",
@@ -284,19 +302,40 @@ class _ProfilePageState extends State<ProfilePage>
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: height,
-                                width: width,
-                                child: TabBarView(
-                                  controller: tabController,
-                                  children: [
-                                    ProfileAboutView(userData: userData),
-                                    Container(
-                                      color: secondaryColor,
-                                    )
-                                  ],
-                                ),
-                              )
+                              GetBuilder<AppController>(
+                                id: "tabs",
+                                builder: (controller) {
+                                  return IndexedStack(
+                                    index: currentIndex,
+                                    children: <Widget>[
+                                      Visibility(
+                                        maintainState: true,
+                                        visible: currentIndex == 0,
+                                        child: ProfileAboutView(
+                                          userData: userData,
+                                        ),
+                                      ),
+                                      Visibility(
+                                        maintainState: true,
+                                        visible: currentIndex == 1,
+                                        child: const UserPosts(),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+
+                              // SizedBox(
+                              //   height: height * 0.33,
+                              //   width: width,
+                              //   child: TabBarView(
+                              //     controller: tabController,
+                              //     children: [
+                              //       ProfileAboutView(userData: userData),
+                              //       const UserPosts(),
+                              //     ],
+                              //   ),
+                              // )
                             ],
                           ),
                         ],
@@ -363,21 +402,21 @@ class ConvexClipPath extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-class BoxShadowPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final path = Path();
-    // here are my custom shapes
-    path.moveTo(size.width, size.height * 0.14);
-    path.lineTo(size.width, size.height * 1.0);
-    path.lineTo(size.width - (size.width * 0.99), size.height);
-    path.close();
+// class BoxShadowPainter extends CustomPainter {
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     final path = Path();
+//     // here are my custom shapes
+//     path.moveTo(size.width, size.height * 0.14);
+//     path.lineTo(size.width, size.height * 1.0);
+//     path.lineTo(size.width - (size.width * 0.99), size.height);
+//     path.close();
 
-    canvas.drawShadow(path, Colors.black45, 3.0, false);
-  }
+//     canvas.drawShadow(path, Colors.black45, 3.0, false);
+//   }
 
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-}
+//   @override
+//   bool shouldRepaint(CustomPainter oldDelegate) {
+//     return true;
+//   }
+// }

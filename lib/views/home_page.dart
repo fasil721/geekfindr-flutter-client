@@ -14,7 +14,6 @@ class _HomePageState extends State<HomePage> {
   final imagePicker = ImagePicker();
   String? imagePath;
 
-
   @override
   Widget build(BuildContext context) {
     // final width = MediaQuery.of(context).size.width;
@@ -61,35 +60,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               backgroundColor: Colors.white,
-            ),
-            body: FutureBuilder<List<PostImage>>(
-              future: getMyImages(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.done) {
-                  final data = snapshot.data;
-                  if (data != null) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: data.length,
-                      itemBuilder: (context, index) => Column(
-                        children: [
-                          Image.network(
-                            data[index].mediaUrl!,
-                            fit: BoxFit.fitWidth,
-                          ),
-                          Text(data[index].description!),
-                        ],
-                      ),
-                    );
-                  }
-                }
-                return const SizedBox();
-              },
             ),
           ),
         ),
