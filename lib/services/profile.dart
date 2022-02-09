@@ -6,7 +6,6 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
-import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +13,7 @@ import 'package:http/http.dart' as http;
 final box = Boxes.getInstance();
 final controller = Get.find<AppController>();
 Future<UserProfileModel?> getUserProfileData() async {
-  // await Future.delayed(const Duration(seconds: 2));
+  await Future.delayed(const Duration(seconds: 1));
   final user = box.get("user");
   const url = "$prodUrl/api/v1/profiles/my-profile/";
   try {

@@ -37,7 +37,6 @@ class _ProfilePageState extends State<ProfilePage>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-
     return GetBuilder<AppController>(
       id: "prof",
       builder: (controller) {
@@ -208,8 +207,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       child: Column(
                                         children: [
                                           Text(
-                                            userData.followersCount
-                                                .toString(),
+                                            userData.followersCount.toString(),
                                             style: GoogleFonts.poppins(
                                               fontSize: textFactor * 17,
                                               color:
@@ -241,8 +239,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       child: Column(
                                         children: [
                                           Text(
-                                            userData.followingCount
-                                                .toString(),
+                                            userData.followingCount.toString(),
                                             style: GoogleFonts.poppins(
                                               fontSize: textFactor * 17,
                                               color:
@@ -292,6 +289,9 @@ class _ProfilePageState extends State<ProfilePage>
                                       currentIndex = index;
                                       tabController!.animateTo(index);
                                       controller.update(["tabs"]);
+                                      if (index == 1) {
+                                        controller.update(["mypost"]);
+                                      }
                                     },
                                     tabs: const [
                                       Tab(
@@ -320,7 +320,9 @@ class _ProfilePageState extends State<ProfilePage>
                                       Visibility(
                                         maintainState: true,
                                         visible: currentIndex == 1,
-                                        child: const UserPosts(),
+                                        child: currentIndex == 1
+                                            ? const UserPosts()
+                                            : const SizedBox(),
                                       ),
                                     ],
                                   );

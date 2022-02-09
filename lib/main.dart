@@ -46,22 +46,21 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
 
-  final screens = [
-    HomePage(),
-    Container(
-      color: Colors.green,
-    ),
-    Container(
-      color: Colors.red,
-    ),
-    const ProfilePage()
-  ];
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
       id: "home",
       builder: (controller) {
+        final screens = [
+          HomePage(),
+          Container(
+            color: Colors.green,
+          ),
+          Container(
+            color: Colors.red,
+          ),
+          if (currentIndex == 3) const ProfilePage() else Container(),
+        ];
         return Scaffold(
           body: IndexedStack(
             index: currentIndex,
@@ -78,6 +77,9 @@ class _MyAppState extends State<MyApp> {
             onTap: (index) {
               currentIndex = index;
               controller.update(["home"]);
+              if (index == 3) {
+                controller.update(["prof"]);
+              }
             },
             items: [
               SalomonBottomBarItem(
