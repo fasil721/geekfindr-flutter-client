@@ -17,36 +17,34 @@ class PostUploadDialoge extends StatelessWidget {
         vertical: 50,
       ),
       height: 200,
-      color: secondaryColor,
+      color: Colors.white,
       child: Column(
         children: [
           Container(
             alignment: Alignment.topCenter,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(width: 0.9, color: Colors.grey),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: GetBuilder<AppController>(
               builder: (controller) {
-                return Column(
-                  children: [
-                    TextField(
-                      controller: descTextController,
-                      decoration: InputDecoration(
-                        hintText: "Type here",
-                        hintStyle: TextStyle(
-                          fontSize: textFactor * 15,
-                        ),
-                        iconColor: primaryColor,
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                      ),
+                return Material(
+                  child: TextField(
+                    controller: descTextController,
+                    textInputAction: TextInputAction.newline,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    minLines: 1,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,hintText: "",
+                      filled: true,
+                      fillColor: Colors.grey,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
                     ),
-                  ],
+                  ),
                 );
               },
             ),

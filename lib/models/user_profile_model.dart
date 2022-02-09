@@ -33,6 +33,7 @@ class UserProfileModel {
   String? updatedAt;
   String? bio;
   String? id;
+  
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       UserProfileModel(

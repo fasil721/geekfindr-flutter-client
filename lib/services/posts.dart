@@ -111,7 +111,7 @@ class PostImage {
   String? mediaUrl;
   String? description;
   bool? isOrganization;
-  String? owner;
+  Owner? owner;
   int? likeCount;
   List<dynamic>? comments;
   List<dynamic>? teamJoinRequests;
@@ -136,7 +136,7 @@ class PostImage {
 
   factory PostImage.fromJson(Map<String, dynamic> json) => PostImage(
         mediaType: json["mediaType"] as String,
-        owner: json["owner"] as String,
+        owner: Owner.fromJson(Map<String, String>.from(json["owner"] as Map)),
         isProject: json["isProject"] as bool,
         mediaUrl: json["mediaURL"] as String,
         description: json["description"] as String,
@@ -163,13 +163,13 @@ class PostImage {
 }
 
 Future<List<PostImage>> getMyImages() async {
-  final user = box.get("user") as UserModel;
+  final user = box.get("user");
   const url = "$prodUrl/api/v1/posts/my-posts";
 
   try {
     final response = await http.get(
       Uri.parse(url),
-      headers: {"Authorization": "Bearer ${user.token}"},
+      headers: {"Authorization": "Bearer ${user!.token}"},
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -177,10 +177,9 @@ Future<List<PostImage>> getMyImages() async {
       final data = jsonData
           .map((e) => PostImage.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
-      // print(data.first.toJson());
+      // print(data.first.owner!.toJson());
       return data;
     }
-
     return [];
   } on HttpException {
     Fluttertoast.showToast(msg: "No Internet");
@@ -190,4 +189,57 @@ Future<List<PostImage>> getMyImages() async {
     Fluttertoast.showToast(msg: "Invalid Format");
   }
   return [];
+}
+
+Future<List<PostImage>> getMyFeeds() async {
+  final user = box.get("user");
+  const url = "$prodUrl/api/v1/posts/my-feed?limit=5";
+
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {"Authorization": "Bearer ${user!.token}"},
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List;
+      final data = jsonData
+          .map((e) => PostImage.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
+      // print(data.first.owner!.toJson());
+      return data;
+    }
+    return [];
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  }
+  return [];
+}
+
+class Owner {
+  Owner({
+    this.username,
+    this.avatar,
+    this.id,
+  });
+
+  String? username;
+  String? avatar;
+  String? id;
+
+  factory Owner.fromJson(Map<String, String> json) => Owner(
+        username: json["username"],
+        avatar: json["avatar"],
+        id: json["id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "username": username,
+        "avatar": avatar,
+        "id": id,
+      };
 }
