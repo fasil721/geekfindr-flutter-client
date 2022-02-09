@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/widgets/post_edit.dart';
 import 'package:get/get.dart';
@@ -11,7 +10,7 @@ class UserPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    return FutureBuilder<List<PostImage>>(
+    return FutureBuilder<List<ImageModel>>(
       future: getMyImages(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

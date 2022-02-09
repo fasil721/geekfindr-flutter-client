@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               ),
               backgroundColor: Colors.white,
             ),
-            body: FutureBuilder<List<PostImage>>(
+            body: FutureBuilder<List<ImageModel>>(
               future: getMyFeeds(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

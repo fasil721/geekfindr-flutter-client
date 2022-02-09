@@ -11,7 +11,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 final box = Boxes.getInstance();
-Future<void> postImage() async {
+Future<void> uploadImage() async {
   final user = box.get("user");
   final imagePicker = ImagePicker();
   const getUrl =
@@ -54,23 +54,23 @@ Future<void> postImage() async {
         body: croppedFile!.readAsBytesSync(),
       );
 
-      final postImage = PostImage();
-      postImage.description = "hi";
-      postImage.isOrganization = false;
-      postImage.isProject = false;
-      postImage.mediaUrl = data.key;
-      postImage.mediaType = "image";
+      final imageModel = ImageModel();
+      imageModel.description = "hi";
+      imageModel.isOrganization = false;
+      imageModel.isProject = false;
+      imageModel.mediaUrl = data.key;
+      imageModel.mediaType = "image";
 
       final response3 = await http.post(
         Uri.parse(postUrl),
-        body: json.encode(postImage.toJson()),
+        body: json.encode(imageModel.toJson()),
         headers: {
           "Authorization": "Bearer ${user.token}",
           "Content-Type": "application/json"
         },
       );
       final jsonData2 = json.decode(response3.body) as Map;
-      final data2 = PostImage.fromJson(jsonData2.cast());
+      final data2 = ImageModel.fromJson(jsonData2.cast());
       print(croppedFile.readAsBytesSync());
       print(response2.statusCode);
       print(response3.statusCode);
@@ -105,7 +105,7 @@ class Signedurl {
       };
 }
 
-class PostImage {
+class ImageModel {
   String? mediaType;
   bool? isProject;
   String? mediaUrl;
@@ -119,7 +119,7 @@ class PostImage {
   String? updatedAt;
   String? id;
 
-  PostImage({
+  ImageModel({
     this.mediaType,
     this.owner,
     this.isProject,
@@ -134,7 +134,7 @@ class PostImage {
     this.id,
   });
 
-  factory PostImage.fromJson(Map<String, dynamic> json) => PostImage(
+  factory ImageModel.fromJson(Map<String, dynamic> json) => ImageModel(
         mediaType: json["mediaType"] as String,
         owner: Owner.fromJson(Map<String, String>.from(json["owner"] as Map)),
         isProject: json["isProject"] as bool,
@@ -162,7 +162,7 @@ class PostImage {
       };
 }
 
-Future<List<PostImage>> getMyImages() async {
+Future<List<ImageModel>> getMyImages() async {
   final user = box.get("user");
   const url = "$prodUrl/api/v1/posts/my-posts";
 
@@ -175,7 +175,7 @@ Future<List<PostImage>> getMyImages() async {
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List;
       final data = jsonData
-          .map((e) => PostImage.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map((e) => ImageModel.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
       // print(data.first.owner!.toJson());
       return data;
@@ -191,7 +191,7 @@ Future<List<PostImage>> getMyImages() async {
   return [];
 }
 
-Future<List<PostImage>> getMyFeeds() async {
+Future<List<ImageModel>> getMyFeeds() async {
   final user = box.get("user");
   const url = "$prodUrl/api/v1/posts/my-feed?limit=5";
 
@@ -204,7 +204,7 @@ Future<List<PostImage>> getMyFeeds() async {
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List;
       final data = jsonData
-          .map((e) => PostImage.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map((e) => ImageModel.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
       // print(data.first.owner!.toJson());
       return data;
@@ -219,7 +219,6 @@ Future<List<PostImage>> getMyFeeds() async {
   }
   return [];
 }
-
 class Owner {
   Owner({
     this.username,
