@@ -77,9 +77,9 @@ class _MyAppState extends State<MyApp> {
             onTap: (index) {
               currentIndex = index;
               controller.update(["home"]);
-              if (index == 3) {
-                controller.update(["prof"]);
-              }
+              // if (index == 3) {
+              //   controller.update(["prof"]);
+              // }
             },
             items: [
               SalomonBottomBarItem(

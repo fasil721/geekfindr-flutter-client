@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 final box = Boxes.getInstance();
+final controller = Get.find<AppController>();
 Future<void> uploadImage({
   required String description,
   required File image,
@@ -224,4 +226,29 @@ class Owner {
         "avatar": avatar,
         "id": id,
       };
+}
+
+Future deleteImages({required String imageId}) async {
+  final user = box.get("user");
+  final url = "$prodUrl/api/v1/posts/$imageId";
+
+  try {
+    final response = await http.delete(
+      Uri.parse(url),
+      headers: {"Authorization": "Bearer ${user!.token}"},
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(msg: "Image deleted successfully");
+      controller.update(["mypost"]);
+    } else {
+      Fluttertoast.showToast(msg: "Image not deleted successfully");
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  }
 }

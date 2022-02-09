@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 final box = Boxes.getInstance();
 final controller = Get.find<AppController>();
 Future<UserProfileModel?> getUserProfileData() async {
-  await Future.delayed(const Duration(seconds: 1));
+  Future.delayed(const Duration(milliseconds: 500));
   final user = box.get("user");
   const url = "$prodUrl/api/v1/profiles/my-profile/";
   try {

@@ -59,7 +59,9 @@ class UserPosts extends StatelessWidget {
                                     ),
                                   ],
                                   onSelected: (value) {
-                                    if (value == "1") {}
+                                    if (value == "1") {
+                                      deleteImages(imageId: data[index].id!);
+                                    }
                                     if (value == "2") {
                                       Get.dialog(
                                         const PostEditDialoge(),

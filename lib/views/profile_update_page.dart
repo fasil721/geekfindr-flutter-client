@@ -15,7 +15,7 @@ class ProfileUpatePage extends StatefulWidget {
 }
 
 class _ProfileUpatePageState extends State<ProfileUpatePage> {
-final box = Boxes.getInstance();
+  final box = Boxes.getInstance();
   final orgItems = <String>[];
   final orgController = TextEditingController();
   final sklController = TextEditingController();
@@ -127,7 +127,7 @@ final box = Boxes.getInstance();
   String? long;
   @override
   Widget build(BuildContext context) {
-    final user = box.get("user") ;
+    final user = box.get("user");
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
@@ -326,6 +326,7 @@ final box = Boxes.getInstance();
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: GetBuilder<AppController>(
+                    id: "org",
                     builder: (controller) {
                       return Column(
                         children: [

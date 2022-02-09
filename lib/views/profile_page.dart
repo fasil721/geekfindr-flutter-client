@@ -289,9 +289,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       currentIndex = index;
                                       tabController!.animateTo(index);
                                       controller.update(["tabs"]);
-                                      if (index == 1) {
-                                        controller.update(["mypost"]);
-                                      }
+                                      
                                     },
                                     tabs: const [
                                       Tab(
