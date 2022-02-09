@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/drawer_page.dart';
-import 'package:geek_findr/views/widgets/post_upload.dart';
+import 'package:geek_findr/views/widgets/image_upload.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 

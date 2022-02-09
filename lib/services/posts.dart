@@ -1,87 +1,69 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/models/user_model.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 
 final box = Boxes.getInstance();
-Future<void> uploadImage() async {
+Future<void> uploadImage({
+  required String description,
+  required File image,
+}) async {
   final user = box.get("user");
-  final imagePicker = ImagePicker();
   const getUrl =
       "$prodUrl/api/v1/uploads/signed-url?fileType=image&fileSubType=jpg";
   const postUrl = "$prodUrl/api/v1/posts/";
 
-  final image = await imagePicker.pickImage(source: ImageSource.camera);
-  if (image != null) {
-    final croppedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ],
-      androidUiSettings: const AndroidUiSettings(
-        toolbarTitle: 'Cropper',
-        toolbarColor: Colors.deepOrange,
-        toolbarWidgetColor: Colors.white,
-        initAspectRatio: CropAspectRatioPreset.original,
-        lockAspectRatio: false,
-      ),
-      iosUiSettings: const IOSUiSettings(
-        minimumAspectRatio: 1.0,
-      ),
+  try {
+    final response1 = await http.get(
+      Uri.parse(getUrl),
+      headers: {"Authorization": "Bearer ${user!.token}"},
+    );
+    final jsonData = json.decode(response1.body) as Map;
+    final data = Signedurl.fromJson(jsonData.cast());
+
+    final response2 = await http.put(
+      Uri.parse(data.url!),
+      body: image.readAsBytesSync(),
     );
 
-    try {
-      final response1 = await http.get(
-        Uri.parse(getUrl),
-        headers: {"Authorization": "Bearer ${user!.token}"},
-      );
-      final jsonData = json.decode(response1.body) as Map;
-      final data = Signedurl.fromJson(jsonData.cast());
+    final imageModel = ImageModel();
+    imageModel.description = description;
+    imageModel.isOrganization = false;
+    imageModel.isProject = false;
+    imageModel.mediaUrl = data.key;
+    imageModel.mediaType = "image";
 
-      final response2 = await http.put(
-        Uri.parse(data.url!),
-        body: croppedFile!.readAsBytesSync(),
-      );
+    final response3 = await http.post(
+      Uri.parse(postUrl),
+      body: json.encode(imageModel.toJson()),
+      headers: {
+        "Authorization": "Bearer ${user.token}",
+        "Content-Type": "application/json"
+      },
+    );
+    if (response3.statusCode == 200) {
+      // final jsonData2 = json.decode(response3.body) as Map;
+      // final data2 = ImageModel.fromJson(jsonData2.cast());  print(data2.toJson());
+      Fluttertoast.showToast(msg: "Image uploaded");
 
-      final imageModel = ImageModel();
-      imageModel.description = "hi";
-      imageModel.isOrganization = false;
-      imageModel.isProject = false;
-      imageModel.mediaUrl = data.key;
-      imageModel.mediaType = "image";
-
-      final response3 = await http.post(
-        Uri.parse(postUrl),
-        body: json.encode(imageModel.toJson()),
-        headers: {
-          "Authorization": "Bearer ${user.token}",
-          "Content-Type": "application/json"
-        },
-      );
-      final jsonData2 = json.decode(response3.body) as Map;
-      final data2 = ImageModel.fromJson(jsonData2.cast());
-      print(croppedFile.readAsBytesSync());
-      print(response2.statusCode);
-      print(response3.statusCode);
-      print(data2.toJson());
-    } on HttpException {
-      Fluttertoast.showToast(msg: "No Internet");
-    } on SocketException {
-      Fluttertoast.showToast(msg: "No Internet");
-    } on PlatformException {
-      Fluttertoast.showToast(msg: "Invalid Format");
+      Get.back();
+    } else {
+      Fluttertoast.showToast(msg: "Image not uploaded");
     }
+
+    print(image.readAsBytesSync());
+    print(response2.statusCode);
+    print(response3.statusCode);
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
   }
 }
 
@@ -219,6 +201,7 @@ Future<List<ImageModel>> getMyFeeds() async {
   }
   return [];
 }
+
 class Owner {
   Owner({
     this.username,
