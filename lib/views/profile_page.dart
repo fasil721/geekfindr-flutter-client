@@ -176,7 +176,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       child: Column(
                                         children: [
                                           Text(
-                                            "100",
+                                            "10",
                                             style: GoogleFonts.poppins(
                                               fontSize: textFactor * 17,
                                               color:
@@ -208,7 +208,8 @@ class _ProfilePageState extends State<ProfilePage>
                                       child: Column(
                                         children: [
                                           Text(
-                                            "100",
+                                            userData.followersCount
+                                                .toString(),
                                             style: GoogleFonts.poppins(
                                               fontSize: textFactor * 17,
                                               color:
@@ -240,7 +241,8 @@ class _ProfilePageState extends State<ProfilePage>
                                       child: Column(
                                         children: [
                                           Text(
-                                            "10",
+                                            userData.followingCount
+                                                .toString(),
                                             style: GoogleFonts.poppins(
                                               fontSize: textFactor * 17,
                                               color:

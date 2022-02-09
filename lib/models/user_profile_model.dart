@@ -5,8 +5,6 @@ class UserProfileModel {
     this.avatar,
     this.bio,
     this.organizations,
-    this.followers,
-    this.following,
     this.followersCount,
     this.followingCount,
     this.experience,
@@ -26,8 +24,6 @@ class UserProfileModel {
   String? username;
   String? avatar;
   List<String>? organizations;
-  List<dynamic>? followers;
-  List<dynamic>? following;
   String? experience;
   List<Map<String, String>>? education;
   List<dynamic>? works;
@@ -47,10 +43,6 @@ class UserProfileModel {
         organizations: List<String>.from(
           (json["organizations"] as List).map((x) => x),
         ),
-        followers:
-            List<dynamic>.from((json["followers"] as List).map((x) => x)),
-        following:
-            List<dynamic>.from((json["following"] as List).map((x) => x)),
         followersCount: json["followersCount"] as int,
         followingCount: json["followingCount"] as int,
         experience: json["experience"] as String,

@@ -326,7 +326,6 @@ final box = Boxes.getInstance();
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: GetBuilder<AppController>(
-                    id: "org",
                     builder: (controller) {
                       return Column(
                         children: [

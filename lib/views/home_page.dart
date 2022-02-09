@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/drawer_page.dart';
+import 'package:geek_findr/views/widgets/post_upload.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,17 +18,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    // final textFactor = MediaQuery.textScaleFactorOf(context);
-    // final user = box.get("user") as UserModel;
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // imgFromcamara();
-            postImage();
-            //  getMyImages();
+            Get.dialog(
+               PostUploadDialoge(),
+            );
           },
         ),
         body: AdvancedDrawer(
