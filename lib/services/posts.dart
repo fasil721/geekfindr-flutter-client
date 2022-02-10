@@ -18,7 +18,6 @@ Future<void> uploadImage({
   const getUrl =
       "$prodUrl/api/v1/uploads/signed-url?fileType=image&fileSubType=jpg";
   const postUrl = "$prodUrl/api/v1/posts/";
-
   try {
     final response1 = await http.get(
       Uri.parse(getUrl),
@@ -31,35 +30,34 @@ Future<void> uploadImage({
       Uri.parse(data.url!),
       body: image.readAsBytesSync(),
     );
+    if (response2.statusCode == 200) {
+      final imageModel = ImageModel();
+      imageModel.description = description;
+      imageModel.isOrganization = false;
+      imageModel.isProject = false;
+      imageModel.mediaUrl = data.key;
+      imageModel.mediaType = "image";
 
-    final imageModel = ImageModel();
-    imageModel.description = description;
-    imageModel.isOrganization = false;
-    imageModel.isProject = false;
-    imageModel.mediaUrl = data.key;
-    imageModel.mediaType = "image";
+      final response3 = await http.post(
+        Uri.parse(postUrl),
+        body: json.encode(imageModel.toJson()),
+        headers: {
+          "Authorization": "Bearer ${user.token}",
+          "Content-Type": "application/json"
+        },
+      );
+      if (response3.statusCode == 200) {
+        // final jsonData2 = json.decode(response3.body) as Map;
+        // final data2 = ImageModel.fromJson(jsonData2.cast());  print(data2.toJson());
+        Fluttertoast.showToast(msg: "Image uploaded");
 
-    final response3 = await http.post(
-      Uri.parse(postUrl),
-      body: json.encode(imageModel.toJson()),
-      headers: {
-        "Authorization": "Bearer ${user.token}",
-        "Content-Type": "application/json"
-      },
-    );
-    if (response3.statusCode == 200) {
-      // final jsonData2 = json.decode(response3.body) as Map;
-      // final data2 = ImageModel.fromJson(jsonData2.cast());  print(data2.toJson());
-      Fluttertoast.showToast(msg: "Image uploaded");
-
-      Get.back();
+        Get.back();
+      } else {
+        Fluttertoast.showToast(msg: "Image not uploaded");
+      }
     } else {
       Fluttertoast.showToast(msg: "Image not uploaded");
     }
-
-    print(image.readAsBytesSync());
-    print(response2.statusCode);
-    print(response3.statusCode);
   } on HttpException {
     Fluttertoast.showToast(msg: "No Internet");
   } on SocketException {
@@ -155,7 +153,6 @@ Future<List<ImageModel>> getMyImages() async {
       Uri.parse(url),
       headers: {"Authorization": "Bearer ${user!.token}"},
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List;
       final data = jsonData
@@ -184,13 +181,11 @@ Future<List<ImageModel>> getMyFeeds() async {
       Uri.parse(url),
       headers: {"Authorization": "Bearer ${user!.token}"},
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List;
       final data = jsonData
           .map((e) => ImageModel.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
-      // print(data.first.owner!.toJson());
       return data;
     }
     return [];

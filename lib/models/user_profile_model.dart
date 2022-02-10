@@ -33,7 +33,6 @@ class UserProfileModel {
   String? updatedAt;
   String? bio;
   String? id;
-  
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       UserProfileModel(
@@ -49,8 +48,6 @@ class UserProfileModel {
         experience: json["experience"] as String,
         role: json["role"] as String,
         bio: json["bio"] as String,
-        createdAt: json["createdAt"] as String,
-        updatedAt: json["updatedAt"] as String,
         socials: List<Map<String, String>>.from(
           (json["socials"] as List)
               .map((x) => Map<String, String>.from(x as Map)),
