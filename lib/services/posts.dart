@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
@@ -88,18 +89,18 @@ class Signedurl {
 }
 
 class ImageModel {
+  int? teamJoinRequestCount;
   String? mediaType;
+  Owner? owner;
   bool? isProject;
   String? mediaUrl;
   String? description;
-  bool? isOrganization;
-  Owner? owner;
   int? likeCount;
-  List<dynamic>? comments;
-  List<dynamic>? teamJoinRequests;
+  int? commentCount;
+  String? id;
+  bool? isOrganization;
   String? createdAt;
   String? updatedAt;
-  String? id;
 
   ImageModel({
     this.mediaType,
@@ -108,27 +109,23 @@ class ImageModel {
     this.mediaUrl,
     this.description,
     this.likeCount,
-    this.comments,
-    this.teamJoinRequests,
     this.isOrganization,
-    this.createdAt,
-    this.updatedAt,
     this.id,
+    this.commentCount,
+    this.createdAt,
+    this.teamJoinRequestCount,
+    this.updatedAt,
   });
 
   factory ImageModel.fromJson(Map<String, dynamic> json) => ImageModel(
         mediaType: json["mediaType"] as String,
         owner: Owner.fromJson(Map<String, String>.from(json["owner"] as Map)),
         isProject: json["isProject"] as bool,
+        teamJoinRequestCount: json["teamJoinRequestCount"] as int,
         mediaUrl: json["mediaURL"] as String,
         description: json["description"] as String,
+        commentCount: json["commentCount"] as int,
         likeCount: json["likeCount"] as int,
-        comments: List<dynamic>.from(
-          (json["comments"] as List).map((x) => x),
-        ),
-        teamJoinRequests: List<dynamic>.from(
-          (json["teamJoinRequests"] as List).map((x) => x),
-        ),
         isOrganization: json["isOrganization"] as bool,
         createdAt: json["createdAt"] as String,
         updatedAt: json["updatedAt"] as String,

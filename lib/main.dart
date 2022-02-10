@@ -54,7 +54,9 @@ class _MyAppState extends State<MyApp> {
       builder: (controller) {
         final screens = [
           HomePage(),
-          SearchWidget(),
+          Container(
+            color: Colors.yellow,
+          ),
           Container(
             color: Colors.red,
           ),

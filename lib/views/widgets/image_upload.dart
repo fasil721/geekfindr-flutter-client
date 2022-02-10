@@ -18,6 +18,7 @@ class PostUploadDialoge extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -35,7 +36,7 @@ class PostUploadDialoge extends StatelessWidget {
                     children: [
                       TextField(
                         controller: descTextController,
-                        textInputAction: TextInputAction.newline,
+                        textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
                         minLines: 1,

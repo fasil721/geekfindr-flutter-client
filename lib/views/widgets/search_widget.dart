@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/profile.dart';
 import 'package:get/get.dart';
 
@@ -39,6 +41,12 @@ class _SearchWidgetState extends State<SearchWidget>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    serchController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return Padding(
@@ -60,17 +68,54 @@ class _SearchWidgetState extends State<SearchWidget>
               ),
               child: Padding(
                 padding: const EdgeInsets.only(left: 20),
-                child: TextField(
-                  controller: serchController,
-                  cursorColor: Colors.black,
-                  style: const TextStyle(color: Colors.black),
-                  decoration: const InputDecoration(border: InputBorder.none),
-                  onChanged: (value) async {
-                    searchText = value;
-                    final userList = await searchUsers(text: value);
-                    print(userList.map((e) => e.username));
+                child: TypeAheadField<UserProfileModel?>(
+                  hideSuggestionsOnKeyboardHide: false,
+                  textFieldConfiguration: TextFieldConfiguration(
+                    controller: serchController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      border: InputBorder.none,
+                      hintText: 'Search Username',
+                    ),
+                  ),
+                  suggestionsCallback: (value) {
+                    if (value.isNotEmpty) {
+                      return searchUsers(text: value);
+                    }
+                    return [];
+                  },
+                  itemBuilder: (context, UserProfileModel? suggestion) {
+                    final user = suggestion!;
+
+                    return ListTile(
+                      title: Text(user.username!),
+                    );
+                  },
+                  noItemsFoundBuilder: (context) => const SizedBox(),
+                  onSuggestionSelected: (UserProfileModel? suggestion) {
+                    final user = suggestion!;
+
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text('Selected user: ${user.username}'),
+                        ),
+                      );
                   },
                 ),
+
+                // TextField(
+                //   controller: serchController,
+                //   cursorColor: Colors.black,
+                //   style: const TextStyle(color: Colors.black),
+                //   decoration: const InputDecoration(border: InputBorder.none),
+                //   onChanged: (value) async {
+                //     searchText = value;
+                //     final userList = await searchUsers(text: value);
+                //     print(userList.map((e) => e.username));
+                //   },
+                // ),
               ),
             ),
             Container(
