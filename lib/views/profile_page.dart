@@ -54,7 +54,6 @@ class _ProfilePageState extends State<ProfilePage>
                   appBar: AppBar(
                     leadingWidth: 70,
                     elevation: 0,
-                    toolbarHeight: 71,
                     backgroundColor: primaryColor,
                     actions: [
                       IconButton(

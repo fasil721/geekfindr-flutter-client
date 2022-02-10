@@ -268,6 +268,7 @@ Future editImage({required String imageId, required Map body}) async {
     if (response.statusCode == 200) {
       Fluttertoast.showToast(msg: "Image edited successfully");
       controller.update(["mypost"]);
+      Get.back();
     } else {
       Fluttertoast.showToast(msg: "Image not edited successfully");
     }
