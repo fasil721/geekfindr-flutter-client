@@ -7,6 +7,7 @@ import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:geek_findr/views/profile_page.dart';
+import 'package:geek_findr/views/widgets/search_widget.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -53,9 +54,7 @@ class _MyAppState extends State<MyApp> {
       builder: (controller) {
         final screens = [
           HomePage(),
-          Container(
-            color: Colors.green,
-          ),
+          SearchWidget(),
           Container(
             color: Colors.red,
           ),
@@ -88,13 +87,13 @@ class _MyAppState extends State<MyApp> {
                 selectedColor: const Color(0xffB954FE),
               ),
               SalomonBottomBarItem(
-                icon: const Icon(Icons.message_outlined),
-                title: const Text('Messages'),
+                icon: const Icon(Icons.search_outlined),
+                title: const Text('Search'),
                 selectedColor: const Color(0xffB954FE),
               ),
               SalomonBottomBarItem(
-                icon: const Icon(Icons.search_outlined),
-                title: const Text('Search'),
+                icon: const Icon(Icons.message_outlined),
+                title: const Text('Chats'),
                 selectedColor: const Color(0xffB954FE),
               ),
               SalomonBottomBarItem(
