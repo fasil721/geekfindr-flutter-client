@@ -59,67 +59,90 @@ class _SearchWidgetState extends State<SearchWidget>
           children: [
             Container(
               height: 45,
-              width: animation!.value * 1.634,
+              width: animation!.value * 1.629,
+              //animation!.value * 1.85
               decoration: const BoxDecoration(
                 color: secondaryColor,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(50),
                   bottomLeft: Radius.circular(50),
                 ),
+                //: BorderRadius.circular(50),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 7),
-                child: TypeAheadField<UserProfileModel?>(
-                  hideSuggestionsOnKeyboardHide: false,
-                  textFieldConfiguration: TextFieldConfiguration(
-                    controller: serchController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      border: InputBorder.none,
-                      hintText: 'Search Username',
-                    ),
+              child: TypeAheadField<UserProfileModel?>(
+                hideSuggestionsOnKeyboardHide: false,
+                debounceDuration: const Duration(milliseconds: 1000),
+                textFieldConfiguration: TextFieldConfiguration(
+                  controller: serchController,
+                  decoration: const InputDecoration(
+                    // suffixIcon: Visibility(
+                    //   visible: isForward,
+                    //   child: IconButton(
+                    //     onPressed: () async {
+                    //       if (isForward) {
+                    //         ScaffoldMessenger.of(context)
+                    //             .removeCurrentSnackBar();
+                    //         serchController.clear();
+                    //         SystemChannels.textInput
+                    //             .invokeMethod("TextInput.hide");
+                    //         animationController!.reverse();
+                    //         isForward = false;
+                    //       } else {
+                    //         animationController!.forward();
+                    //         isForward = true;
+                    //       }
+                    //     },
+                    //     icon: const Icon(
+                    //       Icons.close,
+                    //       size: 20,
+                    //       color: primaryColor,
+                    //     ),
+                    //   ),
+                    // ),
+                    prefixIcon: Icon(Icons.search),
+                    border: InputBorder.none,
+                    hintText: 'Search Username',
                   ),
-                  suggestionsCallback: (value) {
-                    if (value.isNotEmpty) {
-                      return searchUsers(text: value);
-                    }
-                    return [];
-                  },
-                  itemBuilder: (context, UserProfileModel? suggestion) {
-                    final user = suggestion!;
-                    return ListTile(
-                      textColor: secondaryColor,
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                          user.avatar!,
-                          width: 30,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
-                            color: Colors.blue,
-                            height: 130,
-                            width: 130,
-                          ),
+                ),
+                suggestionsCallback: (value) {
+                  if (value.isNotEmpty) {
+                    return searchUsers(text: value);
+                  }
+                  return [];
+                },
+                itemBuilder: (context, UserProfileModel? suggestion) {
+                  final user = suggestion!;
+                  return ListTile(
+                    textColor: secondaryColor,
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                        user.avatar!,
+                        width: 30,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          color: Colors.blue,
+                          height: 130,
+                          width: 130,
                         ),
                       ),
-                      title: Text(
-                        user.username!,
-                        style: GoogleFonts.roboto(color: Colors.black),
+                    ),
+                    title: Text(
+                      user.username!,
+                      style: GoogleFonts.roboto(color: Colors.black),
+                    ),
+                  );
+                },
+                noItemsFoundBuilder: (context) => const SizedBox(),
+                onSuggestionSelected: (UserProfileModel? suggestion) {
+                  final user = suggestion!;
+                  ScaffoldMessenger.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text('Selected user: ${user.username}'),
                       ),
                     );
-                  },
-                  noItemsFoundBuilder: (context) => const SizedBox(),
-                  onSuggestionSelected: (UserProfileModel? suggestion) {
-                    final user = suggestion!;
-                    ScaffoldMessenger.of(context)
-                      ..removeCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Text('Selected user: ${user.username}'),
-                        ),
-                      );
-                  },
-                ),
+                },
               ),
             ),
             Container(
