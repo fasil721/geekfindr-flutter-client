@@ -228,7 +228,7 @@ class Owner {
       };
 }
 
-Future deleteImages({required String imageId}) async {
+Future deleteImage({required String imageId}) async {
   final user = box.get("user");
   final url = "$prodUrl/api/v1/posts/$imageId";
 
@@ -237,12 +237,39 @@ Future deleteImages({required String imageId}) async {
       Uri.parse(url),
       headers: {"Authorization": "Bearer ${user!.token}"},
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       Fluttertoast.showToast(msg: "Image deleted successfully");
       controller.update(["mypost"]);
     } else {
       Fluttertoast.showToast(msg: "Image not deleted successfully");
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  }
+}
+
+Future editImage({required String imageId, required Map body}) async {
+  final user = box.get("user");
+  final url = "$prodUrl/api/v1/posts/$imageId";
+
+  try {
+    final response = await http.patch(
+      Uri.parse(url),
+      body: json.encode(body),
+      headers: {
+        "Authorization": "Bearer ${user!.token}",
+        "Content-Type": "application/json"
+      },
+    );
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(msg: "Image edited successfully");
+      controller.update(["mypost"]);
+    } else {
+      Fluttertoast.showToast(msg: "Image not edited successfully");
     }
   } on HttpException {
     Fluttertoast.showToast(msg: "No Internet connection");
