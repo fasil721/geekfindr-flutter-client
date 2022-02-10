@@ -67,8 +67,8 @@ class _SearchWidgetState extends State<SearchWidget>
                   decoration: const InputDecoration(border: InputBorder.none),
                   onChanged: (value) async {
                     searchText = value;
-                    // final userList = await searchUsers(text: value);
-                    // print(userList.map((e) => e.username));
+                    final userList = await searchUsers(text: value);
+                    print(userList.map((e) => e.username));
                   },
                 ),
               ),

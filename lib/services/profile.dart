@@ -76,3 +76,40 @@ Future<void> updateUserProfileData(Map<String, dynamic> body) async {
     Fluttertoast.showToast(msg: e.toString());
   }
 }
+
+Future<List<UserProfileModel>> searchUsers({
+  required String text,
+  String role = "",
+}) async {
+  final user = box.get("user");
+  final url = "$prodUrl/api/v1/profiles?searchUserName=$text&searchRole=$role";
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Authorization": "Bearer ${user!.token}",
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List;
+      final userData = jsonData
+          .map(
+            (e) => UserProfileModel.fromJson(
+              Map<String, dynamic>.from(e as Map),
+            ),
+          )
+          .toList();
+      return userData;
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  // } catch (e) {
+  //   Fluttertoast.showToast(msg: e.toString());
+  }
+  return [];
+}
