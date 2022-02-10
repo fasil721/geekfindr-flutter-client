@@ -6,6 +6,7 @@ import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/profile.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchWidget extends StatefulWidget {
   const SearchWidget({Key? key}) : super(key: key);
@@ -67,7 +68,7 @@ class _SearchWidgetState extends State<SearchWidget>
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 20),
+                padding: const EdgeInsets.only(left: 7),
                 child: TypeAheadField<UserProfileModel?>(
                   hideSuggestionsOnKeyboardHide: false,
                   textFieldConfiguration: TextFieldConfiguration(
@@ -86,15 +87,30 @@ class _SearchWidgetState extends State<SearchWidget>
                   },
                   itemBuilder: (context, UserProfileModel? suggestion) {
                     final user = suggestion!;
-
                     return ListTile(
-                      title: Text(user.username!),
+                      textColor: secondaryColor,
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.network(
+                          user.avatar!,
+                          width: 30,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                            color: Colors.blue,
+                            height: 130,
+                            width: 130,
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        user.username!,
+                        style: GoogleFonts.roboto(color: Colors.black),
+                      ),
                     );
                   },
                   noItemsFoundBuilder: (context) => const SizedBox(),
                   onSuggestionSelected: (UserProfileModel? suggestion) {
                     final user = suggestion!;
-
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
                       ..showSnackBar(
@@ -104,18 +120,6 @@ class _SearchWidgetState extends State<SearchWidget>
                       );
                   },
                 ),
-
-                // TextField(
-                //   controller: serchController,
-                //   cursorColor: Colors.black,
-                //   style: const TextStyle(color: Colors.black),
-                //   decoration: const InputDecoration(border: InputBorder.none),
-                //   onChanged: (value) async {
-                //     searchText = value;
-                //     final userList = await searchUsers(text: value);
-                //     print(userList.map((e) => e.username));
-                //   },
-                // ),
               ),
             ),
             Container(
@@ -136,12 +140,13 @@ class _SearchWidgetState extends State<SearchWidget>
                   size: 20,
                   color: primaryColor,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (isForward) {
-                    animationController!.reverse();
-                    isForward = false;
-                    SystemChannels.textInput.invokeMethod("TextInput.hide");
                     serchController.clear();
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    SystemChannels.textInput.invokeMethod("TextInput.hide");
+                    isForward = false;
+                    animationController!.reverse();
                   } else {
                     animationController!.forward();
                     isForward = true;
