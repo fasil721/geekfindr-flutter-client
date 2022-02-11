@@ -5,6 +5,7 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/profile.dart';
+import 'package:geek_findr/views/widgets/other_user_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -135,13 +136,8 @@ class _SearchWidgetState extends State<SearchWidget>
                 noItemsFoundBuilder: (context) => const SizedBox(),
                 onSuggestionSelected: (UserProfileModel? suggestion) {
                   final user = suggestion!;
-                  ScaffoldMessenger.of(context)
-                    ..removeCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                        content: Text('Selected user: ${user.username}'),
-                      ),
-                    );
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  Get.to(() => OtherUserProfile(user: user));
                 },
               ),
             ),
