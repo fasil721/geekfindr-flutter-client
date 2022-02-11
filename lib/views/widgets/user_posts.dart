@@ -5,8 +5,11 @@ import 'package:geek_findr/views/widgets/image_edit.dart';
 import 'package:get/get.dart';
 
 class UserPosts extends StatelessWidget {
-  const UserPosts({Key? key}) : super(key: key);
-
+  const UserPosts({
+    Key? key,
+    required this.userId,
+  }) : super(key: key);
+  final String userId;
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -15,7 +18,7 @@ class UserPosts extends StatelessWidget {
       id: "mypost",
       builder: (controller) {
         return FutureBuilder<List<ImageModel>>(
-          future: getMyImages(),
+          future: getMyImages(userId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(

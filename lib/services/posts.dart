@@ -140,9 +140,9 @@ class ImageModel {
       };
 }
 
-Future<List<ImageModel>> getMyImages() async {
+Future<List<ImageModel>> getMyImages(String id) async {
   final user = box.get("user");
-  const url = "$prodUrl/api/v1/posts/my-posts";
+  final url = "$prodUrl/api/v1/posts/by-users/$id";
 
   try {
     final response = await http.get(

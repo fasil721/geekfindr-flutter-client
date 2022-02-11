@@ -4,6 +4,8 @@ import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/profile_page.dart';
+import 'package:geek_findr/views/widgets/profile_about_view.dart';
+import 'package:geek_findr/views/widgets/user_posts.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -36,255 +38,256 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        leadingWidth: 70,
-        elevation: 0,
-        backgroundColor: primaryColor,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.more_vert,
-            ),
-          ),
-          const SizedBox(width: 12)
-        ],
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
-        ),
-      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              CustomPaint(
-                child: ClipPath(
-                  clipper: ConvexClipPath(),
-                  child: Container(
-                    height: height * 0.19,
-                    width: width,
-                    decoration: const BoxDecoration(
-                      color: primaryColor,
-                    ),
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverAppBar(
+              snap: true,
+              floating: true,
+              elevation: 5,
+              automaticallyImplyLeading: false,
+              flexibleSpace: AppBar(
+                leadingWidth: 70,
+                elevation: 0,
+                backgroundColor: Colors.white,
+                leading: IconButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  SizedBox(
-                    height: height * .03,
+            )
+          ],
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: height * .01,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 2,
+                      color: const Color(0xffE7EAF0),
+                    ),
+                    borderRadius: BorderRadius.circular(100),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 2,
-                        color: const Color(0xffE7EAF0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.network(
+                      "${widget.user.avatar!}&s=${height * 0.15}",
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: Colors.blue,
+                        height: 130,
+                        width: 130,
                       ),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Image.network(
-                        "${widget.user.avatar!}&s=${height * 0.15}",
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: Colors.blue,
-                          height: 130,
-                          width: 130,
-                        ),
-                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: height * 0.01,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Column(
-                      children: [
-                        Text(
-                          widget.user.username!,
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 25,
-                            color: Colors.black.withOpacity(0.9),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          widget.user.role == null ? "" : widget.user.role!,
-                          style: GoogleFonts.roboto(
-                            fontSize: textFactor * 15,
-                            color: Colors.black.withOpacity(0.6),
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 15,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                "10",
-                                style: GoogleFonts.poppins(
-                                  fontSize: textFactor * 17,
-                                  color: Colors.black.withOpacity(0.8),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                "Posts",
-                                style: GoogleFonts.roboto(
-                                  fontSize: textFactor * 13,
-                                  color: Colors.black.withOpacity(0.8),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey,
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                          ),
-                          height: 20,
-                          width: 1.5,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                widget.user.followersCount.toString(),
-                                style: GoogleFonts.poppins(
-                                  fontSize: textFactor * 17,
-                                  color: Colors.black.withOpacity(0.8),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                " Followers",
-                                style: GoogleFonts.roboto(
-                                  fontSize: textFactor * 13,
-                                  color: Colors.black.withOpacity(0.8),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey,
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                          ),
-                          height: 20,
-                          width: 1.5,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                widget.user.followingCount.toString(),
-                                style: GoogleFonts.poppins(
-                                  fontSize: textFactor * 17,
-                                  color: Colors.black.withOpacity(0.8),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                "Followings",
-                                style: GoogleFonts.roboto(
-                                  fontSize: textFactor * 12,
-                                  color: Colors.black.withOpacity(0.8),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: TabBar(
-                        labelColor: Colors.black,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        labelPadding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                        ),
-                        unselectedLabelColor: Colors.grey,
-                        controller: tabController,
-                        labelStyle: GoogleFonts.roboto(
-                          fontSize: textFactor * 14,
-                          color: Colors.black.withOpacity(0.8),
+                ),
+                SizedBox(
+                  height: height * 0.01,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.user.username!,
+                        style: GoogleFonts.poppins(
+                          fontSize: textFactor * 25,
+                          color: Colors.black.withOpacity(0.9),
                           fontWeight: FontWeight.w600,
                         ),
-                        indicator: const CircleTabIndicator(
-                          color: primaryColor,
-                          radius: 4,
-                        ),
-                        isScrollable: true,
-                        onTap: (index) {
-                          controller.update(["tabs2"]);
-                        },
-                        tabs: const [
-                          Tab(
-                            text: "About",
-                          ),
-                          Tab(
-                            text: "Posts",
-                          )
-                        ],
                       ),
+                      Text(
+                        widget.user.role == null ? "" : widget.user.role!,
+                        style: GoogleFonts.roboto(
+                          fontSize: textFactor * 15,
+                          color: Colors.black.withOpacity(0.6),
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            FutureBuilder<List<ImageModel?>>(
+                              future: getMyImages(widget.user.id!),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  final postCount = (snapshot.data)!.length;
+                                  return Text(
+                                    postCount.toString(),
+                                    style: GoogleFonts.poppins(
+                                      fontSize: textFactor * 17,
+                                      color: Colors.black.withOpacity(0.8),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  );
+                                }
+                                return Text(
+                                  "",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: textFactor * 17,
+                                    color: Colors.black.withOpacity(0.8),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                );
+                              },
+                            ),
+                            Text(
+                              "Posts",
+                              style: GoogleFonts.roboto(
+                                fontSize: textFactor * 13,
+                                color: Colors.black.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        color: Colors.grey,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 25,
+                        ),
+                        height: 20,
+                        width: 1.5,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              widget.user.followersCount.toString(),
+                              style: GoogleFonts.poppins(
+                                fontSize: textFactor * 17,
+                                color: Colors.black.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              " Followers",
+                              style: GoogleFonts.roboto(
+                                fontSize: textFactor * 13,
+                                color: Colors.black.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        color: Colors.grey,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 25,
+                        ),
+                        height: 20,
+                        width: 1.5,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              widget.user.followingCount.toString(),
+                              style: GoogleFonts.poppins(
+                                fontSize: textFactor * 17,
+                                color: Colors.black.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              "Followings",
+                              style: GoogleFonts.roboto(
+                                fontSize: textFactor * 12,
+                                color: Colors.black.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: TabBar(
+                      labelColor: Colors.black,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      labelPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      unselectedLabelColor: Colors.grey,
+                      controller: tabController,
+                      labelStyle: GoogleFonts.roboto(
+                        fontSize: textFactor * 14,
+                        color: Colors.black.withOpacity(0.8),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      indicator: const CircleTabIndicator(
+                        color: primaryColor,
+                        radius: 4,
+                      ),
+                      isScrollable: true,
+                      onTap: (index) {
+                        currentIndex = index;
+                        controller.update(["tabs2"]);
+                      },
+                      tabs: const [
+                        Tab(
+                          text: "About",
+                        ),
+                        Tab(
+                          text: "Posts",
+                        )
+                      ],
                     ),
                   ),
-                  GetBuilder<AppController>(
-                    id: "tabs2",
-                    builder: (controller) {
-                      return Container();
-                      // return IndexedStack(
-                      //   index: currentIndex,
-                      //   children: <Widget>[
-                      //     Visibility(
-                      //       maintainState: true,
-                      //       visible: currentIndex == 0,
-                      //       child: ProfileAboutView(
-                      //         userData: userData,
-                      //       ),
-                      //     ),
-                      //     Visibility(
-                      //       maintainState: true,
-                      //       visible: currentIndex == 1,
-                      //       child: currentIndex == 1
-                      //           ? const UserPosts()
-                      //           : const SizedBox(),
-                      //     ),
-                      //   ],
-                      // );
-                    },
-                  ),
-                ],
-              ),
-            ],
+                ),
+                GetBuilder<AppController>(
+                  id: "tabs2",
+                  builder: (controller) {
+                    return IndexedStack(
+                      index: currentIndex,
+                      children: <Widget>[
+                        Visibility(
+                          maintainState: true,
+                          visible: currentIndex == 0,
+                          child: ProfileAboutView(
+                            userData: widget.user,
+                          ),
+                        ),
+                        Visibility(
+                          maintainState: true,
+                          visible: currentIndex == 1,
+                          child: UserPosts(userId: widget.user.id!),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -113,6 +113,7 @@ class _SearchWidgetState extends State<SearchWidget>
                 },
                 itemBuilder: (context, UserProfileModel? suggestion) {
                   final user = suggestion!;
+                  print(user.id);
                   return ListTile(
                     textColor: secondaryColor,
                     leading: ClipRRect(

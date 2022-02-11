@@ -186,7 +186,8 @@ class _ProfilePageState extends State<ProfilePage>
                                             builder: (context) {
                                               return FutureBuilder<
                                                   List<ImageModel?>>(
-                                                future: getMyImages(),
+                                                future:
+                                                    getMyImages(userData.id!),
                                                 builder: (context, snapshot) {
                                                   if (snapshot
                                                           .connectionState ==
@@ -355,25 +356,15 @@ class _ProfilePageState extends State<ProfilePage>
                                         maintainState: true,
                                         visible: currentIndex == 1,
                                         child: currentIndex == 1
-                                            ? const UserPosts()
+                                            ? UserPosts(
+                                                userId: userData.id!,
+                                              )
                                             : const SizedBox(),
                                       ),
                                     ],
                                   );
                                 },
                               ),
-
-                              // SizedBox(
-                              //   height: height * 0.33,
-                              //   width: width,
-                              //   child: TabBarView(
-                              //     controller: tabController,
-                              //     children: [
-                              //       ProfileAboutView(userData: userData),
-                              //       const UserPosts(),
-                              //     ],
-                              //   ),
-                              // )
                             ],
                           ),
                         ],
