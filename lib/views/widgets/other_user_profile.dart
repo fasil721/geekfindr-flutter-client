@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
+import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,11 +17,9 @@ class OtherUserProfile extends StatefulWidget {
 class _OtherUserProfileState extends State<OtherUserProfile>
     with TickerProviderStateMixin {
   TabController? tabController;
-
   int currentIndex = 0;
-
   final controller = Get.find<AppController>();
-
+  int? postCount;
   @override
   void initState() {
     super.initState();
@@ -29,6 +28,12 @@ class _OtherUserProfileState extends State<OtherUserProfile>
       length: 2,
       vsync: this,
     );
+    getPostCount();
+  }
+
+  getPostCount() async {
+    final images = await getMyImages();
+    postCount = images.length;
   }
 
   @override
@@ -70,22 +75,8 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                   child: Container(
                     height: height * 0.19,
                     width: width,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: primaryColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(.7),
-                          blurRadius: 115,
-                          spreadRadius: 105,
-                          offset: const Offset(-300, -300),
-                        ),
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(.7),
-                          blurRadius: 105,
-                          spreadRadius: 105,
-                          offset: const Offset(400, 500),
-                        ),
-                      ],
                     ),
                   ),
                 ),
@@ -156,7 +147,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                           child: Column(
                             children: [
                               Text(
-                                "10",
+                                postCount!.toString(),
                                 style: GoogleFonts.poppins(
                                   fontSize: textFactor * 17,
                                   color: Colors.black.withOpacity(0.8),
@@ -260,7 +251,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                         ),
                         isScrollable: true,
                         onTap: (index) {
-                          controller.update(["tabs"]);
+                          controller.update(["tabs2"]);
                         },
                         tabs: const [
                           Tab(
@@ -274,7 +265,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                     ),
                   ),
                   GetBuilder<AppController>(
-                    id: "tabs",
+                    id: "tabs2",
                     builder: (controller) {
                       return Container();
                       // return IndexedStack(

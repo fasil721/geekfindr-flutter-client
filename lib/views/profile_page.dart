@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
+import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/profile_update_page.dart';
 import 'package:geek_findr/views/widgets/profile_about_view.dart';
@@ -22,6 +23,7 @@ class _ProfilePageState extends State<ProfilePage>
   TabController? tabController;
   int currentIndex = 0;
   final controller = Get.find<AppController>();
+  int? postCount;
   @override
   void initState() {
     super.initState();
@@ -30,6 +32,12 @@ class _ProfilePageState extends State<ProfilePage>
       length: 2,
       vsync: this,
     );
+    getPostCount();
+  }
+
+  Future getPostCount() async {
+    final images = await getMyImages();
+    postCount = images.length;
   }
 
   @override
@@ -174,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       child: Column(
                                         children: [
                                           Text(
-                                            "10",
+                                            postCount!.toString(),
                                             style: GoogleFonts.poppins(
                                               fontSize: textFactor * 17,
                                               color:
@@ -288,7 +296,6 @@ class _ProfilePageState extends State<ProfilePage>
                                       currentIndex = index;
                                       tabController!.animateTo(index);
                                       controller.update(["tabs"]);
-                                      
                                     },
                                     tabs: const [
                                       Tab(
