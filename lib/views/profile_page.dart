@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage>
   TabController? tabController;
   int currentIndex = 0;
   final controller = Get.find<AppController>();
-  int? postCount;
+  // int? postCount;
   @override
   void initState() {
     super.initState();
@@ -32,13 +32,13 @@ class _ProfilePageState extends State<ProfilePage>
       length: 2,
       vsync: this,
     );
-    getPostCount();
+    // getPostCount();
   }
 
-  Future getPostCount() async {
-    final images = await getMyImages();
-    postCount = images.length;
-  }
+  // Future getPostCount() async {
+  //   final images = await getMyImages();
+  //   postCount = images.length;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -181,14 +181,44 @@ class _ProfilePageState extends State<ProfilePage>
                                     Expanded(
                                       child: Column(
                                         children: [
-                                          Text(
-                                            postCount!.toString(),
-                                            style: GoogleFonts.poppins(
-                                              fontSize: textFactor * 17,
-                                              color:
-                                                  Colors.black.withOpacity(0.8),
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                          GetBuilder<AppController>(
+                                            id: "postCount",
+                                            builder: (context) {
+                                              return FutureBuilder<
+                                                  List<ImageModel?>>(
+                                                future: getMyImages(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.done) {
+                                                    final postCount =
+                                                        (snapshot.data)!.length;
+                                                    return Text(
+                                                      postCount.toString(),
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        fontSize:
+                                                            textFactor * 17,
+                                                        color: Colors.black
+                                                            .withOpacity(0.8),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    );
+                                                  }
+                                                  return Text(
+                                                    "",
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: textFactor * 17,
+                                                      color: Colors.black
+                                                          .withOpacity(0.8),
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
                                           ),
                                           Text(
                                             "Posts",

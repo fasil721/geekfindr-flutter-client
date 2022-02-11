@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
@@ -51,7 +50,7 @@ Future<void> uploadImage({
         // final jsonData2 = json.decode(response3.body) as Map;
         // final data2 = ImageModel.fromJson(jsonData2.cast());  print(data2.toJson());
         Fluttertoast.showToast(msg: "Image uploaded");
-
+        controller.update(["mypost", "postCount"]);
         Get.back();
       } else {
         Fluttertoast.showToast(msg: "Image not uploaded");
@@ -231,7 +230,7 @@ Future deleteImage({required String imageId}) async {
     );
     if (response.statusCode == 200) {
       Fluttertoast.showToast(msg: "Image deleted successfully");
-      controller.update(["mypost"]);
+      controller.update(["mypost", "postCount"]);
     } else {
       Fluttertoast.showToast(msg: "Image not deleted successfully");
     }
