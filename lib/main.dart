@@ -7,7 +7,6 @@ import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:geek_findr/views/profile_page.dart';
-import 'package:geek_findr/views/widgets/search_widget.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -46,7 +45,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
-
+  int touchCount = 0;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
@@ -60,7 +59,7 @@ class _MyAppState extends State<MyApp> {
           Container(
             color: Colors.red,
           ),
-          if (currentIndex == 3) const ProfilePage() else Container(),
+          const ProfilePage(),
         ];
         return Scaffold(
           body: IndexedStack(
@@ -78,9 +77,9 @@ class _MyAppState extends State<MyApp> {
             onTap: (index) {
               currentIndex = index;
               controller.update(["home"]);
-              // if (index == 3) {
-              //   controller.update(["prof"]);
-              // }
+              if (index == 3) {
+                touchCount++;
+              }
             },
             items: [
               SalomonBottomBarItem(

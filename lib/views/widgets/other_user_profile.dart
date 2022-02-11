@@ -19,7 +19,6 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   TabController? tabController;
   int currentIndex = 0;
   final controller = Get.find<AppController>();
-  int? postCount;
   @override
   void initState() {
     super.initState();
@@ -28,12 +27,6 @@ class _OtherUserProfileState extends State<OtherUserProfile>
       length: 2,
       vsync: this,
     );
-    getPostCount();
-  }
-
-  getPostCount() async {
-    final images = await getMyImages();
-    postCount = images.length;
   }
 
   @override
@@ -147,7 +140,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                           child: Column(
                             children: [
                               Text(
-                                postCount!.toString(),
+                                "10",
                                 style: GoogleFonts.poppins(
                                   fontSize: textFactor * 17,
                                   color: Colors.black.withOpacity(0.8),
