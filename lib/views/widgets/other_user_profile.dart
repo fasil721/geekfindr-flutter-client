@@ -37,7 +37,6 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -177,13 +176,38 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                       Expanded(
                         child: Column(
                           children: [
-                            Text(
-                              widget.user.followersCount.toString(),
-                              style: GoogleFonts.poppins(
-                                fontSize: textFactor * 17,
-                                color: Colors.black.withOpacity(0.8),
-                                fontWeight: FontWeight.w600,
-                              ),
+                            GetBuilder<AppController>(
+                              id: "followers",
+                              builder: (controller) {
+                                return FutureBuilder<List<UserProfileModel>>(
+                                  future: getOtherUserfollowers(
+                                    id: widget.user.id!,
+                                  ),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      final followersCount =
+                                          (snapshot.data)!.length;
+                                      return Text(
+                                        followersCount.toString(),
+                                        style: GoogleFonts.poppins(
+                                          fontSize: textFactor * 17,
+                                          color: Colors.black.withOpacity(0.8),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      );
+                                    }
+                                    return Text(
+                                      "",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: textFactor * 17,
+                                        color: Colors.black.withOpacity(0.8),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                             Text(
                               " Followers",
@@ -245,7 +269,9 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                         ),
                       ),
                       onPressed: () async {
-                        // getOtherUserfollowers(id: widget.user.id!);
+                        final a =
+                            await getOtherUserfollowers(id: widget.user.id!);
+                        print(a.length);
                       },
                       child: SizedBox(
                         height: height * 0.06,

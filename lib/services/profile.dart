@@ -142,7 +142,50 @@ Future followUsers({
     );
 
     if (response.statusCode == 200) {
-      Fluttertoast.showToast(msg: "Following started");
+      controller.update(["followers"]);
+    } else if (response.statusCode == 422) {
+      final errorJson = json.decode(response.body) as Map;
+      final err = ErrorModel.fromJson(errorJson.cast());
+      for (final element in err.errors!) {
+        Fluttertoast.showToast(msg: element.message!);
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Something went wrong");
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  } catch (e) {
+    Fluttertoast.showToast(msg: e.toString());
+  }
+}
+
+Future<List<UserProfileModel>> getOtherUserfollowers({
+  required String id,
+}) async {
+  final user = box.get("user");
+  final url = "$prodUrl/api/v1/profiles/$id/followers";
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Authorization": "Bearer ${user!.token}",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List;
+      final userData = jsonData
+          .map(
+            (e) => UserProfileModel.fromJson(
+              Map<String, dynamic>.from(e as Map),
+            ),
+          )
+          .toList();
+      return userData;
     } else if (response.statusCode == 422) {
       final errorJson = json.decode(response.body) as Map;
       final err = ErrorModel.fromJson(errorJson.cast());
