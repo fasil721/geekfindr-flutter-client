@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/models/error_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -141,6 +142,7 @@ class ImageModel {
 }
 
 Future<List<ImageModel>> getMyImages(String id) async {
+  await Future.delayed(Duration(seconds: 5));
   final user = box.get("user");
   final url = "$prodUrl/api/v1/posts/by-users/$id";
 
@@ -154,8 +156,16 @@ Future<List<ImageModel>> getMyImages(String id) async {
       final data = jsonData
           .map((e) => ImageModel.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
-      // print(data.first.owner!.toJson());
+
       return data;
+    } else if (response.statusCode == 422 || response.statusCode == 400) {
+      final errorJson = json.decode(response.body) as Map;
+      final err = ErrorModel.fromJson(errorJson.cast());
+      for (final element in err.errors!) {
+        Fluttertoast.showToast(msg: element.message!);
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Something went wrong");
     }
     return [];
   } on HttpException {
@@ -177,12 +187,21 @@ Future<List<ImageModel>> getMyFeeds() async {
       Uri.parse(url),
       headers: {"Authorization": "Bearer ${user!.token}"},
     );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List;
       final data = jsonData
           .map((e) => ImageModel.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
       return data;
+    } else if (response.statusCode == 422 || response.statusCode == 400) {
+      final errorJson = json.decode(response.body) as Map;
+      final err = ErrorModel.fromJson(errorJson.cast());
+      for (final element in err.errors!) {
+        Fluttertoast.showToast(msg: element.message!);
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Something went wrong");
     }
     return [];
   } on HttpException {

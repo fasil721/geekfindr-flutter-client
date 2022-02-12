@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
@@ -10,6 +11,7 @@ import 'package:geek_findr/views/widgets/profile_loading_screen.dart';
 import 'package:geek_findr/views/widgets/user_posts.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -126,14 +128,23 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
-                                  child: Image.network(
-                                    "${userData.avatar!}&s=${height * 0.15}",
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            Container(
-                                      color: Colors.blue,
-                                      height: 130,
-                                      width: 130,
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "${userData.avatar!}&s=${height * 0.15}",
+                                    placeholder: (context, url) =>
+                                        Shimmer.fromColors(
+                                      baseColor: Colors.grey.withOpacity(0.3),
+                                      highlightColor: Colors.white,
+                                      period: const Duration(milliseconds: 1000),
+                                      child: Container(
+                                        height: height * 0.15,
+                                        width: height * 0.15,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey,
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),

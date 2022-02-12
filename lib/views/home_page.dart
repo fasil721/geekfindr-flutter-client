@@ -74,12 +74,13 @@ class _HomePageState extends State<HomePage> {
                     child: FutureBuilder<List<ImageModel>>(
                       future: getMyFeeds(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
                         }
-                        if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
                           final data = snapshot.data;
                           if (data != null) {
                             return Padding(
@@ -131,7 +132,8 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 ),
                                 separatorBuilder:
-                                    (BuildContext context, int index) => SizedBox(
+                                    (BuildContext context, int index) =>
+                                        SizedBox(
                                   height: height * 0.05,
                                 ),
                               ),

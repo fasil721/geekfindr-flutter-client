@@ -52,6 +52,7 @@ dependencies:
   image_picker: ^0.8.4+6
   image_cropper: ^1.4.1
   flutter_typeahead: ^3.2.4
+  cached_network_image: ^3.2.0
 
 dev_dependencies:
   flutter_test:
