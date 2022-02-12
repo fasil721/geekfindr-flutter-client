@@ -179,41 +179,42 @@ class ProfileAboutView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: height * 0.001),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Text(
-                          Map<String, String>.from(userData.education!.first)
-                              .keys
-                              .first,
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 15,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.w500,
+                  if (userData.education!.isNotEmpty)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Text(
+                            Map<String, String>.from(userData.education!.first)
+                                .keys
+                                .first,
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 15,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "  :  ",
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 13,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            "  :  ",
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 13,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          Map<String, String>.from(userData.education!.first)
-                              .values
-                              .first,
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 15,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.w500,
+                          Text(
+                            Map<String, String>.from(userData.education!.first)
+                                .values
+                                .first,
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 15,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -239,77 +240,79 @@ class ProfileAboutView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: height * 0.001),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Text(
-                          Map<String, String>.from(userData.socials!.first)
-                              .keys
-                              .first,
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 15,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.w500,
+                  if (userData.socials!.isNotEmpty)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Text(
+                            Map<String, String>.from(userData.socials!.first)
+                                .keys
+                                .first,
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 15,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "  :  ",
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 13,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            "  :  ",
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 13,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          Map<String, String>.from(userData.socials!.first)
-                              .values
-                              .first,
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 15,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.w500,
+                          Text(
+                            Map<String, String>.from(userData.socials!.first)
+                                .values
+                                .first,
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 15,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                   SizedBox(height: height * 0.001),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Text(
-                          Map<String, String>.from(userData.socials!.last)
-                              .keys
-                              .first,
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 15,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.w500,
+                  if (userData.socials!.length > 1)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Text(
+                            Map<String, String>.from(userData.socials!.last)
+                                .keys
+                                .first,
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 15,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "  :  ",
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 13,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            "  :  ",
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 13,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          Map<String, String>.from(userData.socials!.last)
-                              .values
-                              .first,
-                          style: GoogleFonts.poppins(
-                            fontSize: textFactor * 15,
-                            color: Colors.black.withOpacity(0.8),
-                            fontWeight: FontWeight.w500,
+                          Text(
+                            Map<String, String>.from(userData.socials!.last)
+                                .values
+                                .first,
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 15,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),

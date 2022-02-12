@@ -36,6 +36,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+   
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

@@ -134,11 +134,11 @@ class _SearchWidgetState extends State<SearchWidget>
                   );
                 },
                 noItemsFoundBuilder: (context) => const SizedBox(),
-                onSuggestionSelected: (UserProfileModel? suggestion) {
-                  final user = suggestion!;
+                onSuggestionSelected: (UserProfileModel? user) {
                   ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  Get.to(() => OtherUserProfile(user: user));
+                  Get.to(() => OtherUserProfile(user: user!));
                   isForward = false;
+                  serchController.clear();
                   animationController!.reverse();
                 },
               ),
