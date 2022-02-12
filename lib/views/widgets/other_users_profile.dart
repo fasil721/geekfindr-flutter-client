@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/services/profile.dart';
@@ -22,6 +23,8 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   TabController? tabController;
   int currentIndex = 0;
   final controller = Get.find<AppController>();
+  // List<UserProfileModel> followersList = [];
+  final box = Boxes.getInstance();
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final currentUser = box.get("user");
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -178,7 +182,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                           children: [
                             GetBuilder<AppController>(
                               id: "followers",
-                              builder: (controller) {
+                              builder: (_) {
                                 return FutureBuilder<List<UserProfileModel>>(
                                   future: getOtherUserfollowers(
                                     id: widget.user.id!,
@@ -188,6 +192,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                         ConnectionState.done) {
                                       final followersCount =
                                           (snapshot.data)!.length;
+
                                       return Text(
                                         followersCount.toString(),
                                         style: GoogleFonts.poppins(
@@ -268,11 +273,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                           ),
                         ),
                       ),
-                      onPressed: () async {
-                        final a =
-                            await getOtherUserfollowers(id: widget.user.id!);
-                        print(a.length);
-                      },
+                      onPressed: () {},
                       child: SizedBox(
                         height: height * 0.06,
                         width: width * 0.22,
@@ -305,20 +306,58 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                         final body = {"id": widget.user.id};
                         followUsers(body: body.cast());
                       },
-                      child: SizedBox(
-                        height: height * 0.06,
-                        width: width * 0.22,
-                        child: Center(
-                          child: Text(
-                            "Follow",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: textFactor * 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                      child: GetBuilder<AppController>(
+                        id: "followers",
+                        builder: (_) {
+                          return FutureBuilder<List<UserProfileModel>>(
+                            future: getOtherUserfollowers(id: widget.user.id!),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                final followersList = snapshot.data!;
+                                final isFollowing=  followersList
+                                              .where(
+                                                (element) =>
+                                                    element.id ==
+                                                    currentUser!.id,
+                                              )
+                                              .isEmpty;
+                                return SizedBox(
+                                  height: height * 0.06,
+                                  width: width * 0.22,
+                                  child: Center(
+                                    child: Text(
+                                    isFollowing
+                                          ? "Follow"
+                                          : "Following",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: textFactor * 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              return SizedBox(
+                                height: height * 0.06,
+                                width: width * 0.22,
+                                child: Center(
+                                  child: Text(
+                                    "Follow",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: textFactor * 15,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                     ),
                   ],
