@@ -170,7 +170,7 @@ class ProfileAboutView extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Experience",
+                      "Education",
                       style: GoogleFonts.poppins(
                         fontSize: textFactor * 16,
                         color: Colors.black.withOpacity(0.8),
@@ -181,64 +181,137 @@ class ProfileAboutView extends StatelessWidget {
                   SizedBox(height: height * 0.001),
                   Align(
                     alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Text(
+                          Map<String, String>.from(userData.education!.first)
+                              .keys
+                              .first,
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 15,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "  :  ",
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 13,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          Map<String, String>.from(userData.education!.first)
+                              .values
+                              .first,
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 15,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: height * 0.01),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: secondaryColor, width: 1.5),
+                // color: secondaryColor,
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
-                      Map<String, String>.from(userData.education!.first)
-                          .keys
-                          .first,
+                      "Social",
                       style: GoogleFonts.poppins(
-                        fontSize: textFactor * 15,
+                        fontSize: textFactor * 16,
                         color: Colors.black.withOpacity(0.8),
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
                   SizedBox(height: height * 0.001),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      Map<String, String>.from(userData.education!.first)
-                          .values
-                          .first,
-                      style: GoogleFonts.poppins(
-                        fontSize: textFactor * 15,
-                        color: Colors.black.withOpacity(0.8),
-                        fontWeight: FontWeight.w500,
-                      ),
+                    child: Row(
+                      children: [
+                        Text(
+                          Map<String, String>.from(userData.socials!.first)
+                              .keys
+                              .first,
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 15,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "  :  ",
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 13,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          Map<String, String>.from(userData.socials!.first)
+                              .values
+                              .first,
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 15,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: height * 0.001),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Text(
+                          Map<String, String>.from(userData.socials!.last)
+                              .keys
+                              .first,
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 15,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "  :  ",
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 13,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          Map<String, String>.from(userData.socials!.last)
+                              .values
+                              .first,
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 15,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-            expationPanelWidget(
-              img: "assets/icons/office.png",
-              width: width,
-              textFactor: textFactor,
-              title: "Organizations",
-              list: userData.organizations!,
-            ),
-            SizedBox(height: height * 0.02),
-            expationPanelWidget(
-              img: "assets/icons/office.png",
-              width: width,
-              textFactor: textFactor,
-              title: "Experience",
-              list: [],
-            ),
-            SizedBox(height: height * 0.02),
-            expationPanelWidget(
-              img: "assets/icons/office.png",
-              width: width,
-              textFactor: textFactor,
-              title: "Education",
-              list: [],
-            ),
-            SizedBox(height: height * 0.02),
-            expationPanelWidget(
-              img: "assets/icons/office.png",
-              width: width,
-              textFactor: textFactor,
-              title: "Social",
-              list: [],
             ),
             SizedBox(height: height * 0.02),
             expationPanelWidget(
