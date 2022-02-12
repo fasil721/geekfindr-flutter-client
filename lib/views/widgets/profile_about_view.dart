@@ -121,6 +121,42 @@ class ProfileAboutView extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(height: height * 0.01),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: secondaryColor, width: 1.5),
+                // color: secondaryColor,
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Experience",
+                      style: GoogleFonts.poppins(
+                        fontSize: textFactor * 16,
+                        color: Colors.black.withOpacity(0.8),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.001),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      userData.experience!,
+                      style: GoogleFonts.poppins(
+                        fontSize: textFactor * 15,
+                        color: Colors.black.withOpacity(0.8),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             expationPanelWidget(
               img: "assets/icons/office.png",
               width: width,
