@@ -71,6 +71,7 @@ class _SearchWidgetState extends State<SearchWidget>
                 //: BorderRadius.circular(50),
               ),
               child: TypeAheadField<UserProfileModel?>(
+                getImmediateSuggestions: true,
                 hideSuggestionsOnKeyboardHide: false,
                 debounceDuration: const Duration(milliseconds: 1000),
                 textFieldConfiguration: TextFieldConfiguration(

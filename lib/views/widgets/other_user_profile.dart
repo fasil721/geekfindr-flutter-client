@@ -3,6 +3,7 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/posts.dart';
+import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/profile_page.dart';
 import 'package:geek_findr/views/widgets/profile_about_view.dart';
 import 'package:geek_findr/views/widgets/user_posts.dart';
@@ -36,7 +37,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-   
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -227,6 +228,74 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                       ),
                     ],
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all<double>(5),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(secondaryColor),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        // getOtherUserfollowers(id: widget.user.id!);
+                      },
+                      child: SizedBox(
+                        height: height * 0.06,
+                        width: width * 0.22,
+                        child: Center(
+                          child: Text(
+                            "Message",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: textFactor * 15,
+                              color: Colors.black.withOpacity(0.8),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all<double>(5),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(primaryColor),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        final body = {"id": widget.user.id};
+                        followUsers(body: body.cast());
+                      },
+                      child: SizedBox(
+                        height: height * 0.06,
+                        width: width * 0.22,
+                        child: Center(
+                          child: Text(
+                            "Follow",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: textFactor * 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),

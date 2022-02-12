@@ -39,8 +39,8 @@ Future<UserProfileModel?> getUserProfileData() async {
     Fluttertoast.showToast(msg: "No Internet");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+  } catch (e) {
+    Fluttertoast.showToast(msg: e.toString());
   }
   return null;
 }
@@ -80,7 +80,7 @@ Future<void> updateUserProfileData(Map<String, dynamic> body) async {
   }
 }
 
-Future<Iterable<UserProfileModel>> searchUsers({
+Future<List<UserProfileModel>> searchUsers({
   required String text,
   String role = "",
 }) async {
@@ -97,12 +97,52 @@ Future<Iterable<UserProfileModel>> searchUsers({
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List;
-      final userData = jsonData.map(
-        (e) => UserProfileModel.fromJson(
-          Map<String, dynamic>.from(e as Map),
-        ),
-      );
+      final userData = jsonData
+          .map(
+            (e) => UserProfileModel.fromJson(
+              Map<String, dynamic>.from(e as Map),
+            ),
+          )
+          .toList();
       return userData;
+    } else if (response.statusCode == 422) {
+      final errorJson = json.decode(response.body) as Map;
+      final err = ErrorModel.fromJson(errorJson.cast());
+      for (final element in err.errors!) {
+        Fluttertoast.showToast(msg: element.message!);
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Something went wrong");
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  } catch (e) {
+    Fluttertoast.showToast(msg: e.toString());
+  }
+  return [];
+}
+
+Future followUsers({
+  required Map<String, String> body,
+}) async {
+  final user = box.get("user");
+  const url = "$prodUrl/api/v1/profiles/following";
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        "Authorization": "Bearer ${user!.token}",
+        "Content-Type": "application/json",
+      },
+      body: json.encode(body),
+    );
+
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(msg: "Following started");
     } else if (response.statusCode == 422) {
       final errorJson = json.decode(response.body) as Map;
       final err = ErrorModel.fromJson(errorJson.cast());
