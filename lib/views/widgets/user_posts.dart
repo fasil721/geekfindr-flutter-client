@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/widgets/image_edit.dart';
@@ -43,6 +44,8 @@ class UserPosts extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: CachedNetworkImage(
+                              fit: BoxFit.fitWidth,
+                              width: width,
                               imageUrl: data[index].mediaUrl!,
                               placeholder: (context, url) => Shimmer.fromColors(
                                 baseColor: Colors.grey.withOpacity(0.3),
@@ -79,6 +82,8 @@ class UserPosts extends StatelessWidget {
                                   onSelected: (value) {
                                     if (value == "1") {
                                       deleteImage(imageId: data[index].id!);
+                                      // SystemChannels.textInput
+                                      //     .invokeMethod("TextInput.hide");
                                     }
                                     if (value == "2") {
                                       Get.dialog(

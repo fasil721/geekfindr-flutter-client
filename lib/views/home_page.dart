@@ -77,12 +77,11 @@ class _HomePageState extends State<HomePage> {
                       return box(width);
                     }
                     if (snapshot.hasData) {
-                      final data = snapshot.data;
-                      if (data != null) {
+                      if (snapshot.data != null) {
+                        final data = snapshot.data!.reversed.toList();
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 20,
-                            vertical: 20,
                           ),
                           child: ListView.separated(
                             physics: const BouncingScrollPhysics(),
@@ -246,7 +245,11 @@ class _HomePageState extends State<HomePage> {
                                             splashRadius: 25,
                                             splashColor: Colors.grey,
                                             tooltip: 'like',
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              postLike(
+                                                imageId: data[index].id!,
+                                              );
+                                            },
                                             icon: const Icon(
                                               Icons.favorite_outline,
                                             ),

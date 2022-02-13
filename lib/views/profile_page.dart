@@ -366,8 +366,10 @@ class _ProfilePageState extends State<ProfilePage>
                                       Visibility(
                                         maintainState: true,
                                         visible: currentIndex == 1,
-                                        child: currentIndex == 1
-                                            ? UserPosts(
+                                        child:
+                                         currentIndex == 1
+                                            ? 
+                                            UserPosts(
                                                 userId: userData.id!,
                                               )
                                             : const SizedBox(),

@@ -142,7 +142,7 @@ class ImageModel {
 }
 
 Future<List<ImageModel>> getMyImages(String id) async {
-  await Future.delayed(Duration(seconds: 5));
+  // await Future.delayed(Duration(seconds: 5));
   final user = box.get("user");
   final url = "$prodUrl/api/v1/posts/by-users/$id";
 
@@ -179,7 +179,7 @@ Future<List<ImageModel>> getMyImages(String id) async {
 }
 
 Future<List<ImageModel>> getMyFeeds() async {
-  await Future.delayed(Duration(seconds: 5));
+  // await Future.delayed(Duration(seconds: 5));
   final user = box.get("user");
   const url = "$prodUrl/api/v1/posts/my-feed?limit=5";
 
@@ -281,6 +281,36 @@ Future editImage({required String imageId, required Map body}) async {
       Get.back();
     } else {
       Fluttertoast.showToast(msg: "Image not edited successfully");
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  }
+}
+
+Future postLike({required String imageId}) async {
+  final user = box.get("user");
+  final url = "$prodUrl/api/v1/posts/$imageId/likes";
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {"Authorization": "Bearer ${user!.token}"},
+    );
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(msg: "Image liked successfully");
+      Get.back();
+    } else if (response.statusCode == 422 || response.statusCode == 400) {
+      final errorJson = json.decode(response.body) as Map;
+      final err = ErrorModel.fromJson(errorJson.cast());
+      for (final element in err.errors!) {
+        Fluttertoast.showToast(msg: element.message!);
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Something went wrong");
     }
   } on HttpException {
     Fluttertoast.showToast(msg: "No Internet connection");
