@@ -129,7 +129,7 @@ class UserPosts extends StatelessWidget {
             children: [
               Container(
                 width: width,
-                height: 250,
+                height: 300,
                 decoration: BoxDecoration(
                   color: Colors.grey,
                   borderRadius: BorderRadius.circular(10),

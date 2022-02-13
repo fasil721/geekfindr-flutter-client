@@ -179,6 +179,7 @@ Future<List<ImageModel>> getMyImages(String id) async {
 }
 
 Future<List<ImageModel>> getMyFeeds() async {
+  await Future.delayed(Duration(seconds: 5));
   final user = box.get("user");
   const url = "$prodUrl/api/v1/posts/my-feed?limit=5";
 
@@ -187,7 +188,6 @@ Future<List<ImageModel>> getMyFeeds() async {
       Uri.parse(url),
       headers: {"Authorization": "Bearer ${user!.token}"},
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List;
       final data = jsonData

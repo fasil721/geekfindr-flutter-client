@@ -73,7 +73,7 @@ class _SearchWidgetState extends State<SearchWidget>
               child: TypeAheadField<UserProfileModel?>(
                 getImmediateSuggestions: true,
                 hideSuggestionsOnKeyboardHide: false,
-                debounceDuration: const Duration(milliseconds: 1000),
+                debounceDuration: const Duration(milliseconds: 500),
                 textFieldConfiguration: TextFieldConfiguration(
                   controller: serchController,
                   decoration: const InputDecoration(
