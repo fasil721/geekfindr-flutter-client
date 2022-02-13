@@ -301,8 +301,7 @@ Future postLike({required String imageId}) async {
       headers: {"Authorization": "Bearer ${user!.token}"},
     );
     if (response.statusCode == 200) {
-      Fluttertoast.showToast(msg: "Image liked successfully");
-      Get.back();
+      controller.update(["likes"]);
     } else if (response.statusCode == 422 || response.statusCode == 400) {
       final errorJson = json.decode(response.body) as Map;
       final err = ErrorModel.fromJson(errorJson.cast());
@@ -319,4 +318,54 @@ Future postLike({required String imageId}) async {
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
   }
+}
+
+Future<List<LikedUsers>?> getLikedUsers({required String imageId}) async {
+  final user = box.get("user");
+  final url = "$prodUrl/api/v1/posts/$imageId/likes";
+
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {"Authorization": "Bearer ${user!.token}"},
+    );
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List;
+      final data = jsonData
+          .map((e) => LikedUsers.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
+      return data;
+    } else if (response.statusCode == 422 || response.statusCode == 400) {
+      final errorJson = json.decode(response.body) as Map;
+      final err = ErrorModel.fromJson(errorJson.cast());
+      for (final element in err.errors!) {
+        Fluttertoast.showToast(msg: element.message!);
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Something went wrong");
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  }
+  return null;
+}
+
+class LikedUsers {
+  LikedUsers({
+    this.owner,
+  });
+
+  Owner? owner;
+
+  factory LikedUsers.fromJson(Map<String, dynamic> json) => LikedUsers(
+        owner: Owner.fromJson(Map<String, String>.from(json["owner"] as Map)),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "owner": owner!.toJson(),
+      };
 }

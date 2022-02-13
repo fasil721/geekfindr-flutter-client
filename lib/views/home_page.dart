@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                     }
                     if (snapshot.hasData) {
                       if (snapshot.data != null) {
-                        final data = snapshot.data!.reversed.toList();
+                        final data = snapshot.data!;
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 20,
@@ -254,8 +254,43 @@ class _HomePageState extends State<HomePage> {
                                               Icons.favorite_outline,
                                             ),
                                           ),
-                                          Text(
-                                            data[index].likeCount.toString(),
+                                          GetBuilder<AppController>(
+                                            id: "likes",
+                                            builder: (_) {
+                                              return FutureBuilder<List<LikedUsers>?>(
+                                                future: getLikedUsers(
+                                                  imageId: data[index].id!,
+                                                ),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                      ConnectionState.done) {
+                                                    final likedUsersList =
+                                                        snapshot.data!;
+                                                    return InkWell(
+                                                      onTap: () {
+                                                        getLikedUsers(
+                                                          imageId: data[index].id!,
+                                                        );
+                                                      },
+                                                      child: Ink(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                          10,
+                                                        ),
+                                                        child: Text(
+                                                          likedUsersList.length
+                                                              .toString(),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                  return const Padding(
+                                                    padding: EdgeInsets.all(10),
+                                                    child: Text(" "),
+                                                  );
+                                                },
+                                              );
+                                            },
                                           ),
                                           IconButton(
                                             splashRadius: 25,

@@ -315,21 +315,18 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
                                 final followersList = snapshot.data!;
-                                final isFollowing=  followersList
-                                              .where(
-                                                (element) =>
-                                                    element.id ==
-                                                    currentUser!.id,
-                                              )
-                                              .isEmpty;
+                                final isFollowing = followersList
+                                    .where(
+                                      (element) =>
+                                          element.id == currentUser!.id,
+                                    )
+                                    .isEmpty;
                                 return SizedBox(
                                   height: height * 0.06,
                                   width: width * 0.22,
                                   child: Center(
                                     child: Text(
-                                    isFollowing
-                                          ? "Follow"
-                                          : "Following",
+                                      isFollowing ? "Follow" : "Following",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: textFactor * 15,
