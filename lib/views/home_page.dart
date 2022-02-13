@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
+import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/drawer_page.dart';
 import 'package:geek_findr/views/widgets/image_upload.dart';
+import 'package:geek_findr/views/widgets/other_users_profile.dart';
 import 'package:geek_findr/views/widgets/search_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -116,7 +118,19 @@ class _HomePageState extends State<HomePage> {
                                                 child: Material(
                                                   color: Colors.transparent,
                                                   child: InkWell(
-                                                    onTap: () {},
+                                                    onTap: () async {
+                                                      final user =
+                                                          await getUserbyId(
+                                                        id: data[index]
+                                                            .owner!
+                                                            .id!,
+                                                      );
+                                                      Get.to(
+                                                        () => OtherUserProfile(
+                                                          user: user!,
+                                                        ),
+                                                      );
+                                                    },
                                                     autofocus: true,
                                                     highlightColor:
                                                         Colors.orange,

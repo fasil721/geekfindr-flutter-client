@@ -206,3 +206,43 @@ Future<List<UserProfileModel>> getOtherUserfollowers({
   }
   return [];
 }
+
+Future<UserProfileModel?> getUserbyId({
+  required String id,
+}) async {
+  final user = box.get("user");
+  final url = "$prodUrl/api/v1/profiles/$id";
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Authorization": "Bearer ${user!.token}",
+      },
+    );
+
+    if (response.statusCode == 200) {
+        final jsonData =
+          Map<String, dynamic>.from(json.decode(response.body) as Map);
+      final userData = UserProfileModel.fromJson(jsonData);
+      return userData;
+
+    } else if (response.statusCode == 422) {
+      final errorJson = json.decode(response.body) as Map;
+      final err = ErrorModel.fromJson(errorJson.cast());
+      for (final element in err.errors!) {
+        Fluttertoast.showToast(msg: element.message!);
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Something went wrong");
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  } catch (e) {
+    Fluttertoast.showToast(msg: e.toString());
+  }
+  return null;
+}
