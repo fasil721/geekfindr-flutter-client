@@ -48,8 +48,6 @@ Future<void> uploadImage({
         },
       );
       if (response3.statusCode == 200) {
-        // final jsonData2 = json.decode(response3.body) as Map;
-        // final data2 = ImageModel.fromJson(jsonData2.cast());  print(data2.toJson());
         Fluttertoast.showToast(msg: "Image uploaded");
         controller.update(["mypost", "postCount"]);
         Get.back();

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/drawer_page.dart';
@@ -19,12 +20,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final box = Boxes.getInstance();
   final _advancedDrawerController = AdvancedDrawerController();
   final imagePicker = ImagePicker();
   String? imagePath;
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = box.get("user");
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return SafeArea(
@@ -74,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                   future: getMyFeeds(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return box(width);
+                      return skeleton(width);
                     }
                     if (snapshot.hasData) {
                       if (snapshot.data != null) {
@@ -241,40 +244,95 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       Row(
                                         children: [
-                                          IconButton(
-                                            splashRadius: 25,
-                                            splashColor: Colors.grey,
-                                            tooltip: 'like',
-                                            onPressed: () {
-                                              postLike(
-                                                imageId: data[index].id!,
-                                              );
-                                            },
-                                            icon: const Icon(
-                                              Icons.favorite_outline,
-                                            ),
-                                          ),
                                           GetBuilder<AppController>(
                                             id: "likes",
                                             builder: (_) {
-                                              return FutureBuilder<List<LikedUsers>?>(
+                                              return FutureBuilder<
+                                                  List<LikedUsers>?>(
                                                 future: getLikedUsers(
                                                   imageId: data[index].id!,
                                                 ),
                                                 builder: (context, snapshot) {
-                                                  if (snapshot.connectionState ==
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.done) {
+                                                    final likedUsers =
+                                                        snapshot.data!;
+                                                    final isLiked = likedUsers
+                                                        .where(
+                                                          (element) =>
+                                                              element
+                                                                  .owner!.id ==
+                                                              currentUser!.id,
+                                                        )
+                                                        .isEmpty;
+                                                    return !isLiked
+                                                        ? IconButton(
+                                                            splashRadius: 25,
+                                                            splashColor:
+                                                                Colors.grey,
+                                                            tooltip: 'liked',
+                                                            onPressed: () {},
+                                                            icon: const Icon(
+                                                              Icons
+                                                                  .favorite_rounded,
+                                                            ),
+                                                          )
+                                                        : IconButton(
+                                                            splashRadius: 25,
+                                                            splashColor:
+                                                                Colors.grey,
+                                                            tooltip: 'like',
+                                                            onPressed: () {
+                                                              postLike(
+                                                                imageId:
+                                                                    data[index]
+                                                                        .id!,
+                                                              );
+                                                            },
+                                                            icon: const Icon(
+                                                              Icons
+                                                                  .favorite_outline,
+                                                            ),
+                                                          );
+                                                  }
+                                                  return IconButton(
+                                                    splashRadius: 25,
+                                                    splashColor: Colors.grey,
+                                                    onPressed: () {},
+                                                    icon: const Icon(
+                                                      Icons.favorite_outline,
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                          GetBuilder<AppController>(
+                                            id: "likes",
+                                            builder: (_) {
+                                              return FutureBuilder<
+                                                  List<LikedUsers>?>(
+                                                future: getLikedUsers(
+                                                  imageId: data[index].id!,
+                                                ),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
                                                       ConnectionState.done) {
                                                     final likedUsersList =
                                                         snapshot.data!;
                                                     return InkWell(
                                                       onTap: () {
                                                         getLikedUsers(
-                                                          imageId: data[index].id!,
+                                                          imageId:
+                                                              data[index].id!,
                                                         );
                                                       },
                                                       child: Ink(
                                                         padding:
-                                                            const EdgeInsets.all(
+                                                            const EdgeInsets
+                                                                .all(
                                                           10,
                                                         ),
                                                         child: Text(
@@ -340,7 +398,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget box(double width) {
+  Widget skeleton(double width) {
     return Shimmer.fromColors(
       baseColor: Colors.grey.withOpacity(0.3),
       highlightColor: Colors.white,
