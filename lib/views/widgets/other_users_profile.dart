@@ -23,7 +23,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   TabController? tabController;
   int currentIndex = 0;
   final controller = Get.find<AppController>();
-  // List<UserProfileModel> followersList = [];
+  int followersCount = 0;
   final box = Boxes.getInstance();
   @override
   void initState() {
@@ -41,6 +41,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     final currentUser = box.get("user");
+    followersCount = widget.user.followersCount!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -183,34 +184,13 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                             GetBuilder<AppController>(
                               id: "followers",
                               builder: (_) {
-                                return FutureBuilder<List<UserProfileModel>>(
-                                  future: getOtherUserfollowers(
-                                    id: widget.user.id!,
+                                return Text(
+                                  followersCount.toString(),
+                                  style: GoogleFonts.poppins(
+                                    fontSize: textFactor * 17,
+                                    color: Colors.black.withOpacity(0.8),
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.done) {
-                                      final followersCount =
-                                          (snapshot.data)!.length;
-
-                                      return Text(
-                                        followersCount.toString(),
-                                        style: GoogleFonts.poppins(
-                                          fontSize: textFactor * 17,
-                                          color: Colors.black.withOpacity(0.8),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      );
-                                    }
-                                    return Text(
-                                      "",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 17,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    );
-                                  },
                                 );
                               },
                             ),
@@ -290,43 +270,48 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                         ),
                       ),
                     ),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        elevation: MaterialStateProperty.all<double>(5),
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(primaryColor),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      onPressed: () async {
-                        final body = {"id": widget.user.id};
-                        followUsers(body: body.cast());
-                      },
-                      child: GetBuilder<AppController>(
-                        id: "followers",
-                        builder: (_) {
-                          return FutureBuilder<List<UserProfileModel>>(
-                            future: getOtherUserfollowers(id: widget.user.id!),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                final followersList = snapshot.data!;
-                                final isFollowing = followersList
-                                    .where(
-                                      (element) =>
-                                          element.id == currentUser!.id,
-                                    )
-                                    .isEmpty;
-                                return SizedBox(
+                    GetBuilder<AppController>(
+                      id: "followers",
+                      builder: (_) {
+                        return FutureBuilder<List<UserProfileModel>>(
+                          future: getOtherUserfollowers(id: widget.user.id!),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              final followersList = snapshot.data!;
+                              final isFollowing = followersList
+                                  .where(
+                                    (element) => element.id == currentUser!.id,
+                                  )
+                                  .isNotEmpty;
+                              return ElevatedButton(
+                                style: ButtonStyle(
+                                  elevation:
+                                      MaterialStateProperty.all<double>(5),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    primaryColor,
+                                  ),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  if (!isFollowing) {
+                                    followersCount = followersCount + 1;
+                                    final body = {"id": widget.user.id};
+                                    followUsers(body: body.cast());
+                                  }
+                                },
+                                child: SizedBox(
                                   height: height * 0.06,
                                   width: width * 0.22,
                                   child: Center(
                                     child: Text(
-                                      isFollowing ? "Follow" : "Following",
+                                      !isFollowing ? "Follow" : "Following",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: textFactor * 15,
@@ -335,9 +320,25 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                       ),
                                     ),
                                   ),
-                                );
-                              }
-                              return SizedBox(
+                                ),
+                              );
+                            }
+                            return ElevatedButton(
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all<double>(5),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  primaryColor,
+                                ),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {},
+                              child: SizedBox(
                                 height: height * 0.06,
                                 width: width * 0.22,
                                 child: Center(
@@ -351,11 +352,11 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                     ),
                                   ),
                                 ),
-                              );
-                            },
-                          );
-                        },
-                      ),
+                              ),
+                            );
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),
