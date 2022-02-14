@@ -34,13 +34,8 @@ class _ProfilePageState extends State<ProfilePage>
       length: 2,
       vsync: this,
     );
-    // getPostCount();
+   
   }
-
-  // Future getPostCount() async {
-  //   final images = await getMyImages();
-  //   postCount = images.length;
-  // }
 
   @override
   Widget build(BuildContext context) {
