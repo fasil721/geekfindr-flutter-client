@@ -6,6 +6,7 @@ import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/drawer_page.dart';
+import 'package:geek_findr/views/widgets/comment_bottom_sheet.dart';
 import 'package:geek_findr/views/widgets/image_upload.dart';
 import 'package:geek_findr/views/widgets/other_users_profile.dart';
 import 'package:geek_findr/views/widgets/search_widget.dart';
@@ -396,10 +397,20 @@ class _HomePageState extends State<HomePage> {
                                                           snapshot.data!;
                                                       return InkWell(
                                                         onTap: () {
-                                                          // getCommentedUsers(
-                                                          //   imageId:
-                                                          //       data[index].id!,
-                                                          // );
+                                                          Get.bottomSheet(
+                                                            CommentBottomSheet(
+                                                              commentedUsersList:
+                                                                  commentedUsers,
+                                                              imageId:
+                                                                  data[index]
+                                                                      .id!,
+                                                            ),
+                                                          );
+                                                          isComments[index] =
+                                                              false;
+                                                          controller.update(
+                                                            ["comments"],
+                                                          );
                                                         },
                                                         child: Ink(
                                                           padding:
