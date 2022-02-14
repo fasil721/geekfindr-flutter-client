@@ -207,7 +207,7 @@ Future<List<UserProfileModel>> getOtherUserfollowers({
   return [];
 }
 
-Future<UserProfileModel?> getUserbyId({
+Future<UserProfileModel?> getUserProfilebyId({
   required String id,
 }) async {
   final user = box.get("user");

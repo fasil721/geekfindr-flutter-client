@@ -8,7 +8,7 @@ import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/drawer_page.dart';
 import 'package:geek_findr/views/widgets/comment_bottom_sheet.dart';
 import 'package:geek_findr/views/widgets/image_upload.dart';
-import 'package:geek_findr/views/widgets/other_users_profile.dart';
+import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:geek_findr/views/widgets/search_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -127,15 +127,11 @@ class _HomePageState extends State<HomePage> {
                                                   color: Colors.transparent,
                                                   child: InkWell(
                                                     onTap: () async {
-                                                      final user =
-                                                          await getUserbyId(
-                                                        id: data[index]
-                                                            .owner!
-                                                            .id!,
-                                                      );
                                                       Get.to(
                                                         () => OtherUserProfile(
-                                                          user: user!,
+                                                          userId: data[index]
+                                                              .owner!
+                                                              .id!,
                                                         ),
                                                       );
                                                     },
