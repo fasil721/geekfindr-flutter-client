@@ -24,7 +24,9 @@ class _HomePageState extends State<HomePage> {
   final _advancedDrawerController = AdvancedDrawerController();
   final imagePicker = ImagePicker();
   String? imagePath;
-
+  List<bool> isComments = [];
+  final commmentEditController = TextEditingController();
+  final controller = Get.find<AppController>();
   @override
   Widget build(BuildContext context) {
     final currentUser = box.get("user");
@@ -82,6 +84,9 @@ class _HomePageState extends State<HomePage> {
                     if (snapshot.hasData) {
                       if (snapshot.data != null) {
                         final data = snapshot.data!;
+                        for (int i = 0; i < data.length; i++) {
+                          isComments.add(false);
+                        }
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 20,
@@ -353,7 +358,14 @@ class _HomePageState extends State<HomePage> {
                                           IconButton(
                                             splashRadius: 25,
                                             tooltip: 'comment',
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              if (isComments[index]) {
+                                                isComments[index] = false;
+                                              } else {
+                                                isComments[index] = true;
+                                              }
+                                              controller.update(["comments"]);
+                                            },
                                             icon: const Icon(
                                               Icons.mode_comment_outlined,
                                             ),
@@ -371,7 +383,43 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                     ],
-                                  )
+                                  ),
+                                  GetBuilder<AppController>(
+                                    id: "comments",
+                                    builder: (context) {
+                                      return Visibility(
+                                        visible: isComments[index],
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: TextField(
+                                            decoration: InputDecoration(
+                                              suffixIcon: IconButton(
+                                                splashRadius: 25,
+                                                icon: const Icon(
+                                                  Icons.send_rounded,
+                                                ),
+                                                onPressed: () {
+                                                  postComment(
+                                                    imageId: data[index].id!,
+                                                    comment:
+                                                        commmentEditController
+                                                            .text,
+                                                  );
+                                                  isComments[index] = false;
+                                                  controller
+                                                      .update(["comments"]);
+                                                },
+                                              ),
+                                              border: InputBorder.none,
+                                              hintText: 'Add comment',
+                                            ),
+                                            controller: commmentEditController,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ],
                               );
                             },
