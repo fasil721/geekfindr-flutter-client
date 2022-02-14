@@ -325,27 +325,30 @@ class _HomePageState extends State<HomePage> {
                                                   if (snapshot
                                                           .connectionState ==
                                                       ConnectionState.done) {
-                                                    final likedUsersList =
-                                                        snapshot.data!;
-                                                    return InkWell(
-                                                      onTap: () {
-                                                        getLikedUsers(
-                                                          imageId:
-                                                              data[index].id!,
-                                                        );
-                                                      },
-                                                      child: Ink(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(
-                                                          10,
+                                                    if (snapshot.data != null) {
+                                                      final likedUsersList =
+                                                          snapshot.data!;
+                                                      return InkWell(
+                                                        onTap: () {
+                                                          // getLikedUsers(
+                                                          //   imageId:
+                                                          //       data[index].id!,
+                                                          // );
+                                                        },
+                                                        child: Ink(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(
+                                                            10,
+                                                          ),
+                                                          child: Text(
+                                                            likedUsersList
+                                                                .length
+                                                                .toString(),
+                                                          ),
                                                         ),
-                                                        child: Text(
-                                                          likedUsersList.length
-                                                              .toString(),
-                                                        ),
-                                                      ),
-                                                    );
+                                                      );
+                                                    }
                                                   }
                                                   return const Padding(
                                                     padding: EdgeInsets.all(10),
@@ -367,7 +370,6 @@ class _HomePageState extends State<HomePage> {
                                                     i++) {
                                                   isComments[i] = false;
                                                 }
-                                                // controller.update(["comments"]);
                                                 isComments[index] = true;
                                               }
                                               controller.update(["comments"]);
@@ -377,9 +379,48 @@ class _HomePageState extends State<HomePage> {
                                               Icons.mode_comment_outlined,
                                             ),
                                           ),
-                                          Text(
-                                            data[index].commentCount.toString(),
-                                          ),
+                                          GetBuilder<AppController>(
+                                            id: "commentCount",
+                                            builder: (_) {
+                                              return FutureBuilder<
+                                                  List<CommentedUsers>?>(
+                                                future: getCommentedUsers(
+                                                  imageId: data[index].id!,
+                                                ),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.done) {
+                                                    if (snapshot.data != null) {
+                                                      final commentedUsers =
+                                                          snapshot.data!;
+                                                      return InkWell(
+                                                        onTap: () {
+                                                          // getCommentedUsers(
+                                                          //   imageId:
+                                                          //       data[index].id!,
+                                                          // );
+                                                        },
+                                                        child: Ink(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(
+                                                            10,
+                                                          ),
+                                                          child: Text(
+                                                            commentedUsers
+                                                                .length
+                                                                .toString(),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+                                                  }
+                                                  return const SizedBox();
+                                                },
+                                              );
+                                            },
+                                          )
                                         ],
                                       ),
                                       IconButton(
@@ -407,15 +448,18 @@ class _HomePageState extends State<HomePage> {
                                                   Icons.send_rounded,
                                                 ),
                                                 onPressed: () {
-                                                  postComment(
-                                                    imageId: data[index].id!,
-                                                    comment:
-                                                        commmentEditController
-                                                            .text,
-                                                  );
-                                                  isComments[index] = false;
-                                                  controller
-                                                      .update(["comments"]);
+                                                  if (commmentEditController
+                                                      .text.isNotEmpty) {
+                                                    postComment(
+                                                      imageId: data[index].id!,
+                                                      comment:
+                                                          commmentEditController
+                                                              .text,
+                                                    );
+                                                    isComments[index] = false;
+                                                    controller
+                                                        .update(["comments"]);
+                                                  }
                                                 },
                                               ),
                                               border: InputBorder.none,

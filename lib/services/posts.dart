@@ -382,7 +382,7 @@ Future postComment({required String imageId, required String comment}) async {
       body: json.encode(body),
     );
     if (response.statusCode == 200) {
-      Fluttertoast.showToast(msg: "comment added");
+      controller.update(["commentCount"]);
     } else if (response.statusCode == 422 || response.statusCode == 400) {
       final errorJson = json.decode(response.body) as Map;
       final err = ErrorModel.fromJson(errorJson.cast());
@@ -399,4 +399,62 @@ Future postComment({required String imageId, required String comment}) async {
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
   }
+}
+
+Future<List<CommentedUsers>?> getCommentedUsers({
+  required String imageId,
+}) async {
+  final user = box.get("user");
+  final url = "$prodUrl/api/v1/posts/$imageId/comments";
+
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {"Authorization": "Bearer ${user!.token}"},
+    );
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body) as List;
+      final data = jsonData
+          .map(
+            (e) => CommentedUsers.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
+          .toList();
+      return data;
+    } else if (response.statusCode == 422 || response.statusCode == 400) {
+      final errorJson = json.decode(response.body) as Map;
+      final err = ErrorModel.fromJson(errorJson.cast());
+      for (final element in err.errors!) {
+        Fluttertoast.showToast(msg: element.message!);
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Something went wrong");
+    }
+  } on HttpException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on SocketException {
+    Fluttertoast.showToast(msg: "No Internet connection");
+  } on PlatformException {
+    Fluttertoast.showToast(msg: "Invalid Format");
+  }
+  return null;
+}
+
+class CommentedUsers {
+  CommentedUsers({
+    this.comment,
+    this.owner,
+  });
+
+  String? comment;
+  Owner? owner;
+
+  factory CommentedUsers.fromJson(Map<String, dynamic> json) => CommentedUsers(
+        comment: json["comment"] as String,
+        owner: Owner.fromJson(Map<String, String>.from(json["owner"] as Map)),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "comment": comment,
+        "owner": owner!.toJson(),
+      };
 }
