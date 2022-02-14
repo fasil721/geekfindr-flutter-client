@@ -362,9 +362,16 @@ class _HomePageState extends State<HomePage> {
                                               if (isComments[index]) {
                                                 isComments[index] = false;
                                               } else {
+                                                for (int i = 0;
+                                                    i < isComments.length;
+                                                    i++) {
+                                                  isComments[i] = false;
+                                                }
+                                                // controller.update(["comments"]);
                                                 isComments[index] = true;
                                               }
                                               controller.update(["comments"]);
+                                              commmentEditController.clear();
                                             },
                                             icon: const Icon(
                                               Icons.mode_comment_outlined,
