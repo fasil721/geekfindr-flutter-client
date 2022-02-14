@@ -4,11 +4,10 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/posts.dart';
-import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/drawer_page.dart';
+import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:geek_findr/views/widgets/comment_bottom_sheet.dart';
 import 'package:geek_findr/views/widgets/image_upload.dart';
-import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:geek_findr/views/widgets/search_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   final imagePicker = ImagePicker();
   String? imagePath;
   List<bool> isComments = [];
+  List<int> likesCountList = [];
+  List<int> commentCountList = [];
   final commmentEditController = TextEditingController();
   final controller = Get.find<AppController>();
   @override
@@ -84,9 +85,18 @@ class _HomePageState extends State<HomePage> {
                     }
                     if (snapshot.hasData) {
                       if (snapshot.data != null) {
+                        isComments = [];
                         final data = snapshot.data!;
                         for (int i = 0; i < data.length; i++) {
                           isComments.add(false);
+                        }
+                        likesCountList = [];
+                        for (final e in data) {
+                          likesCountList.add(e.likeCount!);
+                        }
+                        commentCountList = [];
+                        for (final e in data) {
+                          commentCountList.add(e.commentCount!);
                         }
                         return Padding(
                           padding: const EdgeInsets.symmetric(
@@ -286,6 +296,11 @@ class _HomePageState extends State<HomePage> {
                                                                 Colors.grey,
                                                             tooltip: 'like',
                                                             onPressed: () {
+                                                              likesCountList[
+                                                                      index] =
+                                                                  likesCountList[
+                                                                          index] +
+                                                                      1;
                                                               postLike(
                                                                 imageId:
                                                                     data[index]
@@ -313,45 +328,22 @@ class _HomePageState extends State<HomePage> {
                                           GetBuilder<AppController>(
                                             id: "likes",
                                             builder: (_) {
-                                              return FutureBuilder<
-                                                  List<LikedUsers>?>(
-                                                future: getLikedUsers(
-                                                  imageId: data[index].id!,
-                                                ),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.done) {
-                                                    if (snapshot.data != null) {
-                                                      final likedUsersList =
-                                                          snapshot.data!;
-                                                      return InkWell(
-                                                        onTap: () {
-                                                          // getLikedUsers(
-                                                          //   imageId:
-                                                          //       data[index].id!,
-                                                          // );
-                                                        },
-                                                        child: Ink(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(
-                                                            10,
-                                                          ),
-                                                          child: Text(
-                                                            likedUsersList
-                                                                .length
-                                                                .toString(),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  }
-                                                  return const Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: Text(" "),
-                                                  );
+                                              return InkWell(
+                                                onTap: () {
+                                                  // getLikedUsers(
+                                                  //   imageId:
+                                                  //       data[index].id!,
+                                                  // );
                                                 },
+                                                child: Ink(
+                                                  padding: const EdgeInsets.all(
+                                                    10,
+                                                  ),
+                                                  child: Text(
+                                                    likesCountList[index]
+                                                        .toString(),
+                                                  ),
+                                                ),
                                               );
                                             },
                                           ),
@@ -379,52 +371,29 @@ class _HomePageState extends State<HomePage> {
                                           GetBuilder<AppController>(
                                             id: "commentCount",
                                             builder: (_) {
-                                              return FutureBuilder<
-                                                  List<CommentedUsers>?>(
-                                                future: getCommentedUsers(
-                                                  imageId: data[index].id!,
-                                                ),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.done) {
-                                                    if (snapshot.data != null) {
-                                                      final commentedUsers =
-                                                          snapshot.data!;
-                                                      return InkWell(
-                                                        onTap: () {
-                                                          Get.bottomSheet(
-                                                            CommentBottomSheet(
-                                                              commentedUsersList:
-                                                                  commentedUsers,
-                                                              imageId:
-                                                                  data[index]
-                                                                      .id!,
-                                                            ),
-                                                          );
-                                                          isComments[index] =
-                                                              false;
-                                                          controller.update(
-                                                            ["comments"],
-                                                          );
-                                                        },
-                                                        child: Ink(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(
-                                                            10,
-                                                          ),
-                                                          child: Text(
-                                                            commentedUsers
-                                                                .length
-                                                                .toString(),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  }
-                                                  return const SizedBox();
+                                              return InkWell(
+                                                onTap: () {
+                                                  // Get.bottomSheet(
+                                                  //   CommentBottomSheet(
+                                                  //     commentedUsersList:
+                                                  //         commentedUsers,
+                                                  //     imageId: data[index].id!,
+                                                  //   ),
+                                                  // );
+                                                  isComments[index] = false;
+                                                  controller.update(
+                                                    ["comments"],
+                                                  );
                                                 },
+                                                child: Ink(
+                                                  padding: const EdgeInsets.all(
+                                                    10,
+                                                  ),
+                                                  child: Text(
+                                                    commentCountList[index]
+                                                        .toString(),
+                                                  ),
+                                                ),
                                               );
                                             },
                                           )
@@ -441,7 +410,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   GetBuilder<AppController>(
                                     id: "comments",
-                                    builder: (context) {
+                                    builder: (_) {
                                       return Visibility(
                                         visible: isComments[index],
                                         child: Padding(
@@ -454,15 +423,17 @@ class _HomePageState extends State<HomePage> {
                                                 icon: const Icon(
                                                   Icons.send_rounded,
                                                 ),
-                                                onPressed: () {
+                                                onPressed: () async {
                                                   if (commmentEditController
                                                       .text.isNotEmpty) {
-                                                    postComment(
+                                                    await postComment(
                                                       imageId: data[index].id!,
                                                       comment:
                                                           commmentEditController
                                                               .text,
                                                     );
+                                                    commentCountList[index] +=
+                                                        1;
                                                     isComments[index] = false;
                                                     controller
                                                         .update(["comments"]);

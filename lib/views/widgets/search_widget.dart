@@ -51,6 +51,8 @@ class _SearchWidgetState extends State<SearchWidget>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    // print(animation!.value * 1.629);
+    // print(335 / (width * .83));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: SizedBox(

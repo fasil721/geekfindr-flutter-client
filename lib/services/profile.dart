@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 final box = Boxes.getInstance();
 final controller = Get.find<AppController>();
+
 Future<UserProfileModel?> getUserProfileData() async {
   Future.delayed(const Duration(milliseconds: 500));
   final user = box.get("user");
@@ -221,12 +222,11 @@ Future<UserProfileModel?> getUserProfilebyId({
     );
 
     if (response.statusCode == 200) {
-        final jsonData =
+      final jsonData =
           Map<String, dynamic>.from(json.decode(response.body) as Map);
       final userData = UserProfileModel.fromJson(jsonData);
       return userData;
-
-    } else if (response.statusCode == 422) {
+    } else if (response.statusCode == 422 || response.statusCode == 400) {
       final errorJson = json.decode(response.body) as Map;
       final err = ErrorModel.fromJson(errorJson.cast());
       for (final element in err.errors!) {

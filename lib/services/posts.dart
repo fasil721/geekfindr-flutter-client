@@ -179,7 +179,7 @@ Future<List<ImageModel>> getMyImages(String id) async {
 Future<List<ImageModel>> getMyFeeds() async {
   // await Future.delayed(Duration(seconds: 5));
   final user = box.get("user");
-  const url = "$prodUrl/api/v1/posts/my-feed?limit=5";
+  const url = "$prodUrl/api/v1/posts/my-feed?limit=15";
 
   try {
     final response = await http.get(
