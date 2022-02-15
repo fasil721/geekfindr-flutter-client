@@ -4,6 +4,7 @@ import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:geek_findr/widgets/comment_bottom_sheet.dart';
+import 'package:geek_findr/widgets/userslist.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -298,11 +299,12 @@ class FeedList extends StatelessWidget {
                                       id: "likes",
                                       builder: (_) {
                                         return InkWell(
-                                          onTap: () {
-                                            // getLikedUsers(
-                                            //   imageId:
-                                            //       datas[index].id!,
-                                            // );
+                                          onTap: () async {
+                                            Get.bottomSheet(
+                                              LikedUsersBottomSheet(
+                                                imageId: datas[index].id!,
+                                              ),
+                                            );
                                           },
                                           child: Ink(
                                             padding: const EdgeInsets.all(
