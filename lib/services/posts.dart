@@ -176,11 +176,13 @@ Future<List<ImageModel>> getMyImages(String id) async {
   return [];
 }
 
-Future<List<ImageModel>> getMyFeeds() async {
+Future<List<ImageModel>> getMyFeeds({String? lastId}) async {
   // await Future.delayed(Duration(seconds: 5));
   final user = box.get("user");
-  const url = "$prodUrl/api/v1/posts/my-feed?limit=5";
-
+  String url = "$prodUrl/api/v1/posts/my-feed?limit=5";
+  if (lastId != null) {
+    url = "$prodUrl/api/v1/posts/my-feed?limit=5&lastid=$lastId";
+  }
   try {
     final response = await http.get(
       Uri.parse(url),
