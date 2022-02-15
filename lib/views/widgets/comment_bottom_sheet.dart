@@ -5,10 +5,8 @@ import 'package:geek_findr/services/posts.dart';
 class CommentBottomSheet extends StatelessWidget {
   CommentBottomSheet({
     Key? key,
-    required this.commentedUsersList,
     required this.imageId,
   }) : super(key: key);
-  final List<CommentedUsers> commentedUsersList;
   final String imageId;
   final commmentEditController = TextEditingController();
   @override
@@ -34,7 +32,7 @@ class CommentBottomSheet extends StatelessWidget {
                         imageId: imageId,
                         comment: commmentEditController.text,
                       );
-                      controller.update(["comments"]);
+                      controller.update(["commentCount"]);
                       commmentEditController.clear();
                     }
                   },
@@ -45,18 +43,18 @@ class CommentBottomSheet extends StatelessWidget {
               controller: commmentEditController,
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: commentedUsersList.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Text(commentedUsersList[index].owner!.username!),
-                  Text(commentedUsersList[index].comment!)
-                ],
-              );
-            },
-          )
+          // ListView.builder(
+          //   shrinkWrap: true,
+          //   itemCount: commentedUsersList.length,
+          //   itemBuilder: (context, index) {
+          //     return Column(
+          //       children: [
+          //         Text(commentedUsersList[index].owner!.username!),
+          //         Text(commentedUsersList[index].comment!)
+          //       ],
+          //     );
+          //   },
+          // )
         ],
       ),
     );

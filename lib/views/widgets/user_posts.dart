@@ -67,7 +67,7 @@ class UserPosts extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(data[index].description!),
+                                Expanded(child: Text(data[index].description!)),
                                 PopupMenuButton(
                                   itemBuilder: (BuildContext bc) => [
                                     const PopupMenuItem(

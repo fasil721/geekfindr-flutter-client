@@ -62,7 +62,7 @@ class _SearchWidgetState extends State<SearchWidget>
           children: [
             Container(
               height: 45,
-              width: animation!.value * 1.629,
+              width: animation!.value, // * 1.629,
               //animation!.value * 1.85
               decoration: const BoxDecoration(
                 color: secondaryColor,
@@ -72,37 +72,13 @@ class _SearchWidgetState extends State<SearchWidget>
                 ),
                 //: BorderRadius.circular(50),
               ),
-              child: TypeAheadField<UserProfileModel?>(
+              child: TypeAheadField<UserDetials?>(
                 getImmediateSuggestions: true,
                 hideSuggestionsOnKeyboardHide: false,
                 debounceDuration: const Duration(milliseconds: 500),
                 textFieldConfiguration: TextFieldConfiguration(
                   controller: serchController,
                   decoration: const InputDecoration(
-                    // suffixIcon: Visibility(
-                    //   visible: isForward,
-                    //   child: IconButton(
-                    //     onPressed: () async {
-                    //       if (isForward) {
-                    //         ScaffoldMessenger.of(context)
-                    //             .removeCurrentSnackBar();
-                    //         serchController.clear();
-                    //         SystemChannels.textInput
-                    //             .invokeMethod("TextInput.hide");
-                    //         animationController!.reverse();
-                    //         isForward = false;
-                    //       } else {
-                    //         animationController!.forward();
-                    //         isForward = true;
-                    //       }
-                    //     },
-                    //     icon: const Icon(
-                    //       Icons.close,
-                    //       size: 20,
-                    //       color: primaryColor,
-                    //     ),
-                    //   ),
-                    // ),
                     prefixIcon: Icon(Icons.search),
                     border: InputBorder.none,
                     hintText: 'Search Username',
@@ -114,7 +90,7 @@ class _SearchWidgetState extends State<SearchWidget>
                   }
                   return [];
                 },
-                itemBuilder: (context, UserProfileModel? suggestion) {
+                itemBuilder: (context, UserDetials? suggestion) {
                   final user = suggestion!;
                   return ListTile(
                     textColor: secondaryColor,
@@ -137,9 +113,9 @@ class _SearchWidgetState extends State<SearchWidget>
                   );
                 },
                 noItemsFoundBuilder: (context) => const SizedBox(),
-                onSuggestionSelected: (UserProfileModel? user) {
+                onSuggestionSelected: (UserDetials? user) {
                   ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  // Get.to(() => OtherUserProfile(userId: user!));
+                  Get.to(() => OtherUserProfile(userId: user!.id!));
                   isForward = false;
                   serchController.clear();
                   animationController!.reverse();

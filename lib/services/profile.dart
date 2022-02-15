@@ -81,7 +81,7 @@ Future<void> updateUserProfileData(Map<String, dynamic> body) async {
   }
 }
 
-Future<List<UserProfileModel>> searchUsers({
+Future<List<UserDetials>> searchUsers({
   required String text,
   String role = "",
 }) async {
@@ -100,8 +100,8 @@ Future<List<UserProfileModel>> searchUsers({
       final jsonData = json.decode(response.body) as List;
       final userData = jsonData
           .map(
-            (e) => UserProfileModel.fromJson(
-              Map<String, dynamic>.from(e as Map),
+            (e) => UserDetials.fromJson(
+              Map<String, String>.from(e as Map),
             ),
           )
           .toList();
@@ -125,6 +125,34 @@ Future<List<UserProfileModel>> searchUsers({
     Fluttertoast.showToast(msg: e.toString());
   }
   return [];
+}
+
+class UserDetials {
+    UserDetials({
+        this.username,
+        this.avatar,
+        this.role,
+        this.id,
+    });
+
+    String? username;
+    String? avatar;
+    String? role;
+    String? id;
+
+    factory UserDetials.fromJson(Map<String, String> json) => UserDetials(
+        username: json["username"],
+        avatar: json["avatar"],
+        role: json["role"],
+        id: json["id"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "username": username,
+        "avatar": avatar,
+        "role": role,
+        "id": id,
+    };
 }
 
 Future followUsers({
