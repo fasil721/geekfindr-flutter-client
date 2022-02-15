@@ -39,7 +39,7 @@ class LikedUsersBottomSheet extends StatelessWidget {
                       );
                     },
                     leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
                         imageUrl: userList[index].avatar!,
                         fit: BoxFit.fitWidth,
@@ -56,7 +56,7 @@ class LikedUsersBottomSheet extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Colors.grey,
                               borderRadius: BorderRadius.circular(
-                                10,
+                                100,
                               ),
                             ),
                           ),

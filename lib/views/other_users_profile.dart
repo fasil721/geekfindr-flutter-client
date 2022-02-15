@@ -10,6 +10,7 @@ import 'package:geek_findr/views/profile_page.dart';
 import 'package:geek_findr/widgets/profile_about_view.dart';
 import 'package:geek_findr/widgets/profile_loading_screen.dart';
 import 'package:geek_findr/widgets/user_posts.dart';
+import 'package:geek_findr/widgets/users_list.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -212,7 +213,11 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               ),
                               Expanded(
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Get.bottomSheet(
+                                      UsersListView(userId: user.id!),
+                                    );
+                                  },
                                   child: Ink(
                                     padding: const EdgeInsets.all(10),
                                     child: Column(

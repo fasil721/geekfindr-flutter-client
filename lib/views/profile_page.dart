@@ -13,8 +13,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
-
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -36,7 +34,6 @@ class _ProfilePageState extends State<ProfilePage>
       length: 2,
       vsync: this,
     );
-   
   }
 
   @override
@@ -132,7 +129,8 @@ class _ProfilePageState extends State<ProfilePage>
                                         Shimmer.fromColors(
                                       baseColor: Colors.grey.withOpacity(0.3),
                                       highlightColor: Colors.white,
-                                      period: const Duration(milliseconds: 1000),
+                                      period:
+                                          const Duration(milliseconds: 1000),
                                       child: Container(
                                         height: height * 0.15,
                                         width: height * 0.15,
@@ -187,58 +185,70 @@ class _ProfilePageState extends State<ProfilePage>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Expanded(
-                                      child: Column(
-                                        children: [
-                                          GetBuilder<AppController>(
-                                            id: "postCount",
-                                            builder: (context) {
-                                              return FutureBuilder<
-                                                  List<ImageModel?>>(
-                                                future:
-                                                    getMyImages(userData.id!),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.done) {
-                                                    final postCount =
-                                                        (snapshot.data)!.length;
-                                                    return Text(
-                                                      postCount.toString(),
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                        fontSize:
-                                                            textFactor * 17,
-                                                        color: Colors.black
-                                                            .withOpacity(0.8),
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    );
-                                                  }
-                                                  return Text(
-                                                    "",
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: textFactor * 17,
-                                                      color: Colors.black
-                                                          .withOpacity(0.8),
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
+                                      child: InkWell(
+                                        onTap: () {},
+                                        child: Ink(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            children: [
+                                              GetBuilder<AppController>(
+                                                id: "postCount",
+                                                builder: (context) {
+                                                  return FutureBuilder<
+                                                      List<ImageModel?>>(
+                                                    future: getMyImages(
+                                                        userData.id!),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .done) {
+                                                        final postCount =
+                                                            (snapshot.data)!
+                                                                .length;
+                                                        return Text(
+                                                          postCount.toString(),
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                            fontSize:
+                                                                textFactor * 17,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.8),
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        );
+                                                      }
+                                                      return Text(
+                                                        "",
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          fontSize:
+                                                              textFactor * 17,
+                                                          color: Colors.black
+                                                              .withOpacity(0.8),
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      );
+                                                    },
                                                   );
                                                 },
-                                              );
-                                            },
+                                              ),
+                                              Text(
+                                                "Posts",
+                                                style: GoogleFonts.roboto(
+                                                  fontSize: textFactor * 13,
+                                                  color: Colors.black
+                                                      .withOpacity(0.8),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            "Posts",
-                                            style: GoogleFonts.roboto(
-                                              fontSize: textFactor * 13,
-                                              color:
-                                                  Colors.black.withOpacity(0.8),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                     Container(
@@ -250,27 +260,34 @@ class _ProfilePageState extends State<ProfilePage>
                                       width: 1.5,
                                     ),
                                     Expanded(
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            userData.followersCount.toString(),
-                                            style: GoogleFonts.poppins(
-                                              fontSize: textFactor * 17,
-                                              color:
-                                                  Colors.black.withOpacity(0.8),
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                      child: InkWell(
+                                        onTap: () {},
+                                        child: Ink(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                userData.followersCount
+                                                    .toString(),
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: textFactor * 17,
+                                                  color: Colors.black
+                                                      .withOpacity(0.8),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Text(
+                                                " Followers",
+                                                style: GoogleFonts.roboto(
+                                                  fontSize: textFactor * 13,
+                                                  color: Colors.black
+                                                      .withOpacity(0.8),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            " Followers",
-                                            style: GoogleFonts.roboto(
-                                              fontSize: textFactor * 13,
-                                              color:
-                                                  Colors.black.withOpacity(0.8),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                     Container(
@@ -282,27 +299,34 @@ class _ProfilePageState extends State<ProfilePage>
                                       width: 1.5,
                                     ),
                                     Expanded(
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            userData.followingCount.toString(),
-                                            style: GoogleFonts.poppins(
-                                              fontSize: textFactor * 17,
-                                              color:
-                                                  Colors.black.withOpacity(0.8),
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                      child: InkWell(
+                                        onTap: () {},
+                                        child: Ink(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                userData.followingCount
+                                                    .toString(),
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: textFactor * 17,
+                                                  color: Colors.black
+                                                      .withOpacity(0.8),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Text(
+                                                "Followings",
+                                                style: GoogleFonts.roboto(
+                                                  fontSize: textFactor * 12,
+                                                  color: Colors.black
+                                                      .withOpacity(0.8),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            "Followings",
-                                            style: GoogleFonts.roboto(
-                                              fontSize: textFactor * 12,
-                                              color:
-                                                  Colors.black.withOpacity(0.8),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -363,10 +387,8 @@ class _ProfilePageState extends State<ProfilePage>
                                       Visibility(
                                         maintainState: true,
                                         visible: currentIndex == 1,
-                                        child:
-                                         currentIndex == 1
-                                            ? 
-                                            UserPosts(
+                                        child: currentIndex == 1
+                                            ? UserPosts(
                                                 userId: userData.id!,
                                               )
                                             : const SizedBox(),

@@ -4,7 +4,7 @@ import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:geek_findr/widgets/comment_bottom_sheet.dart';
-import 'package:geek_findr/widgets/userslist.dart';
+import 'package:geek_findr/widgets/liked_users_bottom_list.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
