@@ -154,45 +154,52 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: Column(
-                                  children: [
-                                    FutureBuilder<List<ImageModel?>>(
-                                      future: getMyImages(user.id!),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.done) {
-                                          final postCount =
-                                              (snapshot.data)!.length;
-                                          return Text(
-                                            postCount.toString(),
-                                            style: GoogleFonts.poppins(
-                                              fontSize: textFactor * 17,
-                                              color:
-                                                  Colors.black.withOpacity(0.8),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          );
-                                        }
-                                        return Text(
-                                          "",
-                                          style: GoogleFonts.poppins(
-                                            fontSize: textFactor * 17,
+                                child: InkWell(
+                                  onTap: () {},
+                                  child: Ink(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        FutureBuilder<List<ImageModel?>>(
+                                          future: getMyImages(user.id!),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.done) {
+                                              final postCount =
+                                                  (snapshot.data)!.length;
+                                              return Text(
+                                                postCount.toString(),
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: textFactor * 17,
+                                                  color: Colors.black
+                                                      .withOpacity(0.8),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              );
+                                            }
+                                            return Text(
+                                              "",
+                                              style: GoogleFonts.poppins(
+                                                fontSize: textFactor * 17,
+                                                color: Colors.black
+                                                    .withOpacity(0.8),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        Text(
+                                          "Posts",
+                                          style: GoogleFonts.roboto(
+                                            fontSize: textFactor * 13,
                                             color:
                                                 Colors.black.withOpacity(0.8),
                                             fontWeight: FontWeight.w600,
                                           ),
-                                        );
-                                      },
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      "Posts",
-                                      style: GoogleFonts.roboto(
-                                        fontSize: textFactor * 13,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                               Container(
@@ -204,31 +211,38 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                 width: 1.5,
                               ),
                               Expanded(
-                                child: Column(
-                                  children: [
-                                    GetBuilder<AppController>(
-                                      id: "followers",
-                                      builder: (_) {
-                                        return Text(
-                                          followersCount.toString(),
-                                          style: GoogleFonts.poppins(
-                                            fontSize: textFactor * 17,
+                                child: InkWell(
+                                  onTap: () {},
+                                  child: Ink(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        GetBuilder<AppController>(
+                                          id: "followers",
+                                          builder: (_) {
+                                            return Text(
+                                              followersCount.toString(),
+                                              style: GoogleFonts.poppins(
+                                                fontSize: textFactor * 17,
+                                                color: Colors.black
+                                                    .withOpacity(0.8),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        Text(
+                                          " Followers",
+                                          style: GoogleFonts.roboto(
+                                            fontSize: textFactor * 13,
                                             color:
                                                 Colors.black.withOpacity(0.8),
                                             fontWeight: FontWeight.w600,
                                           ),
-                                        );
-                                      },
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      " Followers",
-                                      style: GoogleFonts.roboto(
-                                        fontSize: textFactor * 13,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                               Container(
@@ -240,25 +254,33 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                 width: 1.5,
                               ),
                               Expanded(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      user.followingCount.toString(),
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 17,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                child: InkWell(
+                                  onTap: () {},
+                                  child: Ink(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          user.followingCount.toString(),
+                                          style: GoogleFonts.poppins(
+                                            fontSize: textFactor * 17,
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Followings",
+                                          style: GoogleFonts.roboto(
+                                            fontSize: textFactor * 12,
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      "Followings",
-                                      style: GoogleFonts.roboto(
-                                        fontSize: textFactor * 12,
-                                        color: Colors.black.withOpacity(0.8),
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ],
