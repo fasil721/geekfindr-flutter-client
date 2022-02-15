@@ -301,7 +301,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                             GetBuilder<AppController>(
                               id: "followers",
                               builder: (_) {
-                                return FutureBuilder<List<UserProfileModel>>(
+                                return FutureBuilder<List<UserDetials>>(
                                   future: getOtherUserfollowers(id: user.id!),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==

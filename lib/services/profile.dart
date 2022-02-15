@@ -128,31 +128,31 @@ Future<List<UserDetials>> searchUsers({
 }
 
 class UserDetials {
-    UserDetials({
-        this.username,
-        this.avatar,
-        this.role,
-        this.id,
-    });
+  UserDetials({
+    this.username,
+    this.avatar,
+    this.role,
+    this.id,
+  });
 
-    String? username;
-    String? avatar;
-    String? role;
-    String? id;
+  String? username;
+  String? avatar;
+  String? role;
+  String? id;
 
-    factory UserDetials.fromJson(Map<String, String> json) => UserDetials(
+  factory UserDetials.fromJson(Map<String, String> json) => UserDetials(
         username: json["username"],
         avatar: json["avatar"],
         role: json["role"],
         id: json["id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "username": username,
         "avatar": avatar,
         "role": role,
         "id": id,
-    };
+      };
 }
 
 Future followUsers({
@@ -192,7 +192,7 @@ Future followUsers({
   }
 }
 
-Future<List<UserProfileModel>> getOtherUserfollowers({
+Future<List<UserDetials>> getOtherUserfollowers({
   required String id,
 }) async {
   final user = box.get("user");
@@ -205,12 +205,12 @@ Future<List<UserProfileModel>> getOtherUserfollowers({
       },
     );
 
-    if (response.statusCode == 200) {
+     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List;
       final userData = jsonData
           .map(
-            (e) => UserProfileModel.fromJson(
-              Map<String, dynamic>.from(e as Map),
+            (e) => UserDetials.fromJson(
+              Map<String, String>.from(e as Map),
             ),
           )
           .toList();
@@ -230,8 +230,8 @@ Future<List<UserProfileModel>> getOtherUserfollowers({
     Fluttertoast.showToast(msg: "No Internet");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
-  } catch (e) {
-    Fluttertoast.showToast(msg: e.toString());
+    // } catch (e) {
+    //   Fluttertoast.showToast(msg: e.toString());
   }
   return [];
 }
@@ -269,8 +269,8 @@ Future<UserProfileModel?> getUserProfilebyId({
     Fluttertoast.showToast(msg: "No Internet");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
-  } catch (e) {
-    Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
   }
   return null;
 }
