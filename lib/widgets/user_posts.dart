@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
-import 'package:geek_findr/views/widgets/image_edit.dart';
+import 'package:geek_findr/widgets/image_edit.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
