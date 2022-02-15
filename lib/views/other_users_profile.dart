@@ -215,7 +215,10 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                 child: InkWell(
                                   onTap: () {
                                     Get.bottomSheet(
-                                      UsersListView(userId: user.id!),
+                                      UsersListView(
+                                        userId: user.id!,
+                                        type: "followers",
+                                      ),
                                     );
                                   },
                                   child: Ink(
@@ -260,7 +263,14 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               ),
                               Expanded(
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Get.bottomSheet(
+                                      UsersListView(
+                                        userId: user.id!,
+                                        type: "following",
+                                      ),
+                                    );
+                                  },
                                   child: Ink(
                                     padding: const EdgeInsets.all(10),
                                     child: Column(
@@ -329,7 +339,10 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               id: "followers",
                               builder: (_) {
                                 return FutureBuilder<List<UserDetials>>(
-                                  future: getOtherUserfollowers(id: user.id!),
+                                  future: getUserfollowersAndFollowings(
+                                    id: user.id!,
+                                    type: "followers",
+                                  ),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.done) {

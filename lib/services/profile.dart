@@ -192,11 +192,18 @@ Future followUsers({
   }
 }
 
-Future<List<UserDetials>> getOtherUserfollowers({
+Future<List<UserDetials>> getUserfollowersAndFollowings({
   required String id,
+  required String type,
 }) async {
+  String url = "$prodUrl/api/v1/profiles/$id/";
   final user = box.get("user");
-  final url = "$prodUrl/api/v1/profiles/$id/followers";
+
+  if (type == "followers") {
+    url = url + type;
+  } else if (type == "following") {
+    url = url + type;
+  }
   try {
     final response = await http.get(
       Uri.parse(url),
@@ -205,7 +212,7 @@ Future<List<UserDetials>> getOtherUserfollowers({
       },
     );
 
-     if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
       final jsonData = json.decode(response.body) as List;
       final userData = jsonData
           .map(
@@ -269,8 +276,8 @@ Future<UserProfileModel?> getUserProfilebyId({
     Fluttertoast.showToast(msg: "No Internet");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+  } catch (e) {
+    Fluttertoast.showToast(msg: e.toString());
   }
   return null;
 }

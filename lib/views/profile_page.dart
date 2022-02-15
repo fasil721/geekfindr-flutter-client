@@ -9,6 +9,7 @@ import 'package:geek_findr/views/profile_update_page.dart';
 import 'package:geek_findr/widgets/profile_about_view.dart';
 import 'package:geek_findr/widgets/profile_loading_screen.dart';
 import 'package:geek_findr/widgets/user_posts.dart';
+import 'package:geek_findr/widgets/users_list.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -197,7 +198,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                   return FutureBuilder<
                                                       List<ImageModel?>>(
                                                     future: getMyImages(
-                                                        userData.id!),
+                                                      userData.id!,
+                                                    ),
                                                     builder:
                                                         (context, snapshot) {
                                                       if (snapshot
@@ -215,7 +217,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                                 textFactor * 17,
                                                             color: Colors.black
                                                                 .withOpacity(
-                                                                    0.8),
+                                                              0.8,
+                                                            ),
                                                             fontWeight:
                                                                 FontWeight.w600,
                                                           ),
@@ -261,7 +264,14 @@ class _ProfilePageState extends State<ProfilePage>
                                     ),
                                     Expanded(
                                       child: InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Get.bottomSheet(
+                                            UsersListView(
+                                              userId: userData.id!,
+                                              type: "followers",
+                                            ),
+                                          );
+                                        },
                                         child: Ink(
                                           padding: const EdgeInsets.all(10),
                                           child: Column(
@@ -300,7 +310,14 @@ class _ProfilePageState extends State<ProfilePage>
                                     ),
                                     Expanded(
                                       child: InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Get.bottomSheet(
+                                            UsersListView(
+                                              userId: userData.id!,
+                                              type: "following",
+                                            ),
+                                          );
+                                        },
                                         child: Ink(
                                           padding: const EdgeInsets.all(10),
                                           child: Column(

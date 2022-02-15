@@ -11,8 +11,10 @@ class UsersListView extends StatelessWidget {
   const UsersListView({
     Key? key,
     required this.userId,
+    required this.type,
   }) : super(key: key);
   final String userId;
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class UsersListView extends StatelessWidget {
     return Container(
       color: secondaryColor,
       child: FutureBuilder<List<UserDetials>>(
-        future: getOtherUserfollowers(id: userId),
+        future: getUserfollowersAndFollowings(id: userId, type: type),
         builder: (context, snapshot) {
           if (ConnectionState.done == snapshot.connectionState) {
             if (snapshot.data != null) {
