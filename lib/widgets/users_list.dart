@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
@@ -28,7 +27,6 @@ class UsersListView extends StatelessWidget {
           if (ConnectionState.done == snapshot.connectionState) {
             if (snapshot.data != null) {
               final userList = snapshot.data!;
-
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: userList.length,
@@ -36,6 +34,7 @@ class UsersListView extends StatelessWidget {
                   return ListTile(
                     // dense: true,
                     onTap: () {
+                      Get.back();
                       Get.to(
                         () => OtherUserProfile(userId: userList[index].id!),
                       );

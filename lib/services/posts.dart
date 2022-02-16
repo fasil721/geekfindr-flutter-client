@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 
 final box = Boxes.getInstance();
 final controller = Get.find<AppController>();
+
 Future<void> uploadImage({
   required String description,
   required File image,

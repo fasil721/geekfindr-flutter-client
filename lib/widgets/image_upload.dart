@@ -18,7 +18,6 @@ class PostUploadDialoge extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-    
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +58,7 @@ class PostUploadDialoge extends StatelessWidget {
                               ? Image.file(
                                   image!,
                                   width: double.infinity,
-                                  fit: BoxFit.fitHeight,
+                                  fit: BoxFit.contain,
                                 )
                               : const SizedBox(),
                         ),
