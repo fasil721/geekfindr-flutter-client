@@ -35,6 +35,7 @@ class UsersListView extends StatelessWidget {
                     // dense: true,
                     onTap: () {
                       Get.back();
+                      Get.back();
                       Get.to(
                         () => OtherUserProfile(userId: userList[index].id!),
                       );
