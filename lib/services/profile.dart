@@ -172,6 +172,7 @@ Future followUsers({
 
     if (response.statusCode == 200) {
       controller.update(["followers"]);
+      controller.update(["prof"]);
     } else if (response.statusCode == 422 || response.statusCode == 400) {
       final errorJson = json.decode(response.body) as Map;
       final err = ErrorModel.fromJson(errorJson.cast());
