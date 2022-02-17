@@ -265,12 +265,14 @@ class _ProfilePageState extends State<ProfilePage>
                                     Expanded(
                                       child: InkWell(
                                         onTap: () {
-                                          Get.bottomSheet(
-                                            UsersListView(
-                                              userId: userData.id!,
-                                              type: "followers",
-                                            ),
-                                          );
+                                          if (0 < userData.followersCount!) {
+                                            Get.bottomSheet(
+                                              UsersListView(
+                                                userId: userData.id!,
+                                                type: "followers",
+                                              ),
+                                            );
+                                          }
                                         },
                                         child: Ink(
                                           padding: const EdgeInsets.all(10),

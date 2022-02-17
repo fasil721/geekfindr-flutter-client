@@ -182,7 +182,7 @@ Future<List<ImageModel>> getMyFeeds({String? lastId}) async {
   final user = box.get("user");
   String url = "$prodUrl/api/v1/posts/my-feed?limit=5";
   if (lastId != null) {
-    url = "$prodUrl/api/v1/posts/my-feed?limit=5&lastid=$lastId";
+    url = "$prodUrl/api/v1/posts/my-feed?limit=5&lastId=$lastId";
   }
   try {
     final response = await http.get(

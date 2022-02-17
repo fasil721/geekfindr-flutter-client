@@ -45,7 +45,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
-  int touchCount = 0;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
@@ -68,6 +67,7 @@ class _MyAppState extends State<MyApp> {
           ),
           bottomNavigationBar: SalomonBottomBar(
             curve: Curves.ease,
+            selectedItemColor: const Color(0xffB954FE),
             unselectedItemColor: const Color(0xffB954FE),
             duration: const Duration(milliseconds: 300),
             margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
@@ -77,30 +77,23 @@ class _MyAppState extends State<MyApp> {
             onTap: (index) {
               currentIndex = index;
               controller.update(["home"]);
-              if (index == 3) {
-                touchCount++;
-              }
             },
             items: [
               SalomonBottomBarItem(
                 icon: const Icon(Icons.home),
                 title: const Text('Home'),
-                selectedColor: const Color(0xffB954FE),
               ),
               SalomonBottomBarItem(
                 icon: const Icon(Icons.search_outlined),
                 title: const Text('Search'),
-                selectedColor: const Color(0xffB954FE),
               ),
               SalomonBottomBarItem(
                 icon: const Icon(Icons.message_outlined),
                 title: const Text('Chats'),
-                selectedColor: const Color(0xffB954FE),
               ),
               SalomonBottomBarItem(
                 icon: const Icon(Icons.person),
                 title: const Text('Profile'),
-                selectedColor: const Color(0xffB954FE),
               ),
             ],
           ),

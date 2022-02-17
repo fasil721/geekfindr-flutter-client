@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
@@ -7,6 +8,7 @@ import 'package:geek_findr/widgets/comment_bottom_sheet.dart';
 import 'package:geek_findr/widgets/liked_users_bottom_list.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -24,17 +26,14 @@ class FeedList extends StatelessWidget {
   Future mockData(String lastId) async {
     if (!allLoaded) {
       isLoading = true;
-      // controller.update(["dataList"]);
     }
     final newData = await getMyFeeds(lastId: lastId);
-    // print("length = ${newData.length}");
     if (newData.isNotEmpty) {
       datas.addAll(newData);
       controller.update(["dataList"]);
     }
     isLoading = false;
     allLoaded = newData.isEmpty;
-    // controller.update(["dataList"]);
   }
 
   @override
@@ -82,8 +81,6 @@ class FeedList extends StatelessWidget {
                           if (info.visibleFraction == 1) {
                             print(index);
                             if (datas.length - 3 <= index && !isLoading) {
-                              // print(
-                              //     "length2 = ${datas[last].id}");
                               mockData(datas.last.id!);
                             }
                           }
@@ -194,44 +191,75 @@ class FeedList extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: CachedNetworkImage(
-                                imageUrl: datas[index].mediaUrl!,
-                                fit: BoxFit.fitWidth,
-                                width: width,
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                  baseColor: Colors.grey.withOpacity(0.3),
-                                  highlightColor: Colors.white,
-                                  period: const Duration(
-                                    milliseconds: 1000,
-                                  ),
-                                  child: Container(
-                                    height: 300,
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                bottom: 10,
+                              ),
+                              child: ReadMoreText(
+                                datas[index].description!,
+                                colorClickableText: primaryColor,
+                                trimMode: TrimMode.Line,
+                                style: GoogleFonts.poppins(color: Colors.black),
+                              ),
+                            ),
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CachedNetworkImage(
+                                    imageUrl: datas[index].mediaUrl!,
+                                    fit: BoxFit.fitWidth,
                                     width: width,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(
-                                        10,
+                                    placeholder: (context, url) =>
+                                        Shimmer.fromColors(
+                                      baseColor: Colors.grey.withOpacity(0.3),
+                                      highlightColor: Colors.white,
+                                      period: const Duration(
+                                        milliseconds: 1000,
+                                      ),
+                                      child: Container(
+                                        height: 300,
+                                        width: width,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10,
-                                left: 5,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(datas[index].description!),
-                                ],
-                              ),
+                                Positioned(
+                                  // alignment: Alignment.bottomRight,
+                                  bottom: 0, right: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.favorite,
+                                            color: Colors.white,
+                                            size: 28,
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.mode_comment_outlined,
+                                            color: Colors.white,
+                                            size: 28,
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
