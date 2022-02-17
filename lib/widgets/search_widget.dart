@@ -54,7 +54,7 @@ class _SearchWidgetState extends State<SearchWidget>
     // print(animation!.value * 1.629);
     // print(335 / (width * .83));
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: SizedBox(
         width: width,
         child: Row(
@@ -64,9 +64,9 @@ class _SearchWidgetState extends State<SearchWidget>
               height: 45,
               width: animation!.value, // * 1.629,
               //animation!.value * 1.85
-              decoration:  BoxDecoration(
+              decoration: const BoxDecoration(
                 color: secondaryColor,
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(50),
                   bottomLeft: Radius.circular(50),
                 ),

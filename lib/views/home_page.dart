@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/views/drawer_page.dart';
 import 'package:geek_findr/widgets/feed_list.dart';
@@ -50,14 +51,29 @@ class _HomePageState extends State<HomePage> {
                 appBar: AppBar(
                   elevation: 0,
                   toolbarHeight: 60,
-                  leading: IconButton(
-                    icon: Image.asset(
-                      "assets/icons/hamburger.png",
-                      height: height * .035,
+                  title: Container(
+                    height: 45, width: 45,
+                    // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: secondaryColor,
+                      borderRadius: BorderRadius.circular(
+                        100,
+                      ),
                     ),
-                    onPressed: () {
-                      _advancedDrawerController.showDrawer();
-                    },
+                    child: IconButton(
+                      icon: const ImageIcon(
+                        AssetImage(
+                          "assets/icons/hamburger.png",
+                        ),
+                        size: 18,
+                        color: primaryColor,
+                      ),
+                      onPressed: () {
+                        _advancedDrawerController.showDrawer();
+                      },
+                    ),
                   ),
                   backgroundColor: Colors.white,
                 ),
