@@ -27,6 +27,7 @@ class FeedList extends StatelessWidget {
     if (!allLoaded) {
       isLoading = true;
     }
+    print("new request have sent");
     final newData = await getMyFeeds(lastId: lastId);
     if (newData.isNotEmpty) {
       datas.addAll(newData);
@@ -329,10 +330,9 @@ class FeedList extends StatelessWidget {
                                                       splashColor: Colors.grey,
                                                       tooltip: 'liked',
                                                       onPressed: () {},
-                                                      icon: Icon(
+                                                      icon: const Icon(
                                                         Icons.favorite_rounded,
-                                                        color: Colors.black
-                                                            .withOpacity(0.8),
+                                                        color: primaryColor,
                                                         size: 28,
                                                       ),
                                                     )
@@ -370,9 +370,9 @@ class FeedList extends StatelessWidget {
                                       },
                                     ),
                                     IconButton(
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.mode_comment_outlined,
-                                        color: Colors.black.withOpacity(0.8),
+                                        color: primaryColor,
                                         size: 28,
                                       ),
                                       splashRadius: 25,

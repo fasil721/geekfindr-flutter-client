@@ -7,6 +7,7 @@ import 'package:geek_findr/widgets/feed_list.dart';
 import 'package:geek_findr/widgets/image_upload.dart';
 import 'package:geek_findr/widgets/search_widget.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -48,41 +49,60 @@ class _HomePageState extends State<HomePage> {
               Scaffold(
                 resizeToAvoidBottomInset: true,
                 backgroundColor: Colors.white,
-                appBar: AppBar(
-                  elevation: 0,
-                  toolbarHeight: 60,
-                  title: Container(
-                    height: 45, width: 45,
-                    // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: secondaryColor,
-                      borderRadius: BorderRadius.circular(
-                        100,
-                      ),
-                    ),
-                    child: IconButton(
-                      icon: const ImageIcon(
-                        AssetImage(
-                          "assets/icons/hamburger.png",
+                body: NestedScrollView(
+                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                    SliverAppBar(
+                      floating: true,
+                      expandedHeight: 130,
+                      backgroundColor: Colors.white,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Column(
+                          children: [
+                            Container(
+                              height: 70,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      color: secondaryColor,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: IconButton(
+                                      icon: const ImageIcon(
+                                        AssetImage(
+                                          "assets/icons/hamburger.png",
+                                        ),
+                                        size: 18,
+                                        color: primaryColor,
+                                      ),
+                                      onPressed: () {
+                                        _advancedDrawerController.showDrawer();
+                                      },
+                                    ),
+                                  ),
+                                  const SearchWidget()
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 60,
+                            ),
+                          ],
                         ),
-                        size: 18,
-                        color: primaryColor,
                       ),
-                      onPressed: () {
-                        _advancedDrawerController.showDrawer();
-                      },
-                    ),
-                  ),
-                  backgroundColor: Colors.white,
+                    )
+                  ],
+                  body: FeedList(),
                 ),
-                body: FeedList(),
-              ),
-              GetBuilder<AppController>(
-                id: "search",
-                builder: (context) => const SearchWidget(),
-              ),
+              )
+              // GetBuilder<AppController>(
+              //   id: "search",
+              //   builder: (context) => const SearchWidget(),
+              // ),
             ],
           ),
         ),
