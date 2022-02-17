@@ -22,15 +22,16 @@ class FeedList extends StatelessWidget {
   List<ImageModel> datas = [];
   bool isLoading = false;
   bool allLoaded = false;
+  int dataLength = -2;
 
   Future mockData(String lastId) async {
     if (!allLoaded) {
       isLoading = true;
     }
-    print("new request have sent");
     final newData = await getMyFeeds(lastId: lastId);
     if (newData.isNotEmpty) {
       datas.addAll(newData);
+      // print("datas.length ${datas.length}");
       controller.update(["dataList"]);
     }
     isLoading = false;
@@ -60,7 +61,6 @@ class FeedList extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: datas.length,
                   itemBuilder: (context, index) {
-                    // final last = datas.length - 1;
                     isComments = [];
                     for (int i = 0; i < datas.length; i++) {
                       isComments.add(false);
@@ -76,7 +76,13 @@ class FeedList extends StatelessWidget {
                     return VisibilityDetector(
                       onVisibilityChanged: (info) {
                         if (info.visibleFraction == 1) {
-                          if (datas.length - 3 <= index && !isLoading) {
+                          print("index $index");
+                          if (datas.length - 3 <= index &&
+                              !isLoading &&
+                              (dataLength + 2) < index) {
+                            dataLength = index;
+                            print(dataLength);
+
                             mockData(datas.last.id!);
                           }
                         }
