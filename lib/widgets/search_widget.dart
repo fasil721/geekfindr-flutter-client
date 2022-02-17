@@ -64,9 +64,9 @@ class _SearchWidgetState extends State<SearchWidget>
               height: 45,
               width: animation!.value, // * 1.629,
               //animation!.value * 1.85
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 color: secondaryColor,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(50),
                   bottomLeft: Radius.circular(50),
                 ),

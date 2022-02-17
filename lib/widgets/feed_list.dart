@@ -114,8 +114,8 @@ class FeedList extends StatelessWidget {
                                               100,
                                             ),
                                             border: Border.all(
-                                              width: 2,
-                                              color: Colors.grey,
+                                              width: 1.5,
+                                              color: Colors.white,
                                             ),
                                           ),
                                           child: ClipRRect(
@@ -234,7 +234,7 @@ class FeedList extends StatelessWidget {
                                       milliseconds: 1000,
                                     ),
                                     child: Container(
-                                      height: 300,
+                                      height: 280,
                                       width: width,
                                       decoration: BoxDecoration(
                                         color: Colors.grey,
@@ -270,8 +270,8 @@ class FeedList extends StatelessWidget {
                                               child: Text(
                                                 "${likesCountList[index]} Likes",
                                                 style: GoogleFonts.roboto(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
                                               ),
                                             ),
@@ -300,8 +300,8 @@ class FeedList extends StatelessWidget {
                                               child: Text(
                                                 "${commentCountList[index]} Comments",
                                                 style: GoogleFonts.roboto(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
                                               ),
                                             ),
@@ -339,15 +339,16 @@ class FeedList extends StatelessWidget {
                                                             Colors.grey,
                                                         tooltip: 'liked',
                                                         onPressed: () {},
-                                                        icon: const Icon(
+                                                        icon: Icon(
                                                           Icons
                                                               .favorite_rounded,
-                                                          color: Colors.black,
+                                                          color: Colors.black
+                                                              .withOpacity(0.8),
                                                           size: 28,
                                                         ),
                                                       )
                                                     : IconButton(
-                                                        splashRadius: 25,
+                                                        splashRadius: 5,
                                                         splashColor:
                                                             Colors.grey,
                                                         tooltip: 'like',
@@ -360,17 +361,17 @@ class FeedList extends StatelessWidget {
                                                                     .id!,
                                                           );
                                                         },
-                                                        icon: const Icon(
+                                                        icon: Icon(
                                                           Icons
                                                               .favorite_outline,
-                                                          color: Colors.black,
+                                                          color: Colors.black
+                                                              .withOpacity(0.8),
                                                           size: 28,
                                                         ),
                                                       );
                                               }
                                               return IconButton(
-                                                splashRadius: 25,
-                                                splashColor: Colors.grey,
+                                                splashRadius: 5,
                                                 onPressed: () {},
                                                 icon: const Icon(
                                                   Icons.favorite_outline,
@@ -383,9 +384,9 @@ class FeedList extends StatelessWidget {
                                         },
                                       ),
                                       IconButton(
-                                        icon: const Icon(
+                                        icon: Icon(
                                           Icons.mode_comment_outlined,
-                                          color: Colors.black,
+                                          color: Colors.black.withOpacity(0.8),
                                           size: 28,
                                         ),
                                         splashRadius: 25,

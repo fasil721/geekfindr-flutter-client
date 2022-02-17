@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
-const secondaryColor = Color(0xffE7EAF0);
+const secondaryColor = Color(0xffF3F4F7);
 double textfactorfind(double val) {
   if (val == 0.85) {
     return val + 0.1;
