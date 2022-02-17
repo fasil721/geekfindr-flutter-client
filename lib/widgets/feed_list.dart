@@ -54,6 +54,7 @@ class FeedList extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
+                vertical: 10,
               ),
               child: GetBuilder<AppController>(
                 id: "dataList",
@@ -79,75 +80,90 @@ class FeedList extends StatelessWidget {
                       return VisibilityDetector(
                         onVisibilityChanged: (info) {
                           if (info.visibleFraction == 1) {
-                            print(index);
                             if (datas.length - 3 <= index && !isLoading) {
                               mockData(datas.last.id!);
                             }
                           }
                         },
                         key: UniqueKey(),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            100,
+                        child: Container(
+                          // margin: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: secondaryColor,
+                            borderRadius: BorderRadius.circular(
+                              30,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              100,
+                                            ),
+                                            border: Border.all(
+                                              width: 2,
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                          border: Border.all(
-                                            width: 2,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            100,
-                                          ),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap: () async {
-                                                Get.to(
-                                                  () => OtherUserProfile(
-                                                    userId:
-                                                        datas[index].owner!.id!,
-                                                  ),
-                                                );
-                                              },
-                                              autofocus: true,
-                                              highlightColor: Colors.orange,
-                                              splashColor: Colors.red,
-                                              child: CachedNetworkImage(
-                                                imageUrl:
-                                                    "${datas[index].owner!.avatar}&s=${height * 0.04}",
-                                                placeholder: (
-                                                  context,
-                                                  url,
-                                                ) =>
-                                                    Shimmer.fromColors(
-                                                  baseColor:
-                                                      Colors.grey.withOpacity(
-                                                    0.3,
-                                                  ),
-                                                  highlightColor: Colors.white,
-                                                  period: const Duration(
-                                                    milliseconds: 1000,
-                                                  ),
-                                                  child: Container(
-                                                    height: height * 0.04,
-                                                    width: height * 0.04,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        100,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              100,
+                                            ),
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  Get.to(
+                                                    () => OtherUserProfile(
+                                                      userId: datas[index]
+                                                          .owner!
+                                                          .id!,
+                                                    ),
+                                                  );
+                                                },
+                                                autofocus: true,
+                                                highlightColor: Colors.orange,
+                                                splashColor: Colors.red,
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      "${datas[index].owner!.avatar}&s=${height * 0.04}",
+                                                  placeholder: (
+                                                    context,
+                                                    url,
+                                                  ) =>
+                                                      Shimmer.fromColors(
+                                                    baseColor:
+                                                        Colors.grey.withOpacity(
+                                                      0.3,
+                                                    ),
+                                                    highlightColor:
+                                                        Colors.white,
+                                                    period: const Duration(
+                                                      milliseconds: 1000,
+                                                    ),
+                                                    child: Container(
+                                                      height: height * 0.04,
+                                                      width: height * 0.04,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          100,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -156,298 +172,289 @@ class FeedList extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: width * 0.04,
-                                      ),
-                                      Text(
-                                        datas[index].owner!.username!,
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.bold,
+                                        SizedBox(
+                                          width: width * 0.04,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  PopupMenuButton(
-                                    itemBuilder: (BuildContext bc) => [
-                                      const PopupMenuItem(
-                                        value: "2",
-                                        child: Text(""),
-                                      ),
-                                      const PopupMenuItem(
-                                        value: "1",
-                                        child: Text(""),
-                                      ),
-                                    ],
-                                    onSelected: (value) {
-                                      if (value == "1") {}
-                                      if (value == "2") {}
-                                    },
-                                    icon: const Icon(
-                                      Icons.more_horiz,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                bottom: 10,
-                              ),
-                              child: ReadMoreText(
-                                datas[index].description!,
-                                colorClickableText: primaryColor,
-                                trimMode: TrimMode.Line,
-                                style: GoogleFonts.poppins(color: Colors.black),
-                              ),
-                            ),
-                            Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl: datas[index].mediaUrl!,
-                                    fit: BoxFit.fitWidth,
-                                    width: width,
-                                    placeholder: (context, url) =>
-                                        Shimmer.fromColors(
-                                      baseColor: Colors.grey.withOpacity(0.3),
-                                      highlightColor: Colors.white,
-                                      period: const Duration(
-                                        milliseconds: 1000,
-                                      ),
-                                      child: Container(
-                                        height: 300,
-                                        width: width,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          borderRadius: BorderRadius.circular(
-                                            10,
+                                        Text(
+                                          datas[index].owner!.username!,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  // alignment: Alignment.bottomRight,
-                                  bottom: 0, right: 0,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.favorite,
-                                            color: Colors.white,
-                                            size: 28,
-                                          ),
-                                          onPressed: () {},
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.mode_comment_outlined,
-                                            color: Colors.white,
-                                            size: 28,
-                                          ),
-                                          onPressed: () {},
                                         ),
                                       ],
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    GetBuilder<AppController>(
-                                      id: "likes",
-                                      builder: (_) {
-                                        return FutureBuilder<List<LikedUsers>?>(
-                                          future: getLikedUsers(
-                                            imageId: datas[index].id!,
-                                          ),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.done) {
-                                              final likedUsers = snapshot.data!;
-                                              final isLiked = likedUsers
-                                                  .where(
-                                                    (element) =>
-                                                        element.owner!.id ==
-                                                        currentUser!.id,
-                                                  )
-                                                  .isEmpty;
-                                              return !isLiked
-                                                  ? IconButton(
-                                                      splashRadius: 25,
-                                                      splashColor: Colors.grey,
-                                                      tooltip: 'liked',
-                                                      onPressed: () {},
-                                                      icon: const Icon(
-                                                        Icons.favorite_rounded,
-                                                      ),
-                                                    )
-                                                  : IconButton(
-                                                      splashRadius: 25,
-                                                      splashColor: Colors.grey,
-                                                      tooltip: 'like',
-                                                      onPressed: () {
-                                                        likesCountList[index] +=
-                                                            1;
-                                                        postLike(
-                                                          imageId:
-                                                              datas[index].id!,
-                                                        );
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.favorite_outline,
-                                                      ),
-                                                    );
-                                            }
-                                            return IconButton(
-                                              splashRadius: 25,
-                                              splashColor: Colors.grey,
-                                              onPressed: () {},
-                                              icon: const Icon(
-                                                Icons.favorite_outline,
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                    GetBuilder<AppController>(
-                                      id: "likes",
-                                      builder: (_) {
-                                        return InkWell(
-                                          onTap: () async {
-                                            Get.bottomSheet(
-                                              LikedUsersBottomSheet(
-                                                imageId: datas[index].id!,
-                                              ),
-                                            );
-                                          },
-                                          child: Ink(
-                                            padding: const EdgeInsets.all(
-                                              10,
-                                            ),
-                                            child: Text(
-                                              likesCountList[index].toString(),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    IconButton(
-                                      splashRadius: 25,
-                                      tooltip: 'comment',
-                                      onPressed: () {
-                                        if (isComments[index]) {
-                                          isComments[index] = false;
-                                        } else {
-                                          for (int i = 0;
-                                              i < isComments.length;
-                                              i++) {
-                                            isComments[i] = false;
-                                          }
-                                          isComments[index] = true;
-                                        }
-                                        controller.update(["comments"]);
-                                        commmentEditController.clear();
+                                    PopupMenuButton(
+                                      itemBuilder: (BuildContext bc) => [
+                                        const PopupMenuItem(
+                                          value: "2",
+                                          child: Text(""),
+                                        ),
+                                        const PopupMenuItem(
+                                          value: "1",
+                                          child: Text(""),
+                                        ),
+                                      ],
+                                      onSelected: (value) {
+                                        if (value == "1") {}
+                                        if (value == "2") {}
                                       },
                                       icon: const Icon(
-                                        Icons.mode_comment_outlined,
+                                        Icons.more_horiz,
+                                        color: Colors.black,
                                       ),
                                     ),
-                                    GetBuilder<AppController>(
-                                      id: "commentCount",
-                                      builder: (_) {
-                                        return InkWell(
-                                          onTap: () {
-                                            Get.bottomSheet(
-                                              CommentBottomSheet(
-                                                imageId: datas[index].id!,
-                                              ),
-                                            );
-                                            isComments[index] = false;
-                                            controller.update(
-                                              ["comments"],
-                                            );
-                                          },
-                                          child: Ink(
-                                            padding: const EdgeInsets.all(
-                                              10,
-                                            ),
-                                            child: Text(
-                                              commentCountList[index]
-                                                  .toString(),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    )
                                   ],
                                 ),
-                                IconButton(
-                                  splashRadius: 25,
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.group_add_outlined,
-                                  ),
+                              ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(
+                                  left: 10,
+                                  bottom: 10,
                                 ),
-                              ],
-                            ),
-                            GetBuilder<AppController>(
-                              id: "comments",
-                              builder: (_) {
-                                return Visibility(
-                                  visible: isComments[index],
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        suffixIcon: IconButton(
-                                          splashRadius: 25,
-                                          icon: const Icon(
-                                            Icons.send_rounded,
-                                          ),
-                                          onPressed: () async {
-                                            if (commmentEditController
-                                                .text.isNotEmpty) {
-                                              await postComment(
-                                                imageId: datas[index].id!,
-                                                comment:
-                                                    commmentEditController.text,
-                                              );
-                                              commentCountList[index] += 1;
-                                              isComments[index] = false;
-                                              controller.update(["comments"]);
-                                            }
-                                          },
+                                child: ReadMoreText(
+                                  datas[index].description!,
+                                  colorClickableText: primaryColor,
+                                  trimMode: TrimMode.Line,
+                                  style:
+                                      GoogleFonts.poppins(color: Colors.black),
+                                ),
+                              ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: CachedNetworkImage(
+                                  imageUrl: datas[index].mediaUrl!,
+                                  fit: BoxFit.fitWidth,
+                                  width: width,
+                                  placeholder: (context, url) =>
+                                      Shimmer.fromColors(
+                                    baseColor: Colors.grey.withOpacity(0.3),
+                                    highlightColor: Colors.white,
+                                    period: const Duration(
+                                      milliseconds: 1000,
+                                    ),
+                                    child: Container(
+                                      height: 300,
+                                      width: width,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.circular(
+                                          20,
                                         ),
-                                        border: InputBorder.none,
-                                        hintText: 'Add comment',
                                       ),
-                                      controller: commmentEditController,
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                          ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      GetBuilder<AppController>(
+                                        id: "likes",
+                                        builder: (_) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              Get.bottomSheet(
+                                                LikedUsersBottomSheet(
+                                                  imageId: datas[index].id!,
+                                                ),
+                                              );
+                                            },
+                                            child: Ink(
+                                              padding: const EdgeInsets.all(
+                                                5,
+                                              ),
+                                              child: Text(
+                                                "${likesCountList[index]} Likes",
+                                                style: GoogleFonts.roboto(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      GetBuilder<AppController>(
+                                        id: "commentCount",
+                                        builder: (_) {
+                                          return InkWell(
+                                            onTap: () {
+                                              Get.bottomSheet(
+                                                CommentBottomSheet(
+                                                  imageId: datas[index].id!,
+                                                ),
+                                              );
+                                              isComments[index] = false;
+                                              controller.update(
+                                                ["comments"],
+                                              );
+                                            },
+                                            child: Ink(
+                                              padding: const EdgeInsets.all(
+                                                5,
+                                              ),
+                                              child: Text(
+                                                "${commentCountList[index]} Comments",
+                                                style: GoogleFonts.roboto(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      GetBuilder<AppController>(
+                                        id: "likes",
+                                        builder: (_) {
+                                          return FutureBuilder<
+                                              List<LikedUsers>?>(
+                                            future: getLikedUsers(
+                                              imageId: datas[index].id!,
+                                            ),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.done) {
+                                                final likedUsers =
+                                                    snapshot.data!;
+                                                final isLiked = likedUsers
+                                                    .where(
+                                                      (element) =>
+                                                          element.owner!.id ==
+                                                          currentUser!.id,
+                                                    )
+                                                    .isEmpty;
+                                                return !isLiked
+                                                    ? IconButton(
+                                                        splashRadius: 25,
+                                                        splashColor:
+                                                            Colors.grey,
+                                                        tooltip: 'liked',
+                                                        onPressed: () {},
+                                                        icon: const Icon(
+                                                          Icons
+                                                              .favorite_rounded,
+                                                          color: Colors.black,
+                                                          size: 28,
+                                                        ),
+                                                      )
+                                                    : IconButton(
+                                                        splashRadius: 25,
+                                                        splashColor:
+                                                            Colors.grey,
+                                                        tooltip: 'like',
+                                                        onPressed: () {
+                                                          likesCountList[
+                                                              index] += 1;
+                                                          postLike(
+                                                            imageId:
+                                                                datas[index]
+                                                                    .id!,
+                                                          );
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons
+                                                              .favorite_outline,
+                                                          color: Colors.black,
+                                                          size: 28,
+                                                        ),
+                                                      );
+                                              }
+                                              return IconButton(
+                                                splashRadius: 25,
+                                                splashColor: Colors.grey,
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                  Icons.favorite_outline,
+                                                  color: Colors.black,
+                                                  size: 28,
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.mode_comment_outlined,
+                                          color: Colors.black,
+                                          size: 28,
+                                        ),
+                                        splashRadius: 25,
+                                        tooltip: 'comment',
+                                        onPressed: () {
+                                          if (isComments[index]) {
+                                            isComments[index] = false;
+                                          } else {
+                                            for (int i = 0;
+                                                i < isComments.length;
+                                                i++) {
+                                              isComments[i] = false;
+                                            }
+                                            isComments[index] = true;
+                                          }
+                                          controller.update(["comments"]);
+                                          commmentEditController.clear();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              GetBuilder<AppController>(
+                                id: "comments",
+                                builder: (_) {
+                                  return Visibility(
+                                    visible: isComments[index],
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                            splashRadius: 25,
+                                            icon: const Icon(
+                                              Icons.send_rounded,
+                                            ),
+                                            onPressed: () async {
+                                              if (commmentEditController
+                                                  .text.isNotEmpty) {
+                                                await postComment(
+                                                  imageId: datas[index].id!,
+                                                  comment:
+                                                      commmentEditController
+                                                          .text,
+                                                );
+                                                commentCountList[index] += 1;
+                                                isComments[index] = false;
+                                                controller.update(["comments"]);
+                                              }
+                                            },
+                                          ),
+                                          border: InputBorder.none,
+                                          hintText: 'Add comment',
+                                        ),
+                                        controller: commmentEditController,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) =>
                         SizedBox(
-                      height: height * 0.01,
+                      height: height * 0.02,
                     ),
                   );
                 },
