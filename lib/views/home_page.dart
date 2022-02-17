@@ -22,13 +22,9 @@ class _HomePageState extends State<HomePage> {
     final height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Get.dialog(
-              PostUploadDialoge(),
-            );
-          },
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {},
+        // ),
         body: AdvancedDrawer(
           backdropColor: Colors.black.withOpacity(.9),
           controller: _advancedDrawerController,
@@ -44,66 +40,83 @@ class _HomePageState extends State<HomePage> {
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           drawer: const DrawerPage(),
-          child: Stack(
-            children: [
-              Scaffold(
-                resizeToAvoidBottomInset: true,
-                backgroundColor: Colors.white,
-                body: NestedScrollView(
-                  headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                    SliverAppBar(
-                      floating: true,
-                      expandedHeight: 130,
-                      backgroundColor: Colors.white,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Column(
-                          children: [
-                            Container(
-                              height: 70,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    decoration: const BoxDecoration(
-                                      color: secondaryColor,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: IconButton(
-                                      icon: const ImageIcon(
-                                        AssetImage(
-                                          "assets/icons/hamburger.png",
-                                        ),
-                                        size: 18,
-                                        color: primaryColor,
-                                      ),
-                                      onPressed: () {
-                                        _advancedDrawerController.showDrawer();
-                                      },
-                                    ),
-                                  ),
-                                  const SearchWidget()
-                                ],
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            backgroundColor: Colors.white,
+            body: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                SliverAppBar(
+                  floating: true,
+                  expandedHeight: 70,
+                  elevation: 0,
+                  backgroundColor: Colors.white,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: secondaryColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              icon: const ImageIcon(
+                                AssetImage(
+                                  "assets/icons/hamburger.png",
+                                ),
+                                size: 18,
+                                color: primaryColor,
                               ),
+                              onPressed: () {
+                                _advancedDrawerController.showDrawer();
+                              },
                             ),
-                            const SizedBox(
-                              height: 60,
-                            ),
-                          ],
+                          ),
+                          const SearchWidget()
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SliverAppBar(
+                  snap: true,
+                  floating: true,
+                  toolbarHeight: 60,
+                  backgroundColor: Colors.white,
+                  flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: false,
+                    background: Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 5),
+                      child: ListTile(
+                        title: Text(
+                          "Add your new post",
+                          style: GoogleFonts.roboto(
+                            fontSize: 17,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        trailing: IconButton(
+                          splashRadius: 25,
+                          onPressed: () {
+                            Get.dialog(
+                              PostUploadDialoge(),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.add_a_photo,
+                            color: primaryColor,
+                          ),
                         ),
                       ),
-                    )
-                  ],
-                  body: FeedList(),
+                    ),
+                  ),
                 ),
-              )
-              // GetBuilder<AppController>(
-              //   id: "search",
-              //   builder: (context) => const SearchWidget(),
-              // ),
-            ],
+              ],
+              body: FeedList(),
+            ),
           ),
         ),
       ),

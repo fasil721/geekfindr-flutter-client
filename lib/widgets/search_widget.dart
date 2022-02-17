@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/models/user_profile_model.dart';
 import 'package:geek_findr/services/profile.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
@@ -38,7 +37,6 @@ class _SearchWidgetState extends State<SearchWidget>
     animation = Tween<double>(begin: 0, end: 200).animate(curvedAnimation)
       ..addListener(() {
         setState(() {});
-        controller.update(["search"]);
       });
   }
 
