@@ -14,7 +14,9 @@ final controller = Get.find<AppController>();
 
 Future<void> uploadImage({
   required String description,
-  required File image,required bool isProject,
+  required File image,
+  required bool isProject,
+  String projectName = "",
 }) async {
   final user = box.get("user");
   const getUrl =
@@ -34,7 +36,7 @@ Future<void> uploadImage({
     );
     if (response2.statusCode == 200) {
       final imageModel = ImageModel();
-      imageModel.projectName = "First Project";
+      imageModel.projectName = projectName;
       imageModel.description = description;
       imageModel.isOrganization = false;
       imageModel.isProject = isProject;
@@ -54,6 +56,12 @@ Future<void> uploadImage({
         Fluttertoast.showToast(msg: "Image uploaded");
         controller.update(["mypost", "postCount"]);
         Get.back();
+      } else if (response3.statusCode == 400 || response3.statusCode == 422) {
+        final errorJson = json.decode(response3.body) as Map;
+        final err = ErrorModel.fromJson(errorJson.cast());
+        for (final element in err.errors!) {
+          Fluttertoast.showToast(msg: element.message!);
+        }
       } else {
         print(response3.body);
         Fluttertoast.showToast(msg: "Image not uploaded");

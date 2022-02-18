@@ -156,6 +156,7 @@ class PostUploadDialoge extends StatelessWidget {
                                 description: descTextController.text,
                                 image: image,
                                 isProject: true,
+                                projectName: projTextController.text,
                               );
                             } else {
                               Get.defaultDialog(
