@@ -7,6 +7,7 @@ import 'package:geek_findr/widgets/image_upload.dart';
 import 'package:geek_findr/widgets/search_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,11 +20,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {},
-        // ),
         body: AdvancedDrawer(
           backdropColor: Colors.black.withOpacity(.9),
           controller: _advancedDrawerController,
@@ -100,18 +99,84 @@ class _HomePageState extends State<HomePage> {
                         trailing: IconButton(
                           splashRadius: 25,
                           onPressed: () {
-                            // Get.bottomSheet(
-                            //   Column(
-                            //     children: const [
-                            //       ListTile(
-                            //         leading: Icon(Icons.image),
-                            //       )
-                            //     ],
-                            //   ),
-                            //   backgroundColor: Colors.white,
-                            // );
-                            Get.dialog(
-                              PostUploadDialoge(),
+                            Get.bottomSheet(
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      final image = await pickImage(
+                                        source: ImageSource.camera,
+                                      );
+                                      Get.back();
+                                      if (image != null) {
+                                        Get.dialog(
+                                          PostUploadDialoge(image: image),
+                                        );
+                                      }
+                                    },
+                                    child: Ink(
+                                      height: height * 0.07,
+                                      color: Colors.white,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.camera_alt,
+                                            size: 25,
+                                            color: primaryColor,
+                                          ),
+                                          SizedBox(width: width * 0.05),
+                                          Text(
+                                            "Open Camara",
+                                            style: GoogleFonts.roboto(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () async {
+                                      final image = await pickImage(
+                                        source: ImageSource.gallery,
+                                      );
+                                      Get.back();
+                                      if (image != null) {
+                                        Get.dialog(
+                                          PostUploadDialoge(image: image),
+                                        );
+                                      }
+                                    },
+                                    child: Ink(
+                                      height: height * 0.07,
+                                      color: Colors.white,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.image,
+                                            size: 25,
+                                            color: primaryColor,
+                                          ),
+                                          SizedBox(width: width * 0.05),
+                                          Text(
+                                            "Open Gallary",
+                                            style: GoogleFonts.roboto(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                           icon: const Icon(
