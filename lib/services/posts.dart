@@ -48,11 +48,13 @@ Future<void> uploadImage({
           "Content-Type": "application/json"
         },
       );
+      print(response3.statusCode);
       if (response3.statusCode == 200) {
         Fluttertoast.showToast(msg: "Image uploaded");
         controller.update(["mypost", "postCount"]);
         Get.back();
       } else {
+        print(response3.body);
         Fluttertoast.showToast(msg: "Image not uploaded");
       }
     } else {

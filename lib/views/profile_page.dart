@@ -82,29 +82,33 @@ class _ProfilePageState extends State<ProfilePage>
                     child: SingleChildScrollView(
                       child: Stack(
                         children: [
-                          CustomPaint(
-                            child: ClipPath(
-                              clipper: ConvexClipPath(),
-                              child: Container(
-                                height: height * 0.19,
-                                width: width,
-                                decoration: BoxDecoration(
-                                  color: primaryColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(.7),
-                                      blurRadius: 115,
-                                      spreadRadius: 105,
-                                      offset: const Offset(-300, -300),
-                                    ),
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(.7),
-                                      blurRadius: 105,
-                                      spreadRadius: 105,
-                                      offset: const Offset(400, 500),
-                                    ),
-                                  ],
-                                ),
+                          ClipShadowPath(
+                            shadow: BoxShadow(
+                              color: Colors.grey.withOpacity(.7),
+                              blurRadius: 3,
+                              spreadRadius: 3,
+                              offset: const Offset(0, 3),
+                            ),
+                            clipper: ConvexClipPath(),
+                            child: Container(
+                              height: height * 0.19,
+                              width: width,
+                              decoration: BoxDecoration(
+                                color: primaryColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(.7),
+                                    blurRadius: 115,
+                                    spreadRadius: 105,
+                                    offset: const Offset(-300, -300),
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(.7),
+                                    blurRadius: 105,
+                                    spreadRadius: 105,
+                                    offset: const Offset(400, 500),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -500,3 +504,50 @@ class ConvexClipPath extends CustomClipper<Path> {
 //     return true;
 //   }
 // }
+@immutable
+class ClipShadowPath extends StatelessWidget {
+  final BoxShadow shadow;
+  final CustomClipper<Path> clipper;
+  final Widget child;
+
+  const ClipShadowPath({
+    Key? key,
+    required this.shadow,
+    required this.clipper,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _ClipShadowShadowPainter(
+        clipper: clipper,
+        shadow: shadow,
+      ),
+      child: ClipPath(clipper: clipper, child: child),
+    );
+  }
+}
+
+class _ClipShadowShadowPainter extends CustomPainter {
+  final BoxShadow shadow;
+  final CustomClipper<Path> clipper;
+
+  _ClipShadowShadowPainter({required this.shadow, required this.clipper});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = shadow.toPaint()
+      ..maskFilter = MaskFilter.blur(
+        BlurStyle.normal,
+        shadow.spreadRadius,
+      );
+    final clipPath = clipper.getClip(size).shift(shadow.offset);
+    canvas.drawPath(clipPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
