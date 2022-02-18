@@ -14,7 +14,7 @@ final controller = Get.find<AppController>();
 
 Future<void> uploadImage({
   required String description,
-  required File image,
+  required File image,required bool isProject,
 }) async {
   final user = box.get("user");
   const getUrl =
@@ -37,7 +37,7 @@ Future<void> uploadImage({
       imageModel.projectName = "First Project";
       imageModel.description = description;
       imageModel.isOrganization = false;
-      imageModel.isProject = true;
+      imageModel.isProject = isProject;
       imageModel.mediaUrl = data.key;
       imageModel.mediaType = "image";
 

@@ -4,6 +4,7 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,6 +15,7 @@ class PostUploadDialoge extends StatelessWidget {
     required this.image,
   }) : super(key: key);
   final descTextController = TextEditingController();
+  final projTextController = TextEditingController();
   final File image;
   final controller = Get.find<AppController>();
   bool isProject = false;
@@ -21,15 +23,15 @@ class PostUploadDialoge extends StatelessWidget {
   Widget build(BuildContext context) {
     // final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    // final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        GetBuilder<AppController>(
-          id: "img",
-          builder: (controller) {
-            return Container(
+    return GetBuilder<AppController>(
+      id: "img",
+      builder: (controller) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               height: height * 0.5,
               child: Material(
@@ -38,44 +40,22 @@ class PostUploadDialoge extends StatelessWidget {
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: height * 0.01),
-                      Visibility(
-                        visible: isProject,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: TextField(
-                            controller: descTextController,
-                            textInputAction: TextInputAction.done,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            minLines: 1,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Project Name",
-                              filled: true,
-                              fillColor: Colors.transparent,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
+                child: Column(
+                  children: [
+                    SizedBox(height: height * 0.01),
+                    Visibility(
+                      visible: isProject,
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: TextField(
-                          controller: descTextController,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.multiline,
+                          controller: projTextController,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.text,
                           maxLines: null,
                           minLines: 1,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            hintText: "Description",
+                            hintText: "Project Name",
                             filled: true,
                             fillColor: Colors.transparent,
                             focusedBorder: InputBorder.none,
@@ -85,8 +65,30 @@ class PostUploadDialoge extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: height * 0.01),
-                      Container(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: TextField(
+                        controller: descTextController,
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        minLines: 1,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Description",
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: height * 0.01),
+                    Expanded(
+                      child: Container(
                         color: secondaryColor,
                         height: height * 0.43,
                         child: Image.file(
@@ -95,52 +97,107 @@ class PostUploadDialoge extends StatelessWidget {
                           fit: BoxFit.contain,
                         ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Material(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Project",
+                            style: GoogleFonts.roboto(
+                              fontSize: textFactor * 16,
+                              color: Colors.black.withOpacity(0.9),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Switch(
+                            inactiveThumbColor: secondaryColor,
+                            activeColor: primaryColor,
+                            value: isProject,
+                            onChanged: (val) {
+                              isProject = val;
+                              controller.update(["img"]);
+                            },
+                          )
+                        ],
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          elevation: MaterialStateProperty.all<double>(3),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(primaryColor),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (isProject) {
+                            if (descTextController.text.isNotEmpty &&
+                                projTextController.text.isNotEmpty) {
+                              uploadImage(
+                                description: descTextController.text,
+                                image: image,
+                                isProject: true,
+                              );
+                            } else {
+                              Get.defaultDialog(
+                                title: "Validation",
+                                content: const Text("Field can't be empty"),
+                                confirmTextColor: Colors.white,
+                                buttonColor: primaryColor,
+                                onConfirm: () {
+                                  Get.back();
+                                },
+                              );
+                            }
+                          } else {
+                            if (descTextController.text.isNotEmpty) {
+                              uploadImage(
+                                description: descTextController.text,
+                                image: image,
+                                isProject: false,
+                              );
+                            } else {
+                              Get.defaultDialog(
+                                title: "Validation",
+                                content: const Text("Field can't be empty"),
+                                confirmTextColor: Colors.white,
+                                buttonColor: primaryColor,
+                                onConfirm: () {
+                                  Get.back();
+                                },
+                              );
+                            }
+                          }
+                        },
+                        child: const Text("Post"),
+                      )
                     ],
                   ),
                 ),
               ),
-            );
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Material(
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      elevation: MaterialStateProperty.all<double>(3),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(primaryColor),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      if (descTextController.text.isNotEmpty) {
-                        uploadImage(
-                          description: descTextController.text,
-                          image: image,
-                        );
-                      }
-                    },
-                    child: const Text("Post"),
-                  )
-                ],
-              ),
-            ),
-          ),
-        )
-      ],
+            )
+          ],
+        );
+      },
     );
   }
 }
