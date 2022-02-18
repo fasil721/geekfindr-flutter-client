@@ -131,10 +131,10 @@ Future<File?> pickImage({required ImageSource source}) async {
         CropAspectRatioPreset.ratio16x9
       ],
       androidUiSettings: const AndroidUiSettings(
-        toolbarTitle: 'Cropper',
-        toolbarColor: Colors.deepOrange,
+        toolbarColor: primaryColor,
         toolbarWidgetColor: Colors.white,
         initAspectRatio: CropAspectRatioPreset.original,
+        activeControlsWidgetColor: primaryColor,
         lockAspectRatio: false,
       ),
       iosUiSettings: const IOSUiSettings(

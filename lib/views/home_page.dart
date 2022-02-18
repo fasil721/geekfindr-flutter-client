@@ -100,6 +100,16 @@ class _HomePageState extends State<HomePage> {
                         trailing: IconButton(
                           splashRadius: 25,
                           onPressed: () {
+                            // Get.bottomSheet(
+                            //   Column(
+                            //     children: const [
+                            //       ListTile(
+                            //         leading: Icon(Icons.image),
+                            //       )
+                            //     ],
+                            //   ),
+                            //   backgroundColor: Colors.white,
+                            // );
                             Get.dialog(
                               PostUploadDialoge(),
                             );

@@ -478,7 +478,7 @@ class ConvexClipPath extends CustomClipper<Path> {
     );
     path.lineTo(size.width, 0);
     path.close();
-
+ 
     return path;
   }
 
@@ -486,25 +486,7 @@ class ConvexClipPath extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-// class BoxShadowPainter extends CustomPainter {
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     final path = Path();
-//     // here are my custom shapes
-//     path.moveTo(size.width, size.height * 0.14);
-//     path.lineTo(size.width, size.height * 1.0);
-//     path.lineTo(size.width - (size.width * 0.99), size.height);
-//     path.close();
 
-//     canvas.drawShadow(path, Colors.black45, 3.0, false);
-//   }
-
-//   @override
-//   bool shouldRepaint(CustomPainter oldDelegate) {
-//     return true;
-//   }
-// }
-@immutable
 class ClipShadowPath extends StatelessWidget {
   final BoxShadow shadow;
   final CustomClipper<Path> clipper;

@@ -34,9 +34,10 @@ Future<void> uploadImage({
     );
     if (response2.statusCode == 200) {
       final imageModel = ImageModel();
+      imageModel.projectName = "First Project";
       imageModel.description = description;
       imageModel.isOrganization = false;
-      imageModel.isProject = false;
+      imageModel.isProject = true;
       imageModel.mediaUrl = data.key;
       imageModel.mediaType = "image";
 
@@ -102,8 +103,10 @@ class ImageModel {
   bool? isOrganization;
   String? createdAt;
   String? updatedAt;
+  String? projectName;
 
   ImageModel({
+    this.projectName,
     this.mediaType,
     this.owner,
     this.isProject,
@@ -139,6 +142,7 @@ class ImageModel {
         "mediaURL": mediaUrl,
         "description": description,
         "isOrganization": isOrganization,
+        "projectName": projectName,
       };
 }
 
