@@ -19,7 +19,7 @@ class ProfileAboutView extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Colors.white.withOpacity(0.9),
+        color: white.withOpacity(0.9),
       ),
       child: SingleChildScrollView(
         child: Column(

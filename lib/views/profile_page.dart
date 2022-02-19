@@ -55,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage>
               final userData = snapshot.data;
               if (userData != null) {
                 return Scaffold(
-                  backgroundColor: Colors.white,
+                  backgroundColor: white,
                   appBar: AppBar(
                     leadingWidth: 70,
                     elevation: 0,
@@ -133,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     placeholder: (context, url) =>
                                         Shimmer.fromColors(
                                       baseColor: Colors.grey.withOpacity(0.3),
-                                      highlightColor: Colors.white,
+                                      highlightColor: white,
                                       period:
                                           const Duration(milliseconds: 1000),
                                       child: Container(

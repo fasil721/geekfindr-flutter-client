@@ -3,6 +3,8 @@ import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:get/get.dart';
 
+import '../contants.dart';
+
 class PostEditDialoge extends StatefulWidget {
   const PostEditDialoge({
     Key? key,
@@ -34,7 +36,7 @@ class _PostEditDialogeState extends State<PostEditDialoge> {
           builder: (controller) {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
-              color: Colors.white,
+              color: white,
               height: height * 0.5,
               child: Material(
                 child: SingleChildScrollView(
@@ -50,7 +52,7 @@ class _PostEditDialogeState extends State<PostEditDialoge> {
                           border: InputBorder.none,
                           hintText: "Description",
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: white,
                           focusedBorder: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           errorBorder: InputBorder.none,

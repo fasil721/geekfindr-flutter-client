@@ -58,7 +58,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
             final user = snapshot.data!;
             followersCount = user.followersCount!;
             return Scaffold(
-              backgroundColor: Colors.white,
+              backgroundColor: white,
               body: SafeArea(
                 child: NestedScrollView(
                   headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -70,7 +70,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                       flexibleSpace: AppBar(
                         leadingWidth: 70,
                         elevation: 0,
-                        backgroundColor: Colors.white,
+                        backgroundColor: white,
                         leading: IconButton(
                           onPressed: () {
                             Get.back();
@@ -103,7 +103,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               imageUrl: "${user.avatar!}&s=${height * 0.15}",
                               placeholder: (context, url) => Shimmer.fromColors(
                                 baseColor: Colors.grey.withOpacity(0.3),
-                                highlightColor: Colors.white,
+                                highlightColor: white,
                                 period: const Duration(milliseconds: 1000),
                                 child: Container(
                                   height: height * 0.15,
@@ -389,7 +389,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: textFactor * 15,
-                                                color: Colors.white,
+                                                color: white,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -425,7 +425,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontSize: textFactor * 15,
-                                              color: Colors.white,
+                                              color: white,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),

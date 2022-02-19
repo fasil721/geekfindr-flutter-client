@@ -48,7 +48,7 @@ class UsersListView extends StatelessWidget {
                         width: 30,
                         placeholder: (context, url) => Shimmer.fromColors(
                           baseColor: Colors.grey.withOpacity(0.3),
-                          highlightColor: Colors.white,
+                          highlightColor: white,
                           period: const Duration(
                             milliseconds: 1000,
                           ),

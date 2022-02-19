@@ -178,7 +178,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: textFactor * 15,
-              color: Colors.white,
+              color: white,
               fontWeight: FontWeight.bold,
             ),
           ),

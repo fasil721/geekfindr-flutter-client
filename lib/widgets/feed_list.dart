@@ -119,7 +119,7 @@ class FeedList extends StatelessWidget {
                                           ),
                                           border: Border.all(
                                             width: 1.5,
-                                            color: Colors.white,
+                                            color: white,
                                           ),
                                         ),
                                         child: ClipRRect(
@@ -152,7 +152,7 @@ class FeedList extends StatelessWidget {
                                                       Colors.grey.withOpacity(
                                                     0.3,
                                                   ),
-                                                  highlightColor: Colors.white,
+                                                  highlightColor: white,
                                                   period: const Duration(
                                                     milliseconds: 1000,
                                                   ),
@@ -229,7 +229,7 @@ class FeedList extends StatelessWidget {
                                 placeholder: (context, url) =>
                                     Shimmer.fromColors(
                                   baseColor: Colors.grey.withOpacity(0.3),
-                                  highlightColor: Colors.white,
+                                  highlightColor: white,
                                   period: const Duration(
                                     milliseconds: 1000,
                                   ),
@@ -457,7 +457,7 @@ class FeedList extends StatelessWidget {
 Widget skeleton(double width) {
   return Shimmer.fromColors(
     baseColor: Colors.grey.withOpacity(0.3),
-    highlightColor: Colors.white,
+    highlightColor: white,
     period: const Duration(milliseconds: 1000),
     child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

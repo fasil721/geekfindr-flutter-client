@@ -79,19 +79,24 @@ class _MyAppState extends State<MyApp> {
             },
             items: [
               SalomonBottomBarItem(
-                icon: const Icon(Icons.home),
+                icon: const ImageIcon(
+                  AssetImage("assets/icons/home.png"),
+                  size: 25,
+                ),
                 title: const Text('Home'),
               ),
               SalomonBottomBarItem(
-                icon: const Icon(Icons.search_outlined),
+                icon: const ImageIcon(
+                  AssetImage("assets/icons/noun-project.png"),
+                ),
                 title: const Text('Search'),
               ),
               SalomonBottomBarItem(
-                icon: const Icon(Icons.message_outlined),
+                icon: const ImageIcon(AssetImage("assets/icons/chat.png")),
                 title: const Text('Chats'),
               ),
               SalomonBottomBarItem(
-                icon: const Icon(Icons.person),
+                icon: const ImageIcon(AssetImage("assets/icons/account.png")),
                 title: const Text('Profile'),
               ),
             ],

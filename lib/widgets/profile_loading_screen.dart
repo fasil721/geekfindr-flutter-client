@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/contants.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LoadingProfilePage extends StatelessWidget {
@@ -15,7 +16,7 @@ class LoadingProfilePage extends StatelessWidget {
             itemBuilder: (BuildContext ctx, index) {
               return Shimmer.fromColors(
                 baseColor: Colors.grey.withOpacity(0.3),
-                highlightColor: Colors.white,
+                highlightColor: white,
                 period: const Duration(milliseconds: 1000),
                 child: box(),
               );

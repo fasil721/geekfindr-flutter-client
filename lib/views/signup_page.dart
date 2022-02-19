@@ -214,7 +214,7 @@ class _SignUpPageState extends State<SignUpPage> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: textFactor * 15,
-              color: Colors.white,
+              color: white,
               fontWeight: FontWeight.bold,
             ),
           ),

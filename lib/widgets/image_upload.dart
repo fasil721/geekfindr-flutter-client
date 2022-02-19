@@ -35,7 +35,7 @@ class PostUploadDialoge extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 10),
               height: height * 0.5,
               child: Material(
-                color: Colors.white,
+                color: white,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -162,7 +162,7 @@ class PostUploadDialoge extends StatelessWidget {
                               Get.defaultDialog(
                                 title: "Validation",
                                 content: const Text("Field can't be empty"),
-                                confirmTextColor: Colors.white,
+                                confirmTextColor: white,
                                 buttonColor: primaryColor,
                                 onConfirm: () {
                                   Get.back();
@@ -180,7 +180,7 @@ class PostUploadDialoge extends StatelessWidget {
                               Get.defaultDialog(
                                 title: "Validation",
                                 content: const Text("Field can't be empty"),
-                                confirmTextColor: Colors.white,
+                                confirmTextColor: white,
                                 buttonColor: primaryColor,
                                 onConfirm: () {
                                   Get.back();
@@ -218,7 +218,7 @@ Future<File?> pickImage({required ImageSource source}) async {
       ],
       androidUiSettings: const AndroidUiSettings(
         toolbarColor: primaryColor,
-        toolbarWidgetColor: Colors.white,
+        toolbarWidgetColor: white,
         initAspectRatio: CropAspectRatioPreset.original,
         activeControlsWidgetColor: primaryColor,
         lockAspectRatio: false,

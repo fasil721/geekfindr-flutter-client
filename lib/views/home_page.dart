@@ -40,14 +40,14 @@ class _HomePageState extends State<HomePage> {
           drawer: const DrawerPage(),
           child: Scaffold(
             resizeToAvoidBottomInset: true,
-            backgroundColor: Colors.white,
+            backgroundColor: white,
             body: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                 SliverAppBar(
                   floating: true,
                   expandedHeight: 70,
                   elevation: 0,
-                  backgroundColor: Colors.white,
+                  backgroundColor: white,
                   flexibleSpace: FlexibleSpaceBar(
                     background: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                   snap: true,
                   floating: true,
                   toolbarHeight: 60,
-                  backgroundColor: Colors.white,
+                  backgroundColor: white,
                   flexibleSpace: FlexibleSpaceBar(
                     centerTitle: false,
                     background: Padding(
@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Ink(
                                       height: height * 0.07,
-                                      color: Colors.white,
+                                      color: white,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Ink(
                                       height: height * 0.07,
-                                      color: Colors.white,
+                                      color: white,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,

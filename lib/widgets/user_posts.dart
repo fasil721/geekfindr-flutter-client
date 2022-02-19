@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:get/get.dart';
@@ -49,7 +50,7 @@ class UserPosts extends StatelessWidget {
                           imageUrl: data[index].mediaUrl!,
                           placeholder: (context, url) => Shimmer.fromColors(
                             baseColor: Colors.grey.withOpacity(0.3),
-                            highlightColor: Colors.white,
+                            highlightColor: white,
                             period: const Duration(milliseconds: 1000),
                             child: Container(
                               // height: 300,
@@ -85,7 +86,7 @@ class UserPosts extends StatelessWidget {
                 //         imageUrl: data[index].mediaUrl!,
                 //         placeholder: (context, url) => Shimmer.fromColors(
                 //           baseColor: Colors.grey.withOpacity(0.3),
-                //           highlightColor: Colors.white,
+                //           highlightColor: white,
                 //           period: const Duration(milliseconds: 1000),
                 //           child: Container(
                 //             height: 300,
@@ -158,7 +159,7 @@ class UserPosts extends StatelessWidget {
   Widget box(double width) {
     return Shimmer.fromColors(
       baseColor: Colors.grey.withOpacity(0.3),
-      highlightColor: Colors.white,
+      highlightColor: white,
       period: const Duration(milliseconds: 1000),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
