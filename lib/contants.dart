@@ -21,4 +21,17 @@ double textfactorfind(double val) {
   }
 }
 
-final a = [];
+List<Map> categories = [
+  {"name": "Cats", 'iconPath': 'assets/icons/office.png'},
+  {'name': 'Dogs', 'iconPath': 'assets/icons/office.png'},
+  {'name': 'Bu5i', 'iconPath': 'assets/icons/office.png'},
+  {'name': 'Pa5s', 'iconPath': 'assets/icons/office.png'},
+];
+
+List<BoxShadow> shadowList = [
+  const BoxShadow(
+    color: Colors.grey,
+    blurRadius: 5,
+    offset: Offset(5, 5),
+  )
+];

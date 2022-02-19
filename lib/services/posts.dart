@@ -53,7 +53,13 @@ Future<void> uploadImage({
       );
       print(response3.statusCode);
       if (response3.statusCode == 200) {
-        Fluttertoast.showToast(msg: "Image uploaded");
+        if (projectName.isNotEmpty) {
+          Fluttertoast.showToast(
+            msg: "New Project Created and Projest post uploaded",
+          );
+        } else {
+          Fluttertoast.showToast(msg: "Post uploaded");
+        }
         controller.update(["mypost", "postCount"]);
         Get.back();
       } else if (response3.statusCode == 400 || response3.statusCode == 422) {
