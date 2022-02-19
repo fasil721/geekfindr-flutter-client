@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/theme.dart';
@@ -53,7 +54,7 @@ class _MyAppState extends State<MyApp> {
       builder: (controller) {
         final screens = [
           HomePage(),
-          ProjectPage(),
+          const ProjectPage(),
           Container(
             color: Colors.red,
           ),
@@ -66,7 +67,6 @@ class _MyAppState extends State<MyApp> {
           ),
           bottomNavigationBar: SalomonBottomBar(
             curve: Curves.ease,
-            selectedItemColor: const Color(0xffB954FE),
             unselectedItemColor: const Color(0xffB954FE),
             duration: const Duration(milliseconds: 300),
             margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
@@ -79,23 +79,26 @@ class _MyAppState extends State<MyApp> {
             },
             items: [
               SalomonBottomBarItem(
+                selectedColor: primaryColor,
                 icon: const ImageIcon(
                   AssetImage("assets/icons/home.png"),
-                  size: 25,
                 ),
                 title: const Text('Home'),
               ),
               SalomonBottomBarItem(
+                selectedColor: primaryColor,
                 icon: const ImageIcon(
-                  AssetImage("assets/icons/noun-project.png"),
+                  AssetImage("assets/icons/idea.png"),
                 ),
-                title: const Text('Search'),
+                title: const Text('Projects'),
               ),
               SalomonBottomBarItem(
+                selectedColor: primaryColor.withOpacity(0.8),
                 icon: const ImageIcon(AssetImage("assets/icons/chat.png")),
                 title: const Text('Chats'),
               ),
               SalomonBottomBarItem(
+                selectedColor: primaryColor,
                 icon: const ImageIcon(AssetImage("assets/icons/account.png")),
                 title: const Text('Profile'),
               ),

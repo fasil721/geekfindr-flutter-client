@@ -31,7 +31,7 @@ class FeedList extends StatelessWidget {
     final newData = await getMyFeeds(lastId: lastId);
     if (newData.isNotEmpty) {
       datas.addAll(newData);
-       print("datas.length ${datas.length}");
+      print("datas.length ${datas.length}");
       controller.update(["dataList"]);
     }
     isLoading = false;
@@ -76,12 +76,12 @@ class FeedList extends StatelessWidget {
                     return VisibilityDetector(
                       onVisibilityChanged: (info) {
                         if (info.visibleFraction == 1) {
-                        print("index $index");
+                          print("index $index");
                           if (datas.length - 3 <= index &&
                               !isLoading &&
                               (dataLength + 2) < index) {
                             dataLength = index;
-                           print(dataLength);
+                            print(dataLength);
                             mockData(datas.last.id!);
                           }
                         }

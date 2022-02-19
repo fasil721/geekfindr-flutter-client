@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
             resizeToAvoidBottomInset: true,
             backgroundColor: white,
             body: NestedScrollView(
+              physics: BouncingScrollPhysics(),
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                 SliverAppBar(
                   floating: true,

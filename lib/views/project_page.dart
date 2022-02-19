@@ -41,12 +41,11 @@ class _ProjectPageState extends State<ProjectPage> {
                 tabs: [
                   ...categories.map(
                     (element) => Container(
-                      // width: 90,
-                      // height: 75,
+                      width: 110,
+                      height: 65,
                       // margin: const EdgeInsets.symmetric(vertical: 5),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
+                        vertical: 5,
                       ),
                       decoration: BoxDecoration(
                         color: categories[_currentIndex] == element
@@ -57,6 +56,7 @@ class _ProjectPageState extends State<ProjectPage> {
                       ),
                       child: Tab(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
                               element["iconPath"] as String,
@@ -67,7 +67,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                   : Colors.grey[700],
                             ),
                             Container(
-                              margin: const EdgeInsets.only(top: 1),
+                              margin: const EdgeInsets.only(top: 3),
                               child: Text(
                                 element['name'] as String,
                                 style: GoogleFonts.poppins(

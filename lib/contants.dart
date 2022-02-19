@@ -24,10 +24,10 @@ double textfactorfind(double val) {
 }
 
 List<Map> categories = [
-  {"name": "Cats", 'iconPath': 'assets/icons/office.png'},
-  {'name': 'Dogs', 'iconPath': 'assets/icons/office.png'},
-  {'name': 'Bu5i', 'iconPath': 'assets/icons/office.png'},
-  {'name': 'Pa5s', 'iconPath': 'assets/icons/office.png'},
+  {"name": "Info", 'iconPath': 'assets/icons/info.png'},
+  {'name': 'Teams', 'iconPath': 'assets/icons/people.png'},
+  {'name': 'Todos', 'iconPath': 'assets/icons/to-do-list.png'},
+  {'name': 'Tasks', 'iconPath': 'assets/icons/office.png'},
 ];
 
 List<BoxShadow> shadowList = [
