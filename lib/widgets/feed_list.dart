@@ -5,6 +5,7 @@ import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:geek_findr/widgets/comment_bottom_sheet.dart';
+import 'package:geek_findr/widgets/heart_animation_widget.dart';
 import 'package:geek_findr/widgets/liked_users_bottom_list.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,16 +14,33 @@ import 'package:shimmer/shimmer.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 // ignore: must_be_immutable
-class FeedList extends StatelessWidget {
+class FeedList extends StatefulWidget {
   FeedList({Key? key}) : super(key: key);
+
+  @override
+  State<FeedList> createState() => _FeedListState();
+}
+
+class _FeedListState extends State<FeedList> {
   final commmentEditController = TextEditingController();
+
   List<bool> isComments = [];
+
   List<int> likesCountList = [];
+
   List<int> commentCountList = [];
+
   List<ImageModel> datas = [];
+
   bool isLoading = false;
+
   bool allLoaded = false;
+
   int dataLength = -2;
+
+  bool isLiked = false;
+
+  bool isHeartAnimating = false;
 
   Future mockData(String lastId) async {
     if (!allLoaded) {
@@ -31,7 +49,7 @@ class FeedList extends StatelessWidget {
     final newData = await getMyFeeds(lastId: lastId);
     if (newData.isNotEmpty) {
       datas.addAll(newData);
-      print("datas.length ${datas.length}");
+      // print("datas.length ${datas.length}");
       controller.update(["dataList"]);
     }
     isLoading = false;
@@ -76,12 +94,12 @@ class FeedList extends StatelessWidget {
                     return VisibilityDetector(
                       onVisibilityChanged: (info) {
                         if (info.visibleFraction == 1) {
-                          print("index $index");
+                          // print("index $index");
                           if (datas.length - 3 <= index &&
                               !isLoading &&
                               (dataLength + 2) < index) {
                             dataLength = index;
-                            print(dataLength);
+                            // print(dataLength);
                             mockData(datas.last.id!);
                           }
                         }
@@ -220,31 +238,61 @@ class FeedList extends StatelessWidget {
                                 style: GoogleFonts.poppins(color: Colors.black),
                               ),
                             ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: CachedNetworkImage(
-                                imageUrl: datas[index].mediaUrl!,
-                                fit: BoxFit.fitWidth,
-                                width: width,
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                  baseColor: Colors.grey.withOpacity(0.3),
-                                  highlightColor: white,
-                                  period: const Duration(
-                                    milliseconds: 1000,
-                                  ),
-                                  child: Container(
-                                    height: 280,
-                                    width: width,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(
-                                        20,
+                            GetBuilder<AppController>(
+                              id: "Like",
+                              builder: (controller) {
+                                return GestureDetector(
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: CachedNetworkImage(
+                                          imageUrl: datas[index].mediaUrl!,
+                                          fit: BoxFit.fitWidth,
+                                          width: width,
+                                          placeholder: (context, url) =>
+                                              Shimmer.fromColors(
+                                            baseColor:
+                                                Colors.grey.withOpacity(0.3),
+                                            highlightColor: white,
+                                            period: const Duration(
+                                              milliseconds: 1000,
+                                            ),
+                                            child: Container(
+                                              height: 280,
+                                              width: width,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  20,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      Opacity(
+                                        opacity: isHeartAnimating ? 1 : 0,
+                                        child: HeartAnimationWidget(
+                                          isAnimating: isHeartAnimating,
+                                          child: const Icon(
+                                            Icons.favorite,
+                                            color: Colors.white,
+                                            size: 60,
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                ),
-                              ),
+                                  onDoubleTap: () {
+                                    isHeartAnimating = true;
+                                    isLiked = true;
+                                    contoller.update(["Like"]);
+                                  },
+                                );
+                              },
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

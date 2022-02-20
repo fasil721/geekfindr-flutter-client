@@ -60,7 +60,8 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
+  Widget build(BuildContext context) => ScaleTransition(
+        scale: scale,
+        child: widget.child,
+      );
 }
