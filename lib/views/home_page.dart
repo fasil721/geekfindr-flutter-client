@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                                 _advancedDrawerController.showDrawer();
                               },
                             ),
-                          ),
+                          ), 
                           const SearchWidget()
                         ],
                       ),
