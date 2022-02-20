@@ -276,12 +276,18 @@ class _FeedListState extends State<FeedList> {
                                       Opacity(
                                         opacity: isHeartAnimating ? 1 : 0,
                                         child: HeartAnimationWidget(
+                                          duration:
+                                              const Duration(milliseconds: 700),
                                           isAnimating: isHeartAnimating,
                                           child: const Icon(
                                             Icons.favorite,
                                             color: Colors.white,
                                             size: 60,
                                           ),
+                                          onEnd: () {
+                                            isHeartAnimating = false;
+                                            contoller.update(["Like"]);
+                                          },
                                         ),
                                       )
                                     ],

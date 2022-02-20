@@ -48,7 +48,7 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
       await controller.reverse();
       await Future.delayed(const Duration(milliseconds: 400));
       if (widget.onEnd != null) {
-        widget.onEnd ?? () {}();
+        (widget.onEnd)!();
       }
     }
   }
