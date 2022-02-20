@@ -11,13 +11,16 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:transparent_image/transparent_image.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 // ignore: must_be_immutable
-class FeedList extends StatelessWidget {
-  final commmentEditController = TextEditingController();
+class FeedList extends StatefulWidget {
+  @override
+  State<FeedList> createState() => _FeedListState();
+}
 
+class _FeedListState extends State<FeedList> {
+  final commmentEditController = TextEditingController();
   List<bool> isCommenting = [];
   List<int> likesCountList = [];
   List<int> commentCountList = [];
@@ -26,7 +29,7 @@ class FeedList extends StatelessWidget {
   List<ImageModel> datas = [];
   bool isLoading = false;
   bool allLoaded = false;
-  int dataLength = -2;
+  int dataLength = -1;
   bool isRefresh = true;
 
   Future mockData(String lastId) async {
@@ -46,8 +49,7 @@ class FeedList extends StatelessWidget {
 
   Future<void> setUp(List<ImageModel> data) async {
     final currentUser = box.get("user");
-
-    isLikedList = [];
+    final List<bool> values = [];
     for (int i = 0; i < datas.length; i++) {
       final likedUsers = await getLikedUsers(
         imageId: datas[i].id!,
@@ -57,7 +59,12 @@ class FeedList extends StatelessWidget {
             (element) => element.owner!.id == currentUser!.id,
           )
           .isNotEmpty;
-      isLikedList.add(isLiked);
+      values.add(isLiked);
+    }
+    if (values.isNotEmpty) {
+      isLikedList = values;
+      controller.update(["Like"]);
+      print("ffff");
     }
   }
 
@@ -105,22 +112,22 @@ class FeedList extends StatelessWidget {
                         commentCountList.add(e.commentCount!);
                       }
                       print("haiiiii");
+                      setUp(datas);
                     }
                     isRefresh = false;
 
-                    //setUp(datas);
                     return VisibilityDetector(
                       onVisibilityChanged: (info) {
-                        // if (info.visibleFraction == 1) {
-                        //   // print("index $index");//
-                        //   if (datas.length - 3 <= index &&
-                        //       !isLoading &&
-                        //       (dataLength + 2) < index) {
-                        //     dataLength = index;
-                        //     //   print(dataLength);
-                        //     mockData(datas.last.id!);
-                        //   }
-                        // }
+                        if (info.visibleFraction == 1) {
+                          print("index $index"); //
+                          if (datas.length - 3 <= index &&
+                              !isLoading &&
+                              (dataLength + 2) < index) {
+                            dataLength = index;
+                            print(dataLength);
+                            mockData(datas.last.id!);
+                          }
+                        }
                       },
                       key: UniqueKey(),
                       child: Container(
@@ -205,12 +212,7 @@ class FeedList extends StatelessWidget {
                                                   ),
                                                 ),
                                               ),
-                                              // child: FadeInImage.memoryNetwork(
-                                              //   placeholder: kTransparentImage,
-                                              //   image:
-                                              //       'https://picsum.photos/250?image=9',
-                                              //   height: height * 0.04,
-                                              // ),
+                                             
                                             ),
                                           ),
                                         ),
@@ -320,16 +322,21 @@ class FeedList extends StatelessWidget {
                                           ),
                                           onEnd: () {
                                             isHeartAnimatingList[index] = false;
-                                            // controller.update(["Like"]);
+                                            controller.update(["Like"]);
                                           },
                                         ),
                                       )
                                     ],
                                   ),
                                   onDoubleTap: () {
-                                    isHeartAnimatingList[index] = true;
+                                    if (!isLikedList[index]) {
+                                      postLike(
+                                        imageId: datas[index].id!,
+                                      );
+                                    }
                                     isLikedList[index] = true;
-                                    // controller.update(["Like"]);
+                                    isHeartAnimatingList[index] = true;
+                                    controller.update(["Like"]);
                                   },
                                 );
                               },
@@ -457,10 +464,10 @@ class FeedList extends StatelessWidget {
                                         //               onPressed: () {
                                         //                 likesCountList[index] +=
                                         //                     1;
-                                        //                 postLike(
-                                        //                   imageId:
-                                        //                       datas[index].id!,
-                                        //                 );
+                                        // postLike(
+                                        //   imageId:
+                                        //       datas[index].id!,
+                                        // );
                                         //               },
                                         //               icon: Icon(
                                         //                 Icons.favorite_outline,

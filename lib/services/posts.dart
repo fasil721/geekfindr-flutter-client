@@ -312,7 +312,7 @@ Future editImage({required String imageId, required Map body}) async {
   }
 }
 
-Future postLike({required String imageId}) async {
+Future<void> postLike({required String imageId}) async {
   final user = box.get("user");
   final url = "$prodUrl/api/v1/posts/$imageId/likes";
 
