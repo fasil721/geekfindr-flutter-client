@@ -222,6 +222,8 @@ Future<List<ImageModel>> getMyFeeds({String? lastId}) async {
         Fluttertoast.showToast(msg: element.message!);
       }
     } else {
+      print(response.statusCode);
+      print(response.body);
       Fluttertoast.showToast(msg: "Something went wrong");
     }
     return [];

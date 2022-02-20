@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
-              body:  FeedList(),
+              body: const FeedList(),
             ),
           ),
         ),

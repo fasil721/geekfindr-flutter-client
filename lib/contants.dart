@@ -4,7 +4,8 @@ const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
 const secondaryColor = Color(0xffF3F4F7);
 const white = Colors.white;
-const black = Colors.black;
+final black = Colors.black.withOpacity(0.8);
+
 double textfactorfind(double val) {
   if (val == 0.85) {
     return val + 0.1;

@@ -121,7 +121,7 @@ class PostUploadDialoge extends StatelessWidget {
                             "Project",
                             style: GoogleFonts.roboto(
                               fontSize: textFactor * 16,
-                              color: Colors.black.withOpacity(0.9),
+                              color: black.withOpacity(0.9),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
