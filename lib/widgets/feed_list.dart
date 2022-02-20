@@ -11,36 +11,23 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 // ignore: must_be_immutable
-class FeedList extends StatefulWidget {
-  FeedList({Key? key}) : super(key: key);
-
-  @override
-  State<FeedList> createState() => _FeedListState();
-}
-
-class _FeedListState extends State<FeedList> {
+class FeedList extends StatelessWidget {
   final commmentEditController = TextEditingController();
 
-  List<bool> isComments = [];
-
+  List<bool> isCommenting = [];
   List<int> likesCountList = [];
-
   List<int> commentCountList = [];
-
+  List<bool> isLikedList = [];
+  List<bool> isHeartAnimatingList = [];
   List<ImageModel> datas = [];
-
   bool isLoading = false;
-
   bool allLoaded = false;
-
   int dataLength = -2;
-
-  bool isLiked = false;
-
-  bool isHeartAnimating = false;
+  bool isRefresh = true;
 
   Future mockData(String lastId) async {
     if (!allLoaded) {
@@ -50,15 +37,32 @@ class _FeedListState extends State<FeedList> {
     if (newData.isNotEmpty) {
       datas.addAll(newData);
       // print("datas.length ${datas.length}");
+      isRefresh = true;
       controller.update(["dataList"]);
     }
     isLoading = false;
     allLoaded = newData.isEmpty;
   }
 
+  Future<void> setUp(List<ImageModel> data) async {
+    final currentUser = box.get("user");
+
+    isLikedList = [];
+    for (int i = 0; i < datas.length; i++) {
+      final likedUsers = await getLikedUsers(
+        imageId: datas[i].id!,
+      );
+      final isLiked = likedUsers!
+          .where(
+            (element) => element.owner!.id == currentUser!.id,
+          )
+          .isNotEmpty;
+      isLikedList.add(isLiked);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final currentUser = box.get("user");
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return FutureBuilder<List<ImageModel>>(
@@ -79,30 +83,44 @@ class _FeedListState extends State<FeedList> {
                   shrinkWrap: true,
                   itemCount: datas.length,
                   itemBuilder: (context, index) {
-                    isComments = [];
-                    for (int i = 0; i < datas.length; i++) {
-                      isComments.add(false);
+                    if (isRefresh) {
+                      isCommenting = [];
+                      for (int i = 0; i < datas.length; i++) {
+                        isCommenting.add(false);
+                      }
+                      isHeartAnimatingList = [];
+                      for (int i = 0; i < datas.length; i++) {
+                        isHeartAnimatingList.add(false);
+                      }
+                      isLikedList = [];
+                      for (int i = 0; i < datas.length; i++) {
+                        isLikedList.add(false);
+                      }
+                      likesCountList = [];
+                      for (final e in datas) {
+                        likesCountList.add(e.likeCount!);
+                      }
+                      commentCountList = [];
+                      for (final e in datas) {
+                        commentCountList.add(e.commentCount!);
+                      }
+                      print("haiiiii");
                     }
-                    likesCountList = [];
-                    for (final e in datas) {
-                      likesCountList.add(e.likeCount!);
-                    }
-                    commentCountList = [];
-                    for (final e in datas) {
-                      commentCountList.add(e.commentCount!);
-                    }
+                    isRefresh = false;
+
+                    //setUp(datas);
                     return VisibilityDetector(
                       onVisibilityChanged: (info) {
-                        if (info.visibleFraction == 1) {
-                          // print("index $index");
-                          if (datas.length - 3 <= index &&
-                              !isLoading &&
-                              (dataLength + 2) < index) {
-                            dataLength = index;
-                            // print(dataLength);
-                            mockData(datas.last.id!);
-                          }
-                        }
+                        // if (info.visibleFraction == 1) {
+                        //   // print("index $index");//
+                        //   if (datas.length - 3 <= index &&
+                        //       !isLoading &&
+                        //       (dataLength + 2) < index) {
+                        //     dataLength = index;
+                        //     //   print(dataLength);
+                        //     mockData(datas.last.id!);
+                        //   }
+                        // }
                       },
                       key: UniqueKey(),
                       child: Container(
@@ -187,6 +205,12 @@ class _FeedListState extends State<FeedList> {
                                                   ),
                                                 ),
                                               ),
+                                              // child: FadeInImage.memoryNetwork(
+                                              //   placeholder: kTransparentImage,
+                                              //   image:
+                                              //       'https://picsum.photos/250?image=9',
+                                              //   height: height * 0.04,
+                                              // ),
                                             ),
                                           ),
                                         ),
@@ -238,6 +262,14 @@ class _FeedListState extends State<FeedList> {
                                 style: GoogleFonts.poppins(color: Colors.black),
                               ),
                             ),
+
+                            // ClipRRect(
+                            //   borderRadius: BorderRadius.circular(20),
+                            //   child: FadeInImage.memoryNetwork(
+                            //     placeholder: kTransparentImage,
+                            //     image: 'https://picsum.photos/250?image=9',
+                            //   ),
+                            // ),
                             GetBuilder<AppController>(
                               id: "Like",
                               builder: (controller) {
@@ -260,7 +292,7 @@ class _FeedListState extends State<FeedList> {
                                               milliseconds: 1000,
                                             ),
                                             child: Container(
-                                              height: 280,
+                                              height: width * 0.8,
                                               width: width,
                                               decoration: BoxDecoration(
                                                 color: Colors.grey,
@@ -274,28 +306,30 @@ class _FeedListState extends State<FeedList> {
                                         ),
                                       ),
                                       Opacity(
-                                        opacity: isHeartAnimating ? 1 : 0,
+                                        opacity:
+                                            isHeartAnimatingList[index] ? 1 : 0,
                                         child: HeartAnimationWidget(
                                           duration:
                                               const Duration(milliseconds: 700),
-                                          isAnimating: isHeartAnimating,
+                                          isAnimating:
+                                              isHeartAnimatingList[index],
                                           child: const Icon(
                                             Icons.favorite,
                                             color: Colors.white,
                                             size: 60,
                                           ),
                                           onEnd: () {
-                                            isHeartAnimating = false;
-                                            contoller.update(["Like"]);
+                                            isHeartAnimatingList[index] = false;
+                                            // controller.update(["Like"]);
                                           },
                                         ),
                                       )
                                     ],
                                   ),
                                   onDoubleTap: () {
-                                    isHeartAnimating = true;
-                                    isLiked = true;
-                                    contoller.update(["Like"]);
+                                    isHeartAnimatingList[index] = true;
+                                    isLikedList[index] = true;
+                                    // controller.update(["Like"]);
                                   },
                                 );
                               },
@@ -341,7 +375,7 @@ class _FeedListState extends State<FeedList> {
                                                 imageId: datas[index].id!,
                                               ),
                                             );
-                                            isComments[index] = false;
+                                            isCommenting[index] = false;
                                             controller.update(
                                               ["comments"],
                                             );
@@ -368,17 +402,18 @@ class _FeedListState extends State<FeedList> {
                                     GetBuilder<AppController>(
                                       id: "Like",
                                       builder: (_) {
-                                        final icon = isLiked
+                                        final icon = isLikedList[index]
                                             ? Icons.favorite
                                             : Icons.favorite_border_outlined;
-                                        final color =
-                                            isLiked ? Colors.red : Colors.black;
+                                        final color = isLikedList[index]
+                                            ? Colors.red
+                                            : Colors.black;
                                         return HeartAnimationWidget(
-                                          isAnimating: isLiked,
+                                          isAnimating: isLikedList[index],
                                           child: IconButton(
                                             splashRadius: 25,
                                             onPressed: () {
-                                              isLiked = !isLiked;
+                                              isLikedList[index] = true;
                                               contoller.update(["Like"]);
                                             },
                                             icon: Icon(
@@ -396,13 +431,13 @@ class _FeedListState extends State<FeedList> {
                                         //     if (snapshot.connectionState ==
                                         //         ConnectionState.done) {
                                         //       final likedUsers = snapshot.data!;
-                                        //       final isLiked = likedUsers
-                                        //           .where(
-                                        //             (element) =>
-                                        //                 element.owner!.id ==
-                                        //                 currentUser!.id,
-                                        //           )
-                                        //           .isEmpty;
+                                        // final isLiked = likedUsers
+                                        //     .where(
+                                        //       (element) =>
+                                        //           element.owner!.id ==
+                                        //           currentUser!.id,
+                                        //     )
+                                        //     .isEmpty;
                                         //       return !isLiked
                                         //           ? IconButton(
                                         //               splashRadius: 25,
@@ -457,15 +492,15 @@ class _FeedListState extends State<FeedList> {
                                       splashRadius: 25,
                                       tooltip: 'comment',
                                       onPressed: () {
-                                        if (isComments[index]) {
-                                          isComments[index] = false;
+                                        if (isCommenting[index]) {
+                                          isCommenting[index] = false;
                                         } else {
                                           for (int i = 0;
-                                              i < isComments.length;
+                                              i < isCommenting.length;
                                               i++) {
-                                            isComments[i] = false;
+                                            isCommenting[i] = false;
                                           }
-                                          isComments[index] = true;
+                                          isCommenting[index] = true;
                                         }
                                         controller.update(["comments"]);
                                         commmentEditController.clear();
@@ -479,7 +514,7 @@ class _FeedListState extends State<FeedList> {
                               id: "comments",
                               builder: (_) {
                                 return Visibility(
-                                  visible: isComments[index],
+                                  visible: isCommenting[index],
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: TextField(
@@ -498,7 +533,7 @@ class _FeedListState extends State<FeedList> {
                                                     commmentEditController.text,
                                               );
                                               commentCountList[index] += 1;
-                                              isComments[index] = false;
+                                              isCommenting[index] = false;
                                               controller.update(["comments"]);
                                             }
                                           },

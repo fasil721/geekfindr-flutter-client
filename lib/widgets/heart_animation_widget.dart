@@ -55,8 +55,8 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
 
   @override
   void dispose() {
-    super.dispose();
     controller.dispose();
+    super.dispose();
   }
 
   @override

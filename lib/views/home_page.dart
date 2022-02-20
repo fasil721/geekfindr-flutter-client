@@ -42,10 +42,9 @@ class _HomePageState extends State<HomePage> {
             resizeToAvoidBottomInset: true,
             backgroundColor: white,
             body: NestedScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                 SliverAppBar(
-                  floating: true,
                   expandedHeight: 70,
                   elevation: 0,
                   backgroundColor: white,
@@ -72,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                                 _advancedDrawerController.showDrawer();
                               },
                             ),
-                          ), 
+                          ),
                           const SearchWidget()
                         ],
                       ),
@@ -80,8 +79,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SliverAppBar(
-                  snap: true,
-                  floating: true,
                   toolbarHeight: 60,
                   backgroundColor: white,
                   flexibleSpace: FlexibleSpaceBar(
@@ -190,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
-              body: FeedList(),
+              body:  FeedList(),
             ),
           ),
         ),

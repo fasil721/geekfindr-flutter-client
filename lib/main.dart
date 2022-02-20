@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  GestureBinding.instance?.resamplingEnabled = true;
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
   await Hive.openBox<UserModel>('usermodel');
