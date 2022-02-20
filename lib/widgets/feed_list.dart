@@ -366,66 +366,86 @@ class _FeedListState extends State<FeedList> {
                                 Row(
                                   children: [
                                     GetBuilder<AppController>(
-                                      id: "likes",
+                                      id: "Like",
                                       builder: (_) {
-                                        return FutureBuilder<List<LikedUsers>?>(
-                                          future: getLikedUsers(
-                                            imageId: datas[index].id!,
+                                        final icon = isLiked
+                                            ? Icons.favorite
+                                            : Icons.favorite_border_outlined;
+                                        final color =
+                                            isLiked ? Colors.red : Colors.black;
+                                        return HeartAnimationWidget(
+                                          isAnimating: isLiked,
+                                          child: IconButton(
+                                            splashRadius: 25,
+                                            onPressed: () {
+                                              isLiked = !isLiked;
+                                              contoller.update(["Like"]);
+                                            },
+                                            icon: Icon(
+                                              icon,
+                                              color: color,
+                                              size: 25,
+                                            ),
                                           ),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.done) {
-                                              final likedUsers = snapshot.data!;
-                                              final isLiked = likedUsers
-                                                  .where(
-                                                    (element) =>
-                                                        element.owner!.id ==
-                                                        currentUser!.id,
-                                                  )
-                                                  .isEmpty;
-                                              return !isLiked
-                                                  ? IconButton(
-                                                      splashRadius: 25,
-                                                      splashColor: Colors.grey,
-                                                      tooltip: 'liked',
-                                                      onPressed: () {},
-                                                      icon: const Icon(
-                                                        Icons.favorite_rounded,
-                                                        color: primaryColor,
-                                                        size: 28,
-                                                      ),
-                                                    )
-                                                  : IconButton(
-                                                      splashRadius: 5,
-                                                      splashColor: Colors.grey,
-                                                      tooltip: 'like',
-                                                      onPressed: () {
-                                                        likesCountList[index] +=
-                                                            1;
-                                                        postLike(
-                                                          imageId:
-                                                              datas[index].id!,
-                                                        );
-                                                      },
-                                                      icon: Icon(
-                                                        Icons.favorite_outline,
-                                                        color: Colors.black
-                                                            .withOpacity(0.8),
-                                                        size: 28,
-                                                      ),
-                                                    );
-                                            }
-                                            return IconButton(
-                                              splashRadius: 5,
-                                              onPressed: () {},
-                                              icon: const Icon(
-                                                Icons.favorite_outline,
-                                                color: Colors.black,
-                                                size: 28,
-                                              ),
-                                            );
-                                          },
                                         );
+                                        // return FutureBuilder<List<LikedUsers>?>(
+                                        //   future: getLikedUsers(
+                                        //     imageId: datas[index].id!,
+                                        //   ),
+                                        //   builder: (context, snapshot) {
+                                        //     if (snapshot.connectionState ==
+                                        //         ConnectionState.done) {
+                                        //       final likedUsers = snapshot.data!;
+                                        //       final isLiked = likedUsers
+                                        //           .where(
+                                        //             (element) =>
+                                        //                 element.owner!.id ==
+                                        //                 currentUser!.id,
+                                        //           )
+                                        //           .isEmpty;
+                                        //       return !isLiked
+                                        //           ? IconButton(
+                                        //               splashRadius: 25,
+                                        //               splashColor: Colors.grey,
+                                        //               tooltip: 'liked',
+                                        //               onPressed: () {},
+                                        //               icon: const Icon(
+                                        //                 Icons.favorite_rounded,
+                                        //                 color: primaryColor,
+                                        //                 size: 28,
+                                        //               ),
+                                        //             )
+                                        //           : IconButton(
+                                        //               splashRadius: 5,
+                                        //               splashColor: Colors.grey,
+                                        //               tooltip: 'like',
+                                        //               onPressed: () {
+                                        //                 likesCountList[index] +=
+                                        //                     1;
+                                        //                 postLike(
+                                        //                   imageId:
+                                        //                       datas[index].id!,
+                                        //                 );
+                                        //               },
+                                        //               icon: Icon(
+                                        //                 Icons.favorite_outline,
+                                        //                 color: Colors.black
+                                        //                     .withOpacity(0.8),
+                                        //                 size: 28,
+                                        //               ),
+                                        //             );
+                                        //     }
+                                        //     return IconButton(
+                                        //       splashRadius: 5,
+                                        //       onPressed: () {},
+                                        //       icon: const Icon(
+                                        //         Icons.favorite_outline,
+                                        //         color: Colors.black,
+                                        //         size: 28,
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        // );
                                       },
                                     ),
                                     IconButton(
