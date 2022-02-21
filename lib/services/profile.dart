@@ -155,7 +155,7 @@ class UserDetials {
       };
 }
 
-Future followUsers({
+ Future<void> followUsers({
   required Map<String, String> body,
 }) async {
   final user = box.get("user");

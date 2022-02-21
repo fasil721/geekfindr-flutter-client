@@ -32,7 +32,7 @@ class _FeedListState extends State<FeedList> {
   int dataLength = -1;
   bool isRefresh = true;
 
-  Future mockData(String lastId) async {
+  Future<void> mockData(String lastId) async {
     if (!allLoaded) {
       isLoading = true;
     }
@@ -43,12 +43,10 @@ class _FeedListState extends State<FeedList> {
       likesSetUp();
       controller.update(["dataList"]);
     }
-    // print("datas.length ${datas.length}");
+    print("datas.length ${datas.length}");
     isLoading = false;
     allLoaded = newData.isEmpty;
   }
-
-  
 
   Future<void> likesSetUp() async {
     final currentUser = box.get("user");

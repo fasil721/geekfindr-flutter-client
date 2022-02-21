@@ -261,7 +261,7 @@ class Owner {
       };
 }
 
-Future deleteImage({required String imageId}) async {
+ Future<void> deleteImage({required String imageId}) async {
   final user = box.get("user");
   final url = "$prodUrl/api/v1/posts/$imageId";
 
@@ -285,7 +285,7 @@ Future deleteImage({required String imageId}) async {
   }
 }
 
-Future editImage({required String imageId, required Map body}) async {
+ Future<void> editImage({required String imageId, required Map body}) async {
   final user = box.get("user");
   final url = "$prodUrl/api/v1/posts/$imageId";
 
@@ -393,7 +393,7 @@ class LikedUsers {
       };
 }
 
-Future postComment({required String imageId, required String comment}) async {
+ Future<void> postComment({required String imageId, required String comment}) async {
   final user = box.get("user");
   final url = "$prodUrl/api/v1/posts/$imageId/comments";
   final body = {"comment": comment};

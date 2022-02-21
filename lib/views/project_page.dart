@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/services/projects.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProjectPage extends StatefulWidget {
@@ -11,10 +12,17 @@ class ProjectPage extends StatefulWidget {
 
 class _ProjectPageState extends State<ProjectPage> {
   int _currentIndex = 0;
-
+  final myProjects = ProjectServices();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          print("pressed");
+          final a = await myProjects.getMyProjects();
+          print(a!.map((e) => e.project!.name));
+        },
+      ),
       backgroundColor: secondaryColor,
       appBar: AppBar(
         elevation: 0,
