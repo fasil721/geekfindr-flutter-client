@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/models/user_profile_model.dart';
-import 'package:geek_findr/services/posts.dart';
-import 'package:geek_findr/services/profile.dart';
+import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:geek_findr/services/postServices/posts.dart';
+import 'package:geek_findr/services/profileServices/profile.dart';
+import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/views/profile_update_page.dart';
 import 'package:geek_findr/widgets/profile_about_view.dart';
 import 'package:geek_findr/widgets/profile_loading_screen.dart';
@@ -26,7 +27,8 @@ class _ProfilePageState extends State<ProfilePage>
   TabController? tabController;
   int currentIndex = 0;
   final controller = Get.find<AppController>();
-  // int? postCount;
+  final postServices = PostServices();
+  final profileServices = ProfileServices();
   @override
   void initState() {
     super.initState();
@@ -46,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage>
       id: "prof",
       builder: (controller) {
         return FutureBuilder<UserProfileModel?>(
-          future: getUserProfileData(),
+          future: profileServices.getUserProfileData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const LoadingProfilePage();
@@ -201,7 +203,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                 builder: (context) {
                                                   return FutureBuilder<
                                                       List<ImageModel?>>(
-                                                    future: getMyImages(
+                                                    future: postServices
+                                                        .getMyImages(
                                                       userData.id!,
                                                     ),
                                                     builder:
@@ -478,14 +481,13 @@ class ConvexClipPath extends CustomClipper<Path> {
     );
     path.lineTo(size.width, 0);
     path.close();
- 
+
     return path;
   }
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
-
 
 class ClipShadowPath extends StatelessWidget {
   final BoxShadow shadow;

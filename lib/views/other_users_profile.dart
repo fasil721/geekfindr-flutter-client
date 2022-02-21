@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/models/user_profile_model.dart';
-import 'package:geek_findr/services/posts.dart';
-import 'package:geek_findr/services/profile.dart';
+import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:geek_findr/services/postServices/posts.dart';
+import 'package:geek_findr/services/profileServices/profile.dart';
+import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/views/profile_page.dart';
 import 'package:geek_findr/widgets/profile_about_view.dart';
 import 'package:geek_findr/widgets/profile_loading_screen.dart';
@@ -29,7 +30,8 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   final controller = Get.find<AppController>();
   int followersCount = 0;
   final box = Boxes.getInstance();
-
+  final postServices = PostServices();
+  final profileServices = ProfileServices();
   @override
   void initState() {
     super.initState();
@@ -46,9 +48,9 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     final currentUser = box.get("user");
-
+    
     return FutureBuilder<UserProfileModel?>(
-      future: getUserProfilebyId(id: widget.userId),
+      future: profileServices.getUserProfilebyId(id: widget.userId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingProfilePage();
@@ -162,7 +164,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                     child: Column(
                                       children: [
                                         FutureBuilder<List<ImageModel?>>(
-                                          future: getMyImages(user.id!),
+                                          future: postServices.getMyImages(user.id!),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState ==
                                                 ConnectionState.done) {
@@ -339,7 +341,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               id: "followers",
                               builder: (_) {
                                 return FutureBuilder<List<UserDetials>>(
-                                  future: getUserfollowersAndFollowings(
+                                  future: profileServices.getUserfollowersAndFollowings(
                                     id: user.id!,
                                     type: "followers",
                                   ),
@@ -375,7 +377,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                           if (!isFollowing) {
                                             followersCount = followersCount + 1;
                                             final body = {"id": user.id};
-                                            followUsers(body: body.cast());
+                                            profileServices.followUsers(body: body.cast());
                                           }
                                         },
                                         child: SizedBox(

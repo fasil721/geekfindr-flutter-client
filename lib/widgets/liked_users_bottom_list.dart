@@ -1,18 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/posts.dart';
+import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LikedUsersBottomSheet extends StatelessWidget {
-  const LikedUsersBottomSheet({
+   LikedUsersBottomSheet({
     Key? key,
     required this.imageId,
   }) : super(key: key);
   final String imageId;
 
+final postServices = PostServices();
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -20,7 +22,7 @@ class LikedUsersBottomSheet extends StatelessWidget {
     return Container(
       color: secondaryColor,
       child: FutureBuilder<List<LikedUsers>?>(
-        future: getLikedUsers(imageId: imageId),
+        future: postServices.getLikedUsers(imageId: imageId),
         builder: (context, snapshot) {
           if (ConnectionState.done == snapshot.connectionState) {
             if (snapshot.data != null) {

@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/profile.dart';
+import 'package:geek_findr/services/profileServices/profile.dart';
+import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,6 +23,7 @@ class _SearchWidgetState extends State<SearchWidget>
   bool isForward = false;
   final controller = Get.find<AppController>();
   final serchController = TextEditingController();
+  final profileServices = ProfileServices();
   String searchText = "";
   @override
   void initState() {
@@ -81,7 +83,7 @@ class _SearchWidgetState extends State<SearchWidget>
             ),
             suggestionsCallback: (value) {
               if (value.isNotEmpty) {
-                return searchUsers(text: value);
+                return profileServices.searchUsers(text: value);
               }
               return [];
             },

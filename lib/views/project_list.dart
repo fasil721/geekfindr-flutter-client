@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/projects.dart';
+import 'package:geek_findr/services/projectServices/project_model_classes.dart';
+import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:geek_findr/widgets/feed_list.dart';
 
 class MyProjectList extends StatefulWidget {
@@ -35,8 +36,8 @@ class _MyProjectListState extends State<MyProjectList> {
                 itemCount: datas.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
                     color: white,
                     child: Row(
                       children: [

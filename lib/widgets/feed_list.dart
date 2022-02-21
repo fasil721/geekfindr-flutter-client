@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/posts.dart';
+import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:geek_findr/widgets/comment_bottom_sheet.dart';
 import 'package:geek_findr/widgets/heart_animation_widget.dart';
@@ -21,6 +23,9 @@ class FeedList extends StatefulWidget {
 
 class _FeedListState extends State<FeedList> {
   final commmentEditController = TextEditingController();
+  final postServices = PostServices();
+  final controller = Get.find<AppController>();
+  final box = Boxes.getInstance();
   List<bool> isCommenting = [];
   List<int> likesCountList = [];
   List<int> commentCountList = [];
@@ -36,7 +41,7 @@ class _FeedListState extends State<FeedList> {
     if (!allLoaded) {
       isLoading = true;
     }
-    final newData = await getMyFeeds(lastId: lastId);
+    final newData = await postServices.getMyFeeds(lastId: lastId);
     if (newData.isNotEmpty) {
       datas.addAll(newData);
       itemsSetup(newData);
@@ -52,7 +57,7 @@ class _FeedListState extends State<FeedList> {
     final currentUser = box.get("user");
     final List<bool> values = [];
     for (int i = 0; i < datas.length; i++) {
-      final likedUsers = await getLikedUsers(
+      final likedUsers = await postServices.getLikedUsers(
         imageId: datas[i].id!,
       );
       final isLiked = likedUsers!
@@ -91,7 +96,7 @@ class _FeedListState extends State<FeedList> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return FutureBuilder<List<ImageModel>>(
-      future: getMyFeeds(),
+      future: postServices.getMyFeeds(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return skeleton(width);
@@ -319,7 +324,7 @@ class _FeedListState extends State<FeedList> {
                                   ),
                                   onDoubleTap: () {
                                     if (!isLikedList[index]) {
-                                      postLike(
+                                      postServices.postLike(
                                         imageId: datas[index].id!,
                                       );
                                     }
@@ -416,7 +421,7 @@ class _FeedListState extends State<FeedList> {
                                               splashRadius: 28,
                                               onPressed: () {
                                                 if (!isLikedList[index]) {
-                                                  postLike(
+                                                  postServices.postLike(
                                                     imageId: datas[index].id!,
                                                   );
                                                 }
@@ -477,7 +482,7 @@ class _FeedListState extends State<FeedList> {
                                           onPressed: () async {
                                             if (commmentEditController
                                                 .text.isNotEmpty) {
-                                              await postComment(
+                                              await postServices.postComment(
                                                 imageId: datas[index].id!,
                                                 comment:
                                                     commmentEditController.text,

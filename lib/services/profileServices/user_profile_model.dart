@@ -69,3 +69,31 @@ class UserProfileModel {
         "role": role,
       };
 }
+
+class UserDetials {
+  UserDetials({
+    this.username,
+    this.avatar,
+    this.role,
+    this.id,
+  });
+
+  String? username;
+  String? avatar;
+  String? role;
+  String? id;
+
+  factory UserDetials.fromJson(Map<String, String> json) => UserDetials(
+        username: json["username"],
+        avatar: json["avatar"],
+        role: json["role"],
+        id: json["id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "username": username,
+        "avatar": avatar,
+        "role": role,
+        "id": id,
+      };
+}

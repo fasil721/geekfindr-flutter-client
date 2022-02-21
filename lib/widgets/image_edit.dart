@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/posts.dart';
+import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:get/get.dart';
-
-import '../contants.dart';
 
 class PostEditDialoge extends StatefulWidget {
   const PostEditDialoge({
@@ -18,6 +18,7 @@ class PostEditDialoge extends StatefulWidget {
 
 class _PostEditDialogeState extends State<PostEditDialoge> {
   TextEditingController? descTextController;
+  final postServices = PostServices();
   @override
   void initState() {
     super.initState();
@@ -106,7 +107,10 @@ class _PostEditDialogeState extends State<PostEditDialoge> {
                           descTextController!.text !=
                               widget.imageModel.description) {
                         final body = {"description": descTextController!.text};
-                        editImage(imageId: widget.imageModel.id!, body: body);
+                        postServices.editImage(
+                          imageId: widget.imageModel.id!,
+                          body: body,
+                        );
                       }
                     },
                     child: const Text("Save"),

@@ -3,25 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/posts.dart';
+import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 class UserPosts extends StatelessWidget {
-  const UserPosts({
+  UserPosts({
     Key? key,
     required this.userId,
   }) : super(key: key);
   final String userId;
+  final postServices = PostServices();
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    // final height = MediaQuery.of(context).size.height;
     return GetBuilder<AppController>(
       id: "mypost",
       builder: (controller) {
         return FutureBuilder<List<ImageModel>>(
-          future: getMyImages(userId),
+          future: postServices.getMyImages(userId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return box(width);

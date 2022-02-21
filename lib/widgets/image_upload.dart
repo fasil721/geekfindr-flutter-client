@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/posts.dart';
+import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -18,6 +18,7 @@ class PostUploadDialoge extends StatelessWidget {
   final projTextController = TextEditingController();
   final File image;
   final controller = Get.find<AppController>();
+  final postServices = PostServices();
   bool isProject = false;
   @override
   Widget build(BuildContext context) {
@@ -152,7 +153,7 @@ class PostUploadDialoge extends StatelessWidget {
                           if (isProject) {
                             if (descTextController.text.isNotEmpty &&
                                 projTextController.text.isNotEmpty) {
-                              uploadImage(
+                              postServices.uploadImage(
                                 description: descTextController.text,
                                 image: image,
                                 isProject: true,
@@ -171,7 +172,7 @@ class PostUploadDialoge extends StatelessWidget {
                             }
                           } else {
                             if (descTextController.text.isNotEmpty) {
-                              uploadImage(
+                              postServices.uploadImage(
                                 description: descTextController.text,
                                 image: image,
                                 isProject: false,

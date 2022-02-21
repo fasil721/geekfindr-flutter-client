@@ -1,20 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/profile.dart';
+import 'package:geek_findr/services/postServices/posts.dart';
+import 'package:geek_findr/services/profileServices/profile.dart';
+import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 class UsersListView extends StatelessWidget {
-  const UsersListView({
+  UsersListView({
     Key? key,
     required this.userId,
     required this.type,
   }) : super(key: key);
   final String userId;
   final String type;
-
+  final profileServices = ProfileServices();
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -22,7 +24,10 @@ class UsersListView extends StatelessWidget {
     return Container(
       color: secondaryColor,
       child: FutureBuilder<List<UserDetials>>(
-        future: getUserfollowersAndFollowings(id: userId, type: type),
+        future: profileServices.getUserfollowersAndFollowings(
+          id: userId,
+          type: type,
+        ),
         builder: (context, snapshot) {
           if (ConnectionState.done == snapshot.connectionState) {
             if (snapshot.data != null) {

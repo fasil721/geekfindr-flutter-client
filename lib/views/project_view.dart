@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/projects.dart';
+import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProjectView extends StatefulWidget {

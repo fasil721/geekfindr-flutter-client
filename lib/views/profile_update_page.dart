@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/models/user_profile_model.dart';
-import 'package:geek_findr/services/profile.dart';
+import 'package:geek_findr/services/profileServices/profile.dart';
+import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,6 +19,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   final orgItems = <String>[];
   final orgController = TextEditingController();
   final sklController = TextEditingController();
+  final profileServices = ProfileServices();
   final skillsItems = <String>[];
   TextEditingController? bioController;
   TextEditingController? roleController;
@@ -102,7 +103,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
       userprofilemodel.education = [];
     }
 
-    updateUserProfileData(userprofilemodel.toJson());
+    profileServices.updateUserProfileData(userprofilemodel.toJson());
   }
 
   final numList = <String>[

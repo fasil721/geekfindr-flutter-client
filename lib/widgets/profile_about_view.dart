@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/models/user_profile_model.dart';
+import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 

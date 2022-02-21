@@ -6,10 +6,10 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
-import 'package:geek_findr/models/user_profile_model.dart';
+import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
+class ProfileServices{
 final box = Boxes.getInstance();
 final controller = Get.find<AppController>();
 
@@ -127,34 +127,6 @@ Future<List<UserDetials>> searchUsers({
   return [];
 }
 
-class UserDetials {
-  UserDetials({
-    this.username,
-    this.avatar,
-    this.role,
-    this.id,
-  });
-
-  String? username;
-  String? avatar;
-  String? role;
-  String? id;
-
-  factory UserDetials.fromJson(Map<String, String> json) => UserDetials(
-        username: json["username"],
-        avatar: json["avatar"],
-        role: json["role"],
-        id: json["id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "username": username,
-        "avatar": avatar,
-        "role": role,
-        "id": id,
-      };
-}
-
  Future<void> followUsers({
   required Map<String, String> body,
 }) async {
@@ -238,8 +210,8 @@ Future<List<UserDetials>> getUserfollowersAndFollowings({
     Fluttertoast.showToast(msg: "No Internet");
   } on PlatformException {
     Fluttertoast.showToast(msg: "Invalid Format");
-    // } catch (e) {
-    //   Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
   }
   return [];
 }
@@ -281,4 +253,5 @@ Future<UserProfileModel?> getUserProfilebyId({
     Fluttertoast.showToast(msg: e.toString());
   }
   return null;
+}
 }
