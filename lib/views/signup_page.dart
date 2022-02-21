@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/auth.dart';
+import 'package:geek_findr/services/authServices/auth.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final passwordFocusNode = FocusNode();
   final userNameFocusNode = FocusNode();
   final controller = Get.find<AppController>();
+  final authServices = AuthServices();
   bool isVisible = true;
 
   @override
@@ -100,7 +101,7 @@ class _SignUpPageState extends State<SignUpPage> {
       );
     }
     if (emailError == null && passwordError == null && usernameError == null) {
-      userSignUp(
+      authServices.userSignUp(
         email: emailController.text,
         password: passwordController.text,
         username: userNameController.text,

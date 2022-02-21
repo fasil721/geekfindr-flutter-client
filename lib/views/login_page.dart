@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/auth.dart';
+import 'package:geek_findr/services/authServices/auth.dart';
 import 'package:geek_findr/views/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
   final controller = Get.find<AppController>();
+  final authServices = AuthServices();
   bool isVisible = true;
 
   @override
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       );
     }
     if (emailError == null && passwordError == null) {
-      userSignIn(
+      authServices.userSignIn(
         email: emailController.text,
         password: passwordController.text,
       );

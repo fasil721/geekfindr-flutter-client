@@ -3,14 +3,14 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/services/projects.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProjectPage extends StatefulWidget {
-  const ProjectPage({Key? key}) : super(key: key);
+class ProjectView extends StatefulWidget {
+  const ProjectView({Key? key}) : super(key: key);
 
   @override
-  State<ProjectPage> createState() => _ProjectPageState();
+  State<ProjectView> createState() => _ProjectPageState();
 }
 
-class _ProjectPageState extends State<ProjectPage> {
+class _ProjectPageState extends State<ProjectView> {
   int _currentIndex = 0;
   final myProjects = ProjectServices();
   @override
