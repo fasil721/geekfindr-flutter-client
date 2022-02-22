@@ -56,14 +56,13 @@ class PostServices {
         // print(response3.statusCode);
         if (response3.statusCode == 200) {
           if (projectName.isNotEmpty) {
+            controller.update(["projectList"]);
             Fluttertoast.showToast(
               msg: "Projest post uploaded",
             );
-            controller.update(["projectList"]);
           } else {
             Fluttertoast.showToast(msg: "Post uploaded");
           }
-
           Get.back();
         } else if (response3.statusCode == 400 || response3.statusCode == 422) {
           final errorJson = json.decode(response3.body) as Map;

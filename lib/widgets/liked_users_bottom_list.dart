@@ -8,13 +8,13 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LikedUsersBottomSheet extends StatelessWidget {
-   LikedUsersBottomSheet({
+  LikedUsersBottomSheet({
     Key? key,
     required this.imageId,
   }) : super(key: key);
   final String imageId;
 
-final postServices = PostServices();
+  final postServices = PostServices();
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -24,6 +24,7 @@ final postServices = PostServices();
       child: FutureBuilder<List<LikedUsers>?>(
         future: postServices.getLikedUsers(imageId: imageId),
         builder: (context, snapshot) {
+          if (ConnectionState.waiting == snapshot.connectionState) {}
           if (ConnectionState.done == snapshot.connectionState) {
             if (snapshot.data != null) {
               final a = snapshot.data!;

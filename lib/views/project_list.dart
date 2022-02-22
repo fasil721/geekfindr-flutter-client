@@ -51,7 +51,7 @@ class _MyProjectListState extends State<MyProjectList> {
                           );
                         },
                         child: Container(
-                          height: 100,
+                          height: 75,
                           margin: const EdgeInsets.all(10),
                           color: white,
                           child: Row(
