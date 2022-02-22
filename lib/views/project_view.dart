@@ -32,54 +32,80 @@ class _ProjectPageState extends State<ProjectView> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+
     return FutureBuilder<ProjuctDetialsModel?>(
       future: myProjects.getProjectDetialsById(id: widget.projectId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold();
+          return const Scaffold();
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          // if(){}
-          // final projectDetials=snapshot.data!;
-          //  final b = findDatesDifferenceFromToday(a.createdAt!);
-          return Scaffold(
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                final a = await myProjects.getProjectDetialsById(
-                  id: widget.projectId,
-                );
-                if (a != null) {
-                  final b = findDatesDifferenceFromToday(a.createdAt!);
-                  print(b);
-                }
-
-                //final today = DateTime.now();
-                // print(
-                //   "Created at ${a!.createdAt!.difference(today).inDays * -1} days ago",
-                // );
-              },
-            ),
-            backgroundColor: secondaryColor,
-            appBar: AppBar(
-              leading: IconButton(
-                splashRadius: 25,
-                icon: ImageIcon(
-                  const AssetImage("assets/icons/left.png"),
-                  color: black,
-                  size: 25,
-                ),
-                onPressed: () {
-                  Get.back();
+          if (snapshot.data != null) {
+            final projectDetials = snapshot.data!;
+            final date =
+                findDatesDifferenceFromToday(projectDetials.createdAt!);
+            return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                onPressed: () async {
+                  final a = await myProjects.getProjectDetialsById(
+                    id: widget.projectId,
+                  );
+                  if (a != null) {
+                    final b = findDatesDifferenceFromToday(a.createdAt!);
+                    print(b);
+                  }
                 },
               ),
-              elevation: 0,
-              backgroundColor: white,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
+              backgroundColor: secondaryColor,
+              appBar: AppBar(
+                leading: IconButton(
+                  splashRadius: 25,
+                  icon: ImageIcon(
+                    const AssetImage("assets/icons/left.png"),
+                    color: black,
+                    size: 25,
+                  ),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+                elevation: 0,
+                backgroundColor: white,
+              ),
+              body: Column(
                 // mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text()
+                children: [
+                  SizedBox(height: height * 0.02),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      projectDetials.name!,
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: black,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.005),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Created at $date",
+                      style: GoogleFonts.roboto(
+                        fontSize: textFactor * 13,
+                        fontWeight: FontWeight.w500,
+                        color: black,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.025),
                   DefaultTabController(
                     // initialIndex: 0,
                     length: categories.length,
@@ -145,8 +171,8 @@ class _ProjectPageState extends State<ProjectView> {
                   ),
                 ],
               ),
-            ),
-          );
+            );
+          }
         }
         return const SizedBox();
       },
