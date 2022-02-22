@@ -89,8 +89,8 @@ class ImageModel {
   int? commentCount;
   String? id;
   bool? isOrganization;
-  String? createdAt;
-  String? updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   String? projectName;
 
   ImageModel({
@@ -119,8 +119,8 @@ class ImageModel {
         commentCount: json["commentCount"] as int,
         likeCount: json["likeCount"] as int,
         isOrganization: json["isOrganization"] as bool,
-        createdAt: json["createdAt"] as String,
-        updatedAt: json["updatedAt"] as String,
+        createdAt: DateTime.parse(json["createdAt"] as String),
+        updatedAt: DateTime.parse(json["updatedAt"] as String),
         id: json["id"] as String,
       );
 

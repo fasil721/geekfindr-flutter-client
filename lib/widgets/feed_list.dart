@@ -6,6 +6,7 @@ import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
+import 'package:geek_findr/views/project_list.dart';
 import 'package:geek_findr/widgets/comment_bottom_sheet.dart';
 import 'package:geek_findr/widgets/heart_animation_widget.dart';
 import 'package:geek_findr/widgets/liked_users_bottom_list.dart';
@@ -119,6 +120,8 @@ class _FeedListState extends State<FeedList> {
                       likesSetUp();
                     }
                     isRefresh = false;
+                    final postedTime =
+                        findDatesDifferenceFromToday(datas[index].createdAt!);
                     return VisibilityDetector(
                       onVisibilityChanged: (info) {
                         if (info.visibleFraction == 1) {
@@ -222,11 +225,25 @@ class _FeedListState extends State<FeedList> {
                                       SizedBox(
                                         width: width * 0.04,
                                       ),
-                                      Text(
-                                        datas[index].owner!.username!,
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            datas[index].owner!.username!,
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            postedTime,
+                                            style: GoogleFonts.roboto(
+                                              fontSize: 10,
+                                              color: black.withOpacity(0.8),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -431,7 +448,7 @@ class _FeedListState extends State<FeedList> {
                                               icon: Icon(
                                                 icon,
                                                 color: color,
-                                                size: 25,
+                                                size: 28,
                                               ),
                                             ),
                                           );
@@ -459,6 +476,26 @@ class _FeedListState extends State<FeedList> {
                                           controller.update(["comments"]);
                                           commmentEditController.clear();
                                         },
+                                      ),
+                                      Visibility(
+                                        visible: datas[index].isProject!,
+                                        child: IconButton(
+                                          icon: ImageIcon(
+                                            const AssetImage(
+                                              "assets/icons/people.png",
+                                            ),
+                                            color: black,
+                                            size: 23,
+                                          ),
+                                          splashRadius: 25,
+                                          tooltip: 'join request',
+                                          onPressed: () async {
+                                            final a = await myProjects
+                                                .sendJoinRequest(
+                                              projectId: datas[index].id!,
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ],
                                   ),

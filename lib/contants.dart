@@ -38,3 +38,18 @@ List<BoxShadow> shadowList = [
     offset: Offset(5, 5),
   )
 ];
+String findDatesDifferenceFromToday(DateTime dateTime) {
+  final today = DateTime.now();
+  final diff = dateTime.difference(today);
+  if (diff.inMinutes > -1) {
+    return "${diff.inSeconds * -1} seconds ago";
+  } else if (diff.inHours > -1) {
+    return "${diff.inMinutes * -1} minutes ago";
+  } else if (diff.inDays > -1) {
+    return "${diff.inHours * -1} hours ago";
+  } else if (diff.inDays < -7) {
+    return "${dateTime.day}-${dateTime.month}-${dateTime.year}";
+  } else {
+    return "${diff.inDays * -1} days ago";
+  }
+}
