@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerPage extends StatelessWidget {
@@ -15,21 +14,21 @@ class DrawerPage extends StatelessWidget {
       iconColor: Colors.white,
       child: Column(
         children: [
-          Spacer(),
+          const Spacer(),
           ListTile(
             onTap: () async {
+              Get.offAll(() => const LoginPage());
               final pref = await SharedPreferences.getInstance();
               pref.setBool("user", false);
               final box = Boxes.getInstance();
-              await box.delete("user");
-              Get.offAll(() => const LoginPage());
+              box.delete("user");
             },
-            leading: Icon(Icons.settings),
-            title: Text('Logout '),
+            leading: const Icon(Icons.settings),
+            title: const Text('Logout '),
           ),
-          Spacer(),
+          const Spacer(),
           DefaultTextStyle(
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
               color: Colors.white54,
             ),
