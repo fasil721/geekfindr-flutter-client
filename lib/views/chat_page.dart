@@ -10,68 +10,80 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   List<ChatUsers> chatUsers = [
     ChatUsers(
-        text: "Jane Russel",
-        secondaryText: "Awesome Setup",
-        image: "images/userImage1.jpeg",
-        time: "Now"),
+      text: "Jane Russel",
+      secondaryText: "Awesome Setup",
+      image: "assets/images/logo.png",
+      time: "Now",
+    ),
     ChatUsers(
-        text: "Glady's Murphy",
-        secondaryText: "That's Great",
-        image: "images/userImage2.jpeg",
-        time: "Yesterday"),
+      text: "Glady's Murphy",
+      secondaryText: "That's Great",
+      image: "assets/images/logo.png",
+      time: "Yesterday",
+    ),
     ChatUsers(
-        text: "Jorge Henry",
-        secondaryText: "Hey where are you?",
-        image: "images/userImage3.jpeg",
-        time: "31 Mar"),
+      text: "Jorge Henry",
+      secondaryText: "Hey where are you?",
+      image: "assets/images/logo.png",
+      time: "31 Mar",
+    ),
     ChatUsers(
-        text: "Philip Fox",
-        secondaryText: "Busy! Call me in 20 mins",
-        image: "images/userImage4.jpeg",
-        time: "28 Mar"),
+      text: "Philip Fox",
+      secondaryText: "Busy! Call me in 20 mins",
+      image: "assets/images/logo.png",
+      time: "28 Mar",
+    ),
     ChatUsers(
-        text: "Debra Hawkins",
-        secondaryText: "Thankyou, It's awesome",
-        image: "images/userImage5.jpeg",
-        time: "23 Mar"),
+      text: "Debra Hawkins",
+      secondaryText: "Thankyou, It's awesome",
+      image: "assets/images/logo.png",
+      time: "23 Mar",
+    ),
     ChatUsers(
-        text: "Jacob Pena",
-        secondaryText: "will update you in evening",
-        image: "images/userImage6.jpeg",
-        time: "17 Mar"),
+      text: "Jacob Pena",
+      secondaryText: "will update you in evening",
+      image: "assets/images/logo.png",
+      time: "17 Mar",
+    ),
     ChatUsers(
-        text: "Andrey Jones",
-        secondaryText: "Can you please share the file?",
-        image: "images/userImage7.jpeg",
-        time: "24 Feb"),
+      text: "Andrey Jones",
+      secondaryText: "Can you please share the file?",
+      image: "assets/images/logo.png",
+      time: "24 Feb",
+    ),
     ChatUsers(
-        text: "John Wick",
-        secondaryText: "How are you?",
-        image: "images/userImage8.jpeg",
-        time: "18 Feb"),
+      text: "John Wick",
+      secondaryText: "How are you?",
+      image: "assets/images/logo.png",
+      time: "18 Feb",
+    ),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SafeArea(
               child: Padding(
-                padding: EdgeInsets.only(left: 16, right: 16, top: 10),
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
+                    const Text(
                       "Chats",
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                     Container(
-                      padding:
-                          EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 2),
+                      padding: const EdgeInsets.only(
+                        left: 8,
+                        right: 8,
+                        top: 2,
+                        bottom: 2,
+                      ),
                       height: 30,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
@@ -90,7 +102,9 @@ class _ChatPageState extends State<ChatPage> {
                           Text(
                             "New",
                             style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -114,8 +128,9 @@ class _ChatPageState extends State<ChatPage> {
                   fillColor: Colors.grey.shade100,
                   contentPadding: const EdgeInsets.all(8),
                   enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: Colors.grey.shade100)),
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: Colors.grey.shade100),
+                  ),
                 ),
               ),
             ),
@@ -130,7 +145,7 @@ class _ChatPageState extends State<ChatPage> {
                   secondaryText: chatUsers[index].secondaryText,
                   image: chatUsers[index].image,
                   time: chatUsers[index].time,
-                  isMessageRead: (index == 0 || index == 3) ? true : false,
+                  isMessageRead: index == 0 || index == 2 || index == 3,
                 );
               },
             ),

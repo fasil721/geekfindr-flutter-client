@@ -52,15 +52,15 @@ class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
+    const screens = [
+      HomePage(),
+      MyProjectList(),
+      ChatPage(),
+      ProfilePage(),
+    ];
     return GetBuilder<AppController>(
       id: "home",
       builder: (controller) {
-        const screens = [
-          HomePage(),
-          MyProjectList(),
-          ChatPage(),
-          ProfilePage(),
-        ];
         return Scaffold(
           body: IndexedStack(
             index: currentIndex,
