@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/widgets/chat_list.dart';
+import 'package:geek_findr/components/chat_list.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:geek_findr/components/feed_list.dart';
+import 'package:geek_findr/components/image_upload.dart';
+import 'package:geek_findr/components/search_widget.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/views/drawer_page.dart';
-import 'package:geek_findr/widgets/feed_list.dart';
-import 'package:geek_findr/widgets/image_upload.dart';
-import 'package:geek_findr/widgets/search_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';

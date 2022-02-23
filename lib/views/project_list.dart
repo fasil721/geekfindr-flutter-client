@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/components/feed_list.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:geek_findr/views/project_view.dart';
-import 'package:geek_findr/widgets/feed_list.dart';
 import 'package:get/get.dart';
 
 class MyProjectList extends StatefulWidget {

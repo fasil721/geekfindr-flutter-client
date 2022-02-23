@@ -13,8 +13,6 @@ class ProjectView extends StatefulWidget {
   State<ProjectView> createState() => _ProjectPageState();
 }
 
-
-
 class _ProjectPageState extends State<ProjectView> {
   int _currentIndex = 0;
   final myProjects = ProjectServices();
@@ -82,9 +80,9 @@ class _ProjectPageState extends State<ProjectView> {
                     child: Text(
                       "Created at $date",
                       style: GoogleFonts.roboto(
-                        fontSize: textFactor * 13,
+                        fontSize: textFactor * 12,
                         fontWeight: FontWeight.w500,
-                        color: black,
+                        color: black.withOpacity(0.6),
                       ),
                     ),
                   ),

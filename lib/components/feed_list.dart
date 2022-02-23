@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:geek_findr/components/comment_bottom_sheet.dart';
+import 'package:geek_findr/components/heart_animation_widget.dart';
+import 'package:geek_findr/components/liked_users_bottom_list.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
@@ -7,9 +10,6 @@ import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:geek_findr/views/project_list.dart';
-import 'package:geek_findr/widgets/comment_bottom_sheet.dart';
-import 'package:geek_findr/widgets/heart_animation_widget.dart';
-import 'package:geek_findr/widgets/liked_users_bottom_list.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';

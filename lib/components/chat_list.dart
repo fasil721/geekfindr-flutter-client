@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/views/chat_view.dart';
 
 class ChatUsersList extends StatefulWidget {
   const ChatUsersList({
@@ -25,9 +26,12 @@ class _ChatUsersListState extends State<ChatUsersList> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(context, MaterialPageRoute(builder: (context){
-        //   return ChatDetailPage();
-        // }));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatDetailPage(),
+          ),
+        );
       },
       child: Container(
         padding:
