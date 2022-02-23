@@ -6,11 +6,11 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/theme.dart';
+import 'package:geek_findr/views/chat_page.dart';
 import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:geek_findr/views/profile_page.dart';
 import 'package:geek_findr/views/project_list.dart';
-import 'package:geek_findr/views/project_view.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -55,13 +55,11 @@ class _MyAppState extends State<MyApp> {
     return GetBuilder<AppController>(
       id: "home",
       builder: (controller) {
-        final screens = [
+        const screens = [
           HomePage(),
-          const MyProjectList(),
-          Container(
-            color: Colors.red,
-          ),
-          const ProfilePage(),
+          MyProjectList(),
+          ChatPage(),
+          ProfilePage(),
         ];
         return Scaffold(
           body: IndexedStack(
@@ -111,60 +109,4 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
-}
-
-class ProductModel {
-  ProductModel({
-    this.id,
-    this.name,
-    this.tag,
-    this.color,
-    this.criteria,
-  });
-
-  int? id;
-  String? name;
-  String? tag;
-  String? color;
-  List<Criterion>? criteria;
-
-  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
-        id: json["id"] as int,
-        name: json["name"] as String,
-        tag: json["tag"] as String,
-        color: json["color"] as String,
-        criteria: List<Criterion>.from(
-          (json["criteria"] as List).map(
-            (x) => Criterion.fromJson(Map<String, String>.from(x as Map)),
-          ),
-        ),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "tag": tag,
-        "color": color,
-        "criteria": List<dynamic>.from(criteria!.map((x) => x.toJson())),
-      };
-}
-
-class Criterion {
-  Criterion({
-    this.type,
-    this.text,
-  });
-
-  String? type;
-  String? text;
-
-  factory Criterion.fromJson(Map<String, String> json) => Criterion(
-        type: json["type"],
-        text: json["text"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "type": type,
-        "text": text,
-      };
 }
