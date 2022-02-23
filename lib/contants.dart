@@ -26,7 +26,7 @@ double textfactorfind(double val) {
 
 List<Map> categories = [
   {"name": "Info", 'iconPath': 'assets/icons/info.png'},
-  {'name': 'Teams', 'iconPath': 'assets/icons/people.png'},
+  {'name': 'Teams', 'iconPath': 'assets/icons/team.png'},
   {'name': 'Todos', 'iconPath': 'assets/icons/todo-list.png'},
   {'name': 'Tasks', 'iconPath': 'assets/icons/to-do-list.png'},
 ];

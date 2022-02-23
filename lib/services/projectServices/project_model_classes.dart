@@ -12,7 +12,7 @@ class ProjectListModel {
   factory ProjectListModel.fromJson(Map<String, dynamic> json) =>
       ProjectListModel(
         project:
-            Project.fromJson(Map<String, String>.from(json["project"] as Map)),
+            Project.fromJson(Map<String, dynamic>.from(json["project"] as Map)),
         role: json["role"] as String,
       );
 
@@ -77,11 +77,11 @@ class ProjuctDetialsModel {
         description: json["description"] as String,
         name: json["name"] as String,
         owner: Owner.fromJson(
-          Map<String, String>.from((json["user"])! as Map),
+          Map<String, String>.from(json["owner"] as Map),
         ),
         team: List<Team>.from(
           (json["team"] as List)
-              .map((x) => Team.fromJson(Map<String, String>.from(x as Map))),
+              .map((x) => Team.fromJson(Map<String, dynamic>.from(x as Map))),
         ),
         todo: List<dynamic>.from((json["todo"] as List).map((x) => x)),
         task: List<dynamic>.from((json["task"] as List).map((x) => x)),
@@ -100,11 +100,11 @@ class Team {
   Owner? user;
   String? role;
 
-  factory Team.fromJson(Map<String, String> json) => Team(
+  factory Team.fromJson(Map<String, dynamic> json) => Team(
         user: Owner.fromJson(
-          Map<String, String>.from((json["user"])! as Map),
+          Map<String, String>.from(json["user"] as Map),
         ),
-        role: json["role"],
+        role: json["role"] as String,
       );
 
   Map<String, dynamic> toJson() => {
