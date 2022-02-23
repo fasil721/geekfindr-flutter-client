@@ -117,6 +117,7 @@ class _ChatPageState extends State<ChatPage> {
               padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
               child: TextField(
                 decoration: InputDecoration(
+                  border: InputBorder.none,
                   hintText: "Search...",
                   hintStyle: TextStyle(color: Colors.grey.shade400),
                   prefixIcon: Icon(
@@ -126,7 +127,7 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade100,
-                  contentPadding: const EdgeInsets.all(8),
+                  // contentPadding: const EdgeInsets.all(8),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide(color: Colors.grey.shade100),
