@@ -24,16 +24,23 @@ class ProjectListModel {
 
 class Project {
   Project({
+    this.description,
     this.name,
+    this.owner,
     this.id,
   });
-
+  String? description;
+  Owner? owner;
   String? name;
   String? id;
 
-  factory Project.fromJson(Map<String, String> json) => Project(
-        name: json["name"],
-        id: json["id"],
+  factory Project.fromJson(Map<String, dynamic> json) => Project(
+        description: json["description"] as String,
+        name: json["name"] as String,
+        owner: Owner.fromJson(
+          Map<String, String>.from((json["owner"])! as Map),
+        ),
+        id: json["id"] as String,
       );
 
   Map<String, dynamic> toJson() => {
