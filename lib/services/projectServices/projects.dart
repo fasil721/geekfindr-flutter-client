@@ -3,13 +3,16 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class ProjectServices {
   final box = Boxes.getInstance();
+  final controller = Get.find<AppController>();
 
   Future<List<ProjectListModel>?> getMyProjects() async {
     final user = box.get("user");
@@ -86,27 +89,33 @@ class ProjectServices {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-    // } catch (e) {
-    //   Fluttertoast.showToast(msg: e.toString());
+      // } catch (e) {
+      //   Fluttertoast.showToast(msg: e.toString());
     }
     return null;
   }
 
-  Future<void> sendJoinRequest({
+  Future<void> editProjectDescription({
     required String projectId,
+    required Map<String, String> body,
   }) async {
     final user = box.get("user");
-    final url = "$prodUrl/api/v1/posts/$projectId/team-join-requests";
+    final url = "$prodUrl/api/v1/projects/$projectId/description";
     try {
-      final response = await http.post(
+      final response = await http.put(
         Uri.parse(url),
         headers: {
           "Authorization": "Bearer ${user!.token}",
+          "Content-Type": "application/json"
         },
+        body: json.encode(body),
       );
       print(response.statusCode);
       if (response.statusCode == 200) {
-        print(response.body);
+        final jsonData = json.decode(response.body);
+        controller.update(["projectList"]);
+        Get.back();
+        print(jsonData);
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());
@@ -122,8 +131,8 @@ class ProjectServices {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      // } catch (e) {
+      //   Fluttertoast.showToast(msg: e.toString());
     }
   }
 }

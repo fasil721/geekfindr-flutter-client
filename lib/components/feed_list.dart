@@ -9,7 +9,6 @@ import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
-import 'package:geek_findr/views/project_list.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
@@ -341,6 +340,7 @@ class _FeedListState extends State<FeedList> {
                                   ),
                                   onDoubleTap: () {
                                     if (!isLikedList[index]) {
+                                      likesCountList[index] += 1;
                                       postServices.postLike(
                                         imageId: datas[index].id!,
                                       );
@@ -438,6 +438,7 @@ class _FeedListState extends State<FeedList> {
                                               splashRadius: 28,
                                               onPressed: () {
                                                 if (!isLikedList[index]) {
+                                                  likesCountList[index] += 1;
                                                   postServices.postLike(
                                                     imageId: datas[index].id!,
                                                   );
@@ -489,9 +490,8 @@ class _FeedListState extends State<FeedList> {
                                           ),
                                           splashRadius: 25,
                                           tooltip: 'join request',
-                                          onPressed: () async {
-                                            final a = await myProjects
-                                                .sendJoinRequest(
+                                          onPressed: () {
+                                            postServices.sendJoinRequest(
                                               projectId: datas[index].id!,
                                             );
                                           },

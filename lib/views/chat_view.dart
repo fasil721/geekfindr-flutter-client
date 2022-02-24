@@ -56,7 +56,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20), topLeft: Radius.circular(20),),
+                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+              ),
             ),
             child: Column(
               children: <Widget>[
