@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/components/project_team_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
@@ -6,25 +7,27 @@ import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProjectView extends StatefulWidget {
-  const ProjectView({Key? key, required this.projectId}) : super(key: key);
+// ignore: must_be_immutable
+class ProjectView extends StatelessWidget {
+  ProjectView({
+    Key? key,
+    required this.projectId,
+  }) : super(key: key);
   final String projectId;
-  @override
-  State<ProjectView> createState() => _ProjectPageState();
-}
-
-class _ProjectPageState extends State<ProjectView> {
-  int _currentIndex = 0;
-
   final myProjects = ProjectServices();
+  int _currentIndex = 0;
+  double width = 0;
+  double height = 0;
+  double textFactor = 0;
+  int membersCount = 0;
+
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return FutureBuilder<ProjuctDetialsModel?>(
-      future: myProjects.getProjectDetialsById(id: widget.projectId),
+      future: myProjects.getProjectDetialsById(id: projectId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold();
@@ -36,7 +39,12 @@ class _ProjectPageState extends State<ProjectView> {
                 findDatesDifferenceFromToday(projectDetials.createdAt!);
             return Scaffold(
               floatingActionButton: FloatingActionButton(
-                onPressed: () async {},
+                onPressed: () {
+                  for (final e in projectDetials.team!) {
+                    print(e.user!.username);
+                    print(e.role);
+                  }
+                },
               ),
               backgroundColor: secondaryColor,
               appBar: AppBar(
@@ -163,45 +171,11 @@ class _ProjectPageState extends State<ProjectView> {
                           IndexedStack(
                             index: _currentIndex,
                             children: [
-                              Container(
-                                margin: const EdgeInsets.all(20),
-                                width: width,
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: height * 0.005),
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        projectDetials.name!,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600,
-                                          color: black,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: height * 0.01),
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        projectDetials.description!,
-                                        style: GoogleFonts.roboto(
-                                          fontSize: textFactor * 15,
-                                          fontWeight: FontWeight.w500,
-                                          color: black.withOpacity(0.6),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: height * 0.025),
-                                  ],
-                                ),
+                              projectInfo(
+                                description: projectDetials.description!,
+                                name: projectDetials.name!,
                               ),
-                              Container(
-                                margin: const EdgeInsets.all(20),
-                                color: black,
-                                width: width,
-                                height: 200,
-                              ),
+                              ProjectTeamView(teamList: projectDetials.team!),
                               Container(
                                 margin: const EdgeInsets.all(20),
                                 color: primaryColor,
@@ -229,4 +203,39 @@ class _ProjectPageState extends State<ProjectView> {
       },
     );
   }
+
+  Widget projectInfo({required String name, required String description}) =>
+      Container(
+        margin: const EdgeInsets.all(20),
+        width: width,
+        child: Column(
+          children: [
+            SizedBox(height: height * 0.005),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                name,
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: black,
+                ),
+              ),
+            ),
+            SizedBox(height: height * 0.01),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                description,
+                style: GoogleFonts.roboto(
+                  fontSize: textFactor * 15,
+                  fontWeight: FontWeight.w500,
+                  color: black.withOpacity(0.6),
+                ),
+              ),
+            ),
+            SizedBox(height: height * 0.025),
+          ],
+        ),
+      );
 }
