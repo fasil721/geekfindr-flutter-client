@@ -15,6 +15,7 @@ class ProjectView extends StatefulWidget {
 
 class _ProjectPageState extends State<ProjectView> {
   int _currentIndex = 0;
+
   final myProjects = ProjectServices();
   @override
   Widget build(BuildContext context) {
@@ -78,7 +79,7 @@ class _ProjectPageState extends State<ProjectView> {
                     ),
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Created at $date",
+                      "Started $date",
                       style: GoogleFonts.roboto(
                         fontSize: textFactor * 12,
                         fontWeight: FontWeight.w500,
@@ -88,81 +89,137 @@ class _ProjectPageState extends State<ProjectView> {
                   ),
                   SizedBox(height: height * 0.025),
                   GetBuilder<AppController>(
-                      id: "projtabs",
-                      builder: (controller) {
-                        return Column(
-                          children: [
-                            DefaultTabController(
-                              // initialIndex: 0,
-                              length: categories.length,
-                              child: TabBar(
-                                // isScrollable: true,
-                                indicatorColor: Colors.blue,
-                                physics: const BouncingScrollPhysics(),
-                                indicatorWeight: .0001,
-                                onTap: (index) {
-                                  _currentIndex = index;
-                                  controller.update(["projtabs"]);
-                                },
-                                tabs: [
-                                  ...categories.map(
-                                    (element) => Container(
-                                      width: width * 0.2,
-                                      height: height * 0.085,
-                                      // margin: const EdgeInsets.symmetric(vertical: 5),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 5,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            categories[_currentIndex] == element
-                                                ? primaryColor
-                                                : white,
-                                        // boxShadow: shadowList,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Tab(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset(
-                                              element["iconPath"] as String,
-                                              height: 30,
-                                              width: 30,
-                                              color:
-                                                  categories[_currentIndex] ==
-                                                          element
-                                                      ? white
-                                                      : Colors.grey[700],
-                                            ),
-                                            Container(
-                                              margin:
-                                                  const EdgeInsets.only(top: 3),
-                                              child: Text(
-                                                element['name'] as String,
-                                                style: GoogleFonts.poppins(
-                                                  color: categories[
-                                                              _currentIndex] ==
-                                                          element
-                                                      ? white
-                                                      : Colors.grey[700],
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: textFactor * 11,
-                                                ),
+                    id: "projtabs",
+                    builder: (controller) {
+                      return Column(
+                        children: [
+                          DefaultTabController(
+                            // initialIndex: 0,
+                            length: categories.length,
+                            child: TabBar(
+                              // isScrollable: true,
+                              indicatorColor: Colors.blue,
+                              physics: const BouncingScrollPhysics(),
+                              indicatorWeight: .0001,
+                              onTap: (index) {
+                                _currentIndex = index;
+                                controller.update(["projtabs"]);
+                              },
+                              tabs: [
+                                ...categories.map(
+                                  (element) => Container(
+                                    width: width * 0.2,
+                                    height: height * 0.085,
+                                    // margin: const EdgeInsets.symmetric(vertical: 5),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          categories[_currentIndex] == element
+                                              ? primaryColor
+                                              : white,
+                                      // boxShadow: shadowList,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Tab(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            element["iconPath"] as String,
+                                            height: 30,
+                                            width: 30,
+                                            color: categories[_currentIndex] ==
+                                                    element
+                                                ? white
+                                                : Colors.grey[700],
+                                          ),
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 3),
+                                            child: Text(
+                                              element['name'] as String,
+                                              style: GoogleFonts.poppins(
+                                                color:
+                                                    categories[_currentIndex] ==
+                                                            element
+                                                        ? white
+                                                        : Colors.grey[700],
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: textFactor * 11,
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        );
-                      }),
+                          ),
+                          IndexedStack(
+                            index: _currentIndex,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.all(20),
+                                width: width,
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: height * 0.005),
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        projectDetials.name!,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: black,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: height * 0.01),
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        projectDetials.description!,
+                                        style: GoogleFonts.roboto(
+                                          fontSize: textFactor * 15,
+                                          fontWeight: FontWeight.w500,
+                                          color: black.withOpacity(0.6),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: height * 0.025),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.all(20),
+                                color: black,
+                                width: width,
+                                height: 200,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.all(20),
+                                color: primaryColor,
+                                width: width,
+                                height: 200,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.all(20),
+                                color: black,
+                                width: width,
+                                height: 200,
+                              ),
+                            ],
+                          )
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             );

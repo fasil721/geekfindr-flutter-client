@@ -50,8 +50,8 @@ class ProjectServices {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-      // } catch (e) {
-      //   Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     }
     return null;
   }
@@ -68,7 +68,6 @@ class ProjectServices {
           "Authorization": "Bearer ${user!.token}",
         },
       );
-      print(response.statusCode);
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as Map;
         final datas =
@@ -89,8 +88,8 @@ class ProjectServices {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-      // } catch (e) {
-      //   Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     }
     return null;
   }
@@ -110,12 +109,9 @@ class ProjectServices {
         },
         body: json.encode(body),
       );
-      print(response.statusCode);
       if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
         controller.update(["projectList"]);
         Get.back();
-        print(jsonData);
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());
@@ -131,8 +127,8 @@ class ProjectServices {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-      // } catch (e) {
-      //   Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     }
   }
 }

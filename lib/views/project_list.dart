@@ -75,7 +75,10 @@ class _MyProjectListState extends State<MyProjectList> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
+                                    padding: const EdgeInsets.only(
+                                      bottom: 5,
+                                      right: 10,
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -130,6 +133,7 @@ class _MyProjectListState extends State<MyProjectList> {
                                               icon: Icon(
                                                 Icons.more_horiz,
                                                 color: black,
+                                                size: 20,
                                               ),
                                             ),
                                           ],
