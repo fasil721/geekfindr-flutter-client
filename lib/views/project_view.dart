@@ -175,18 +175,21 @@ class ProjectView extends StatelessWidget {
                                 description: projectDetials.description!,
                                 name: projectDetials.name!,
                               ),
-                              ProjectTeamView(teamList: projectDetials.team!),
+                              ProjectTeamView(
+                                teamList: projectDetials.team!,
+                                owner: projectDetials.owner!,
+                              ),
                               Container(
                                 margin: const EdgeInsets.all(20),
                                 color: primaryColor,
                                 width: width,
-                                height: 200,
+                                height: 20,
                               ),
                               Container(
                                 margin: const EdgeInsets.all(20),
                                 color: black,
                                 width: width,
-                                height: 200,
+                                height: 2,
                               ),
                             ],
                           )
