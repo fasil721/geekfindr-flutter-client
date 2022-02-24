@@ -28,6 +28,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
 
   void findMembers() {
     membersList = [];
+    joinRequests = [];
     for (final element in widget.teamList) {
       if (element.role == "joinRequest") {
         joinRequests.add(element);
@@ -49,7 +50,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Members - ${membersList.length}",
+            "Members - ${membersList.length + 1}",
             style: GoogleFonts.poppins(
               fontSize: 17,
               fontWeight: FontWeight.w600,
@@ -63,25 +64,20 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: ListTile(
-              trailing: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: primaryColor),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Text(
-                      "Owner",
-                      style: GoogleFonts.poppins(
-                        fontSize: textFactor * 12,
-                        color: black,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+              trailing: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                decoration: BoxDecoration(
+                  border: Border.all(color: primaryColor),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                child: Text(
+                  "Owner",
+                  style: GoogleFonts.poppins(
+                    fontSize: textFactor * 12,
+                    color: black,
+                    fontWeight: FontWeight.w500,
                   ),
-                ],
+                ),
               ),
               title: Text(
                 widget.owner.username!,
@@ -114,7 +110,8 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding:
+                EdgeInsets.symmetric(vertical: membersList.isNotEmpty ? 10 : 5),
             child: ListView.separated(
               shrinkWrap: true,
               itemCount: membersList.length,
@@ -231,7 +228,8 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                 elevation: MaterialStateProperty.all<double>(3),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
-                                        primaryColor),
+                                  primaryColor,
+                                ),
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -239,9 +237,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                   ),
                                 ),
                               ),
-                              onPressed: () {
-                                print("hafi");
-                              },
+                              onPressed: () {},
                               child: Text(
                                 "Accept",
                                 style: GoogleFonts.poppins(
@@ -287,12 +283,15 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                         const SizedBox(height: 10),
                   )
                 : Center(
-                    child: Text(
-                      "No Members here!!",
-                      style: GoogleFonts.poppins(
-                        fontSize: textFactor * 12,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        "No Join Requests here!!",
+                        style: GoogleFonts.poppins(
+                          fontSize: textFactor * 12,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
