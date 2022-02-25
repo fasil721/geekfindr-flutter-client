@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/projectServices/project_model_classes.dart';
-import 'package:geek_findr/views/project_list.dart';
-
+import 'package:geek_findr/services/projectServices/projects.dart';
 
 class EditDescriptionDialoge extends StatefulWidget {
-  const EditDescriptionDialoge({Key? key, required this.project})
-      : super(key: key);
-  final Project project;
+  const EditDescriptionDialoge({
+    Key? key,
+    required this.description,
+    required this.projectId,
+  }) : super(key: key);
+  final String projectId;
+  final String description;
   @override
   State<EditDescriptionDialoge> createState() => _EditDescriptionDialogeState();
 }
 
 class _EditDescriptionDialogeState extends State<EditDescriptionDialoge> {
+  final myProjects = ProjectServices();
   TextEditingController? descTextController;
+
   @override
   void initState() {
     super.initState();
-    descTextController =
-        TextEditingController(text: widget.project.description);
+    descTextController = TextEditingController(text: widget.description);
   }
 
   @override
@@ -76,7 +79,7 @@ class _EditDescriptionDialogeState extends State<EditDescriptionDialoge> {
                     if (descTextController!.text.isNotEmpty) {
                       final body = {"description": descTextController!.text};
                       myProjects.editProjectDescription(
-                        projectId: widget.project.id!,
+                        projectId: widget.projectId,
                         body: body,
                       );
                     } else {

@@ -5,7 +5,9 @@ const primaryColor = Color(0xffB954FE);
 const secondaryColor = Color(0xffF3F4F7);
 const white = Colors.white;
 final black = Colors.black.withOpacity(0.8);
-
+const admin = "admin";
+const collaborator = "collaborator";
+const joinRequest = "joinRequest";
 double textfactorfind(double val) {
   if (val == 0.85) {
     return val + 0.1;

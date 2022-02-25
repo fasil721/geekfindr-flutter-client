@@ -3,23 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
+import 'package:geek_findr/services/projectServices/projects.dart';
+import 'package:geek_findr/views/project_list.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
 // ignore: must_be_immutable
 class ProjectTeamView extends StatefulWidget {
-  const ProjectTeamView({Key? key, required this.teamList, required this.owner})
+  const ProjectTeamView({Key? key, required this.projuctDetials})
       : super(key: key);
-  final List<Team> teamList;
-  final Owner owner;
+  final ProjuctDetialsModel projuctDetials;
 
   @override
   State<ProjectTeamView> createState() => _ProjectTeamViewState();
 }
 
 class _ProjectTeamViewState extends State<ProjectTeamView> {
+  final myProjects = ProjectServices();
   List<Team> membersList = [];
-  List<Team> joinRequests = [];
+  List<Team> joinRequestsList = [];
   @override
   void initState() {
     findMembers();
@@ -28,10 +30,10 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
 
   void findMembers() {
     membersList = [];
-    joinRequests = [];
-    for (final element in widget.teamList) {
-      if (element.role == "joinRequest") {
-        joinRequests.add(element);
+    joinRequestsList = [];
+    for (final element in widget.projuctDetials.team!) {
+      if (element.role == joinRequest) {
+        joinRequestsList.add(element);
       } else {
         membersList.add(element);
       }
@@ -80,12 +82,12 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                 ),
               ),
               title: Text(
-                widget.owner.username!,
+                widget.projuctDetials.owner!.username!,
               ),
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: CachedNetworkImage(
-                  imageUrl: widget.owner.avatar!,
+                  imageUrl: widget.projuctDetials.owner!.avatar!,
                   fit: BoxFit.fitWidth,
                   width: 30,
                   placeholder: (context, url) => Shimmer.fromColors(
@@ -132,7 +134,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                             borderRadius: BorderRadius.circular(3),
                           ),
                           child: Text(
-                            widget.teamList[index].role!,
+                            membersList[index].role!,
                             style: GoogleFonts.poppins(
                               fontSize: textFactor * 12,
                               color: black,
@@ -166,12 +168,12 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                       ],
                     ),
                     title: Text(
-                      widget.teamList[index].user!.username!,
+                      membersList[index].user!.username!,
                     ),
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
-                        imageUrl: widget.teamList[index].user!.avatar!,
+                        imageUrl: membersList[index].user!.avatar!,
                         fit: BoxFit.fitWidth,
                         width: 30,
                         placeholder: (context, url) => Shimmer.fromColors(
@@ -201,7 +203,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
             ),
           ),
           Text(
-            "Join requests - ${joinRequests.length}",
+            "Join requests - ${joinRequestsList.length}",
             style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -210,10 +212,10 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: joinRequests.isNotEmpty
+            child: joinRequestsList.isNotEmpty
                 ? ListView.separated(
                     shrinkWrap: true,
-                    itemCount: joinRequests.length,
+                    itemCount: joinRequestsList.length,
                     itemBuilder: (context, index) {
                       return Container(
                         decoration: BoxDecoration(
@@ -237,7 +239,13 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                myProjects.changeProjectRole(
+                                  projectId: widget.projuctDetials.id!,
+                                  role: collaborator,
+                                  memberId: joinRequestsList[index].user!.id!,
+                                );
+                              },
                               child: Text(
                                 "Accept",
                                 style: GoogleFonts.poppins(
@@ -249,12 +257,12 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                             ),
                           ),
                           title: Text(
-                            widget.teamList[index].user!.username!,
+                            joinRequestsList[index].user!.username!,
                           ),
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: CachedNetworkImage(
-                              imageUrl: widget.teamList[index].user!.avatar!,
+                              imageUrl: joinRequestsList[index].user!.avatar!,
                               fit: BoxFit.fitWidth,
                               width: 30,
                               placeholder: (context, url) => Shimmer.fromColors(

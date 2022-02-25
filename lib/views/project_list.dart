@@ -16,9 +16,8 @@ class MyProjectList extends StatefulWidget {
   _MyProjectListState createState() => _MyProjectListState();
 }
 
-final myProjects = ProjectServices();
-
 class _MyProjectListState extends State<MyProjectList> {
+  final myProjects = ProjectServices();
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -75,69 +74,21 @@ class _MyProjectListState extends State<MyProjectList> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 5,
-                                      right: 10,
-                                    ),
+                                    padding: const EdgeInsets.all(10),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                datas[index].project!.name!,
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: textFactor * 16,
-                                                  color: Colors.black
-                                                      .withOpacity(0.9),
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                            PopupMenuButton(
-                                              itemBuilder: (BuildContext bc) =>
-                                                  [
-                                                PopupMenuItem(
-                                                  value: "1",
-                                                  child: Text(
-                                                    datas[index]
-                                                            .project!
-                                                            .description!
-                                                            .isEmpty
-                                                        ? "Add Description"
-                                                        : "Edit Description",
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: textFactor * 15,
-                                                      color: Colors.black
-                                                          .withOpacity(0.9),
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                              onSelected: (value) {
-                                                if (value == "1") {
-                                                  Get.dialog(
-                                                    EditDescriptionDialoge(
-                                                      project:
-                                                          datas[index].project!,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              icon: Icon(
-                                                Icons.more_horiz,
-                                                color: black,
-                                                size: 20,
-                                              ),
-                                            ),
-                                          ],
+                                        Text(
+                                          datas[index].project!.name!,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: textFactor * 16,
+                                            color:
+                                                Colors.black.withOpacity(0.9),
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
+                                        SizedBox(height: height * 0.005),
                                         Text(
                                           datas[index].project!.description!,
                                           maxLines: 3,

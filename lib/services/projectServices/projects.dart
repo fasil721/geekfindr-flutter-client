@@ -131,4 +131,47 @@ class ProjectServices {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
+
+  Future<void> changeProjectRole({
+    required String projectId,
+    required String role,
+    required String memberId,
+  }) async {
+    final user = box.get("user");
+    final url = "$prodUrl/api/v1/projects/$projectId/team/$memberId/role";
+    final body = {"role": role};
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {
+          "Authorization": "Bearer ${user!.token}",
+          "Content-Type": "application/json"
+        },
+        body: json.encode(body),
+      );
+      
+      print(response.statusCode);
+      // final a = jsonDecode(response.body) as Map;
+      // print(a.keys.first == "errors");
+      if (response.statusCode == 200) {
+      } else if (response.statusCode == 500) {
+      } else if (response.statusCode == 422 || response.statusCode == 400) {
+        final errorJson = json.decode(response.body) as Map;
+        final err = ErrorModel.fromJson(errorJson.cast());
+        for (final element in err.errors!) {
+          Fluttertoast.showToast(msg: element.message!);
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Something went wrong");
+      }
+    } on HttpException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on SocketException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on PlatformException {
+      Fluttertoast.showToast(msg: "Invalid Format");
+      // } catch (e) {
+      //   Fluttertoast.showToast(msg: e.toString());
+    }
+  }
 }
