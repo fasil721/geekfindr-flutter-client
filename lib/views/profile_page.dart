@@ -10,7 +10,7 @@ import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
-import 'package:geek_findr/views/profile_update_page.dart';
+import 'package:geek_findr/views/profile_edit_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';

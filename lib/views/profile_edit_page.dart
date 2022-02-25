@@ -26,6 +26,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   TextEditingController? gitController;
   TextEditingController? linkController;
   TextEditingController? stdyController;
+  
   @override
   void initState() {
     super.initState();

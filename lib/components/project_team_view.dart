@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 import 'package:geek_findr/services/projectServices/projects.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -18,15 +20,18 @@ class ProjectTeamView extends StatefulWidget {
 
 class _ProjectTeamViewState extends State<ProjectTeamView> {
   final myProjects = ProjectServices();
+  final controller = Get.find<AppController>();
   List<Team> membersList = [];
   List<Team> joinRequestsList = [];
+  List<bool> isChangingRole = [];
+  List<String> roleList = [];
   @override
   void initState() {
-    findMembers();
+    findMemberDetials();
     super.initState();
   }
 
-  void findMembers() {
+  void findMemberDetials() {
     membersList = [];
     joinRequestsList = [];
     for (final element in widget.projuctDetials.team!) {
@@ -37,7 +42,16 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
         membersList.add(element);
       }
     }
+    roleList = [];
+    isChangingRole = [];
+    for (int i = 0; i < membersList.length; i++) {
+      roleList.add(membersList[i].role!);
+      isChangingRole.add(false);
+    }
+    print(membersList);
   }
+
+  final roleOptions = <String>[collaborator, admin];
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +79,19 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: ListTile(
-              trailing: Text(
-                "Owner",
-                style: GoogleFonts.recursive(
-                  fontSize: textFactor * 13,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
-                ),
+              trailing: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    "owner",
+                    style: GoogleFonts.recursive(
+                      fontSize: textFactor * 13,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
               ),
               title: Text(
                 widget.projuctDetials.owner!.username!,
@@ -119,13 +139,47 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                     trailing: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Text(
-                          membersList[index].role!,
-                          style: GoogleFonts.recursive(
-                            fontSize: textFactor * 13,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        GetBuilder<AppController>(
+                          id: "role",
+                          builder: (controller) {
+                            if (isChangingRole[index]) {
+                              return DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  isDense: true,
+                                  value: roleList[index],
+                                  items: roleOptions
+                                      .map(
+                                        (e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(
+                                            e,
+                                            style: TextStyle(
+                                              fontSize: textFactor * 15,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            membersList[index].role = e;
+                                            isChangingRole[index] = false;
+                                            controller.update(["role"]);
+                                          },
+                                        ),
+                                      )
+                                      .toList(),
+                                  onChanged: (value) {},
+                                ),
+                              );
+                            } else {
+                              return Text(
+                                membersList[index].role!,
+                                style: GoogleFonts.recursive(
+                                  fontSize: textFactor * 13,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              );
+                            }
+                          },
                         ),
                         PopupMenuButton(
                           itemBuilder: (BuildContext bc) => [
@@ -140,9 +194,24 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                 ),
                               ),
                             ),
+                            PopupMenuItem(
+                              value: "2",
+                              child: Text(
+                                "Remove this Member",
+                                style: GoogleFonts.poppins(
+                                  fontSize: textFactor * 12,
+                                  color: Colors.black.withOpacity(0.9),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                           ],
                           onSelected: (value) {
-                            if (value == "1") {}
+                            if (value == "1") {
+                              isChangingRole[index] = true;
+                              controller.update(["role"]);
+                            }
+                            if (value == "2") {}
                           },
                           icon: Icon(
                             Icons.more_horiz,
