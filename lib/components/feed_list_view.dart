@@ -36,7 +36,7 @@ class _FeedListState extends State<FeedList> {
   bool allLoaded = false;
   int dataLength = -1;
   bool isRefresh = true;
-
+  bool isRequested = false;
   Future<void> mockData(String lastId) async {
     if (!allLoaded) {
       isLoading = true;
@@ -90,7 +90,14 @@ class _FeedListState extends State<FeedList> {
       commentCountList.add(e.commentCount!);
     }
   }
-// bool checkRequest(){}
+
+  bool checkRequest(List<Join> requests) {
+    final currentUser = box.get("user");
+    return requests
+        .where((element) => element.owner == currentUser!.id)
+        .isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -121,11 +128,15 @@ class _FeedListState extends State<FeedList> {
                     isRefresh = false;
                     final postedTime =
                         findDatesDifferenceFromToday(datas[index].createdAt!);
-                    // final isRequested = checkRequest(data[index].);
+                    if (datas[index].isProject!) {
+                      isRequested =
+                          checkRequest(datas[index].teamJoinRequests!);
+                    }
                     return VisibilityDetector(
                       onVisibilityChanged: (info) {
                         if (info.visibleFraction == 1) {
                           // print("index $index");
+
                           if (datas.length - 3 <= index &&
                               !isLoading &&
                               (dataLength + 2) < index) {
@@ -482,7 +493,8 @@ class _FeedListState extends State<FeedList> {
                                         },
                                       ),
                                       Visibility(
-                                        visible: datas[index].isProject!,
+                                        visible: datas[index].isProject! &&
+                                            !isRequested,
                                         child: IconButton(
                                           icon: ImageIcon(
                                             const AssetImage(
@@ -495,8 +507,12 @@ class _FeedListState extends State<FeedList> {
                                           tooltip: 'join request',
                                           onPressed: () {
                                             postServices.sendJoinRequest(
+                                              projectName:
+                                                  datas[index].projectName!,
                                               projectId: datas[index].id!,
                                             );
+                                            isRequested = false;
+                                            controller.update(["dataList"]);
                                           },
                                         ),
                                       ),

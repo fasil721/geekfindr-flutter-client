@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:geek_findr/components/feed_list.dart';
+import 'package:geek_findr/components/feed_list_view.dart';
 import 'package:geek_findr/components/image_upload.dart';
 import 'package:geek_findr/components/search_widget.dart';
 import 'package:geek_findr/contants.dart';

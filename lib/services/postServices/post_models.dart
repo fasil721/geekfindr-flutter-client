@@ -92,28 +92,36 @@ class ImageModel {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? projectName;
+  List<Join>? teamJoinRequests;
 
   ImageModel({
-    this.projectName,
     this.mediaType,
     this.owner,
     this.isProject,
+    this.projectName,
     this.mediaUrl,
     this.description,
     this.likeCount,
-    this.isOrganization,
-    this.id,
     this.commentCount,
-    this.createdAt,
     this.teamJoinRequestCount,
+    this.isOrganization,
+    this.teamJoinRequests,
+    this.createdAt,
     this.updatedAt,
+    this.id,
   });
 
   factory ImageModel.fromJson(Map<String, dynamic> json) => ImageModel(
         mediaType: json["mediaType"] as String,
         owner: Owner.fromJson(Map<String, String>.from(json["owner"] as Map)),
         isProject: json["isProject"] as bool,
+        projectName:
+            json["projectName"] == null ? "" : json["projectName"] as String,
         teamJoinRequestCount: json["teamJoinRequestCount"] as int,
+        teamJoinRequests: List<Join>.from(
+          (json["teamJoinRequests"] as List)
+              .map((x) => Join.fromJson(Map<String, String>.from(x as Map))),
+        ),
         mediaUrl: json["mediaURL"] as String,
         description: json["description"] as String,
         commentCount: json["commentCount"] as int,
@@ -132,4 +140,16 @@ class ImageModel {
         "isOrganization": isOrganization,
         "projectName": projectName,
       };
+}
+
+class Join {
+  Join({
+    this.owner,
+  });
+
+  String? owner;
+
+  factory Join.fromJson(Map<String, String> json) => Join(
+        owner: json["owner"],
+      );
 }

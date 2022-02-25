@@ -362,6 +362,7 @@ class PostServices {
 
   Future<void> sendJoinRequest({
     required String projectId,
+    required String projectName,
   }) async {
     final user = box.get("user");
     final url = "$prodUrl/api/v1/posts/$projectId/team-join-requests";
@@ -374,7 +375,9 @@ class PostServices {
       );
       print(response.statusCode);
       if (response.statusCode == 200) {
-        print(response.body);
+        Fluttertoast.showToast(
+          msg: "You have sent join request to $projectName",
+        );
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());

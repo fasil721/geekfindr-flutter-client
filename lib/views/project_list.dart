@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/edit_description_dialoge.dart';
-import 'package:geek_findr/components/feed_list.dart';
+import 'package:geek_findr/components/feed_list_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
