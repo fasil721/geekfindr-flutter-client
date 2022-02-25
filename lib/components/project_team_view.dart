@@ -1,10 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 import 'package:geek_findr/services/projectServices/projects.dart';
-import 'package:geek_findr/views/project_list.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -34,7 +32,8 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
     for (final element in widget.projuctDetials.team!) {
       if (element.role == joinRequest) {
         joinRequestsList.add(element);
-      } else {
+      }
+      if (element.role == admin || element.role == collaborator) {
         membersList.add(element);
       }
     }
@@ -66,19 +65,12 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: ListTile(
-              trailing: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 3),
-                decoration: BoxDecoration(
-                  border: Border.all(color: primaryColor),
-                  borderRadius: BorderRadius.circular(3),
-                ),
-                child: Text(
-                  "Owner",
-                  style: GoogleFonts.poppins(
-                    fontSize: textFactor * 12,
-                    color: black,
-                    fontWeight: FontWeight.w500,
-                  ),
+              trailing: Text(
+                "Owner",
+                style: GoogleFonts.recursive(
+                  fontSize: textFactor * 13,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               title: Text(
@@ -127,19 +119,12 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                     trailing: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: primaryColor),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: Text(
-                            membersList[index].role!,
-                            style: GoogleFonts.poppins(
-                              fontSize: textFactor * 12,
-                              color: black,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        Text(
+                          membersList[index].role!,
+                          style: GoogleFonts.recursive(
+                            fontSize: textFactor * 13,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         PopupMenuButton(

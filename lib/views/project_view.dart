@@ -118,7 +118,7 @@ class ProjectView extends StatelessWidget {
                                 tabs: [
                                   ...categories.map(
                                     (element) => Container(
-                                      width: width * 0.2,
+                                      width: width * 0.3,
                                       height: height * 0.085,
                                       // margin: const EdgeInsets.symmetric(vertical: 5),
                                       padding: const EdgeInsets.symmetric(
