@@ -90,7 +90,7 @@ class _FeedListState extends State<FeedList> {
       commentCountList.add(e.commentCount!);
     }
   }
-
+// bool checkRequest(){}
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -121,6 +121,7 @@ class _FeedListState extends State<FeedList> {
                     isRefresh = false;
                     final postedTime =
                         findDatesDifferenceFromToday(datas[index].createdAt!);
+                    // final isRequested = checkRequest(data[index].);
                     return VisibilityDetector(
                       onVisibilityChanged: (info) {
                         if (info.visibleFraction == 1) {
@@ -145,7 +146,9 @@ class _FeedListState extends State<FeedList> {
                           vertical: 5,
                         ),
                         decoration: BoxDecoration(
-                          color: secondaryColor,
+                          color: datas[index].isProject!
+                              ? Colors.blue[50]!.withOpacity(0.5)
+                              : secondaryColor,
                           borderRadius: BorderRadius.circular(
                             30,
                           ),
