@@ -20,7 +20,7 @@ class ProjectTeamView extends StatefulWidget {
 
 class _ProjectTeamViewState extends State<ProjectTeamView> {
   final myProjects = ProjectServices();
-  final controller = Get.find<AppController>();
+  // final controller = Get.find<AppController>();
   List<Team> membersList = [];
   List<Team> joinRequestsList = [];
   List<bool> isChangingRole = [];
@@ -125,140 +125,157 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
           Padding(
             padding:
                 EdgeInsets.symmetric(vertical: membersList.isNotEmpty ? 10 : 5),
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: membersList.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListTile(
-                    trailing: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        GetBuilder<AppController>(
-                          id: "role",
-                          builder: (controller) {
-                            if (isChangingRole[index]) {
-                              return DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  isDense: true,
-                                  value: roleList[index],
-                                  items: roleOptions
-                                      .map(
-                                        (e) => DropdownMenuItem(
-                                          value: e,
-                                          child: Text(
-                                            e,
-                                            style: TextStyle(
-                                              fontSize: textFactor * 15,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          onTap: () {},
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChanged: (value) {
-                                    membersList[index].role = value;
-                                    isChangingRole[index] = false;
+            child: GetBuilder<AppController>(
+                id: "memberList",
+                builder: (controller) {
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: membersList.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          trailing: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              GetBuilder<AppController>(
+                                id: "role",
+                                builder: (controller) {
+                                  if (isChangingRole[index]) {
+                                    return DropdownButtonHideUnderline(
+                                      child: DropdownButton<String>(
+                                        isDense: true,
+                                        value: roleList[index],
+                                        items: roleOptions
+                                            .map(
+                                              (e) => DropdownMenuItem(
+                                                value: e,
+                                                child: Text(
+                                                  e,
+                                                  style: TextStyle(
+                                                    fontSize: textFactor * 15,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                onTap: () {},
+                                              ),
+                                            )
+                                            .toList(),
+                                        onChanged: (value) {
+                                          membersList[index].role = value;
+                                          isChangingRole[index] = false;
+                                          controller.update(["role"]);
+                                          myProjects.changeMemberRole(
+                                            userName: membersList[index]
+                                                .user!
+                                                .username!,
+                                            projectId:
+                                                widget.projuctDetials.id!,
+                                            role: value!,
+                                            memberId:
+                                                membersList[index].user!.id!,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    return Text(
+                                      membersList[index].role!,
+                                      style: GoogleFonts.recursive(
+                                        fontSize: textFactor * 13,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                              PopupMenuButton(
+                                itemBuilder: (BuildContext bc) => [
+                                  PopupMenuItem(
+                                    value: "1",
+                                    child: Text(
+                                      "Change Member role",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: textFactor * 12,
+                                        color: Colors.black.withOpacity(0.9),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "2",
+                                    child: Text(
+                                      "Remove this Member",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: textFactor * 12,
+                                        color: Colors.black.withOpacity(0.9),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                onSelected: (value) async {
+                                  if (value == "1") {
+                                    isChangingRole[index] = true;
                                     controller.update(["role"]);
-                                    myProjects.changeProjectRole(
+                                  }
+                                  if (value == "2") {
+                                    await myProjects.removeMemberFromProject(
+                                      userName:
+                                          membersList[index].user!.username!,
                                       projectId: widget.projuctDetials.id!,
-                                      role: value!,
                                       memberId: membersList[index].user!.id!,
                                     );
-                                  },
-                                ),
-                              );
-                            } else {
-                              return Text(
-                                membersList[index].role!,
-                                style: GoogleFonts.recursive(
-                                  fontSize: textFactor * 13,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                        PopupMenuButton(
-                          itemBuilder: (BuildContext bc) => [
-                            PopupMenuItem(
-                              value: "1",
-                              child: Text(
-                                "Change Member role",
-                                style: GoogleFonts.poppins(
-                                  fontSize: textFactor * 12,
-                                  color: Colors.black.withOpacity(0.9),
-                                  fontWeight: FontWeight.w500,
+                                    membersList.remove(membersList[index]);
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.more_horiz,
+                                  color: black,
+                                  size: 20,
                                 ),
                               ),
-                            ),
-                            PopupMenuItem(
-                              value: "2",
-                              child: Text(
-                                "Remove this Member",
-                                style: GoogleFonts.poppins(
-                                  fontSize: textFactor * 12,
-                                  color: Colors.black.withOpacity(0.9),
-                                  fontWeight: FontWeight.w500,
+                            ],
+                          ),
+                          title: Text(
+                            membersList[index].user!.username!,
+                          ),
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: CachedNetworkImage(
+                              imageUrl: membersList[index].user!.avatar!,
+                              fit: BoxFit.fitWidth,
+                              width: 30,
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: Colors.grey.withOpacity(0.3),
+                                highlightColor: white,
+                                period: const Duration(
+                                  milliseconds: 1000,
                                 ),
-                              ),
-                            ),
-                          ],
-                          onSelected: (value) {
-                            if (value == "1") {
-                              isChangingRole[index] = true;
-                              controller.update(["role"]);
-                            }
-                            if (value == "2") {}
-                          },
-                          icon: Icon(
-                            Icons.more_horiz,
-                            color: black,
-                            size: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                    title: Text(
-                      membersList[index].user!.username!,
-                    ),
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: CachedNetworkImage(
-                        imageUrl: membersList[index].user!.avatar!,
-                        fit: BoxFit.fitWidth,
-                        width: 30,
-                        placeholder: (context, url) => Shimmer.fromColors(
-                          baseColor: Colors.grey.withOpacity(0.3),
-                          highlightColor: white,
-                          period: const Duration(
-                            milliseconds: 1000,
-                          ),
-                          child: Container(
-                            height: 300,
-                            width: width,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(
-                                100,
+                                child: Container(
+                                  height: 300,
+                                  width: width,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(
+                                      100,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) =>
-                  const SizedBox(height: 10),
-            ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const SizedBox(height: 10),
+                  );
+                }),
           ),
           Text(
             "Join requests - ${joinRequestsList.length}",
@@ -298,7 +315,10 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                 ),
                               ),
                               onPressed: () {
-                                myProjects.changeProjectRole(
+                                myProjects.changeMemberRole(
+                                  newJoin: true,
+                                  userName:
+                                      joinRequestsList[index].user!.username!,
                                   projectId: widget.projuctDetials.id!,
                                   role: collaborator,
                                   memberId: joinRequestsList[index].user!.id!,

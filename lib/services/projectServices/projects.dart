@@ -132,29 +132,28 @@ class ProjectServices {
     }
   }
 
-  Future<void> changeProjectRole({
+  Future<void> removeMemberFromProject({
     required String projectId,
-    required String role,
+    required String userName,
     required String memberId,
   }) async {
     final user = box.get("user");
-    final url = "$prodUrl/api/v1/projects/$projectId/team/$memberId/role";
-    final body = {"role": role};
+    final url = "$prodUrl/api/v1/projects/$projectId/team/$memberId";
+
     try {
-      final response = await http.put(
+      final response = await http.delete(
         Uri.parse(url),
         headers: {
           "Authorization": "Bearer ${user!.token}",
-          "Content-Type": "application/json"
         },
-        body: json.encode(body),
       );
-      
+
       print(response.statusCode);
       // final a = jsonDecode(response.body) as Map;
       // print(a.keys.first == "errors");
       if (response.statusCode == 200) {
-      } else if (response.statusCode == 500) {
+        Fluttertoast.showToast(msg: "Removed $userName From project");
+        controller.update(["memberList"]);
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());
@@ -170,8 +169,59 @@ class ProjectServices {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-      // } catch (e) {
-      //   Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  Future<void> changeMemberRole({
+    required String projectId,
+    required String role,
+    bool newJoin = false,
+    required String userName,
+    required String memberId,
+  }) async {
+    final user = box.get("user");
+    final url = "$prodUrl/api/v1/projects/$projectId/team/$memberId/role";
+    final body = {"role": role};
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {
+          "Authorization": "Bearer ${user!.token}",
+          "Content-Type": "application/json"
+        },
+        body: json.encode(body),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        if (newJoin) {
+          Fluttertoast.showToast(msg: "You Added $userName to this Project");
+        } else {
+          // Get.snackbar(
+          //   "Role Change",
+          //   "You changed $userName role to $role",
+          //   snackPosition: SnackPosition.BOTTOM,
+          // );
+          Fluttertoast.showToast(msg: "You changed $userName role to $role");
+        }
+      } else if (response.statusCode == 422 || response.statusCode == 400) {
+        final errorJson = json.decode(response.body) as Map;
+        final err = ErrorModel.fromJson(errorJson.cast());
+        for (final element in err.errors!) {
+          Fluttertoast.showToast(msg: element.message!);
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Something went wrong");
+      }
+    } on HttpException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on SocketException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on PlatformException {
+      Fluttertoast.showToast(msg: "Invalid Format");
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     }
   }
 }
