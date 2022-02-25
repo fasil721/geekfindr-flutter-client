@@ -48,7 +48,6 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
       roleList.add(membersList[i].role!);
       isChangingRole.add(false);
     }
-    print(membersList);
   }
 
   final roleOptions = <String>[collaborator, admin];
@@ -158,15 +157,20 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          onTap: () {
-                                            membersList[index].role = e;
-                                            isChangingRole[index] = false;
-                                            controller.update(["role"]);
-                                          },
+                                          onTap: () {},
                                         ),
                                       )
                                       .toList(),
-                                  onChanged: (value) {},
+                                  onChanged: (value) {
+                                    membersList[index].role = value;
+                                    isChangingRole[index] = false;
+                                    controller.update(["role"]);
+                                    myProjects.changeProjectRole(
+                                      projectId: widget.projuctDetials.id!,
+                                      role: value!,
+                                      memberId: membersList[index].user!.id!,
+                                    );
+                                  },
                                 ),
                               );
                             } else {
