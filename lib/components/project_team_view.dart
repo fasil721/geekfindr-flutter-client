@@ -331,7 +331,8 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                         style: ButtonStyle(
                                           elevation:
                                               MaterialStateProperty.all<double>(
-                                                  3),
+                                            3,
+                                          ),
                                           backgroundColor:
                                               MaterialStateProperty.all<Color>(
                                             primaryColor,
