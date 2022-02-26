@@ -194,7 +194,7 @@ class ProjectView extends StatelessWidget {
                                                   Container(
                                                     margin:
                                                         const EdgeInsets.only(
-                                                            top: 3),
+                                                            top: 3,),
                                                     child: Text(
                                                       element['name'] as String,
                                                       style:
@@ -259,7 +259,7 @@ class ProjectView extends StatelessWidget {
               return const SizedBox();
             },
           );
-        });
+        },);
   }
 
   Widget projectInfo({

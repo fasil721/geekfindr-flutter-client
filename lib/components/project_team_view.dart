@@ -2,14 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
-// ignore: must_be_immutable
 class ProjectTeamView extends StatefulWidget {
   const ProjectTeamView({Key? key, required this.projuctDetials})
       : super(key: key);
@@ -21,11 +19,13 @@ class ProjectTeamView extends StatefulWidget {
 
 class _ProjectTeamViewState extends State<ProjectTeamView> {
   final myProjects = ProjectServices();
-  // final controller = Get.find<AppController>();
+  final controller = Get.find<AppController>();
   List<Team> membersList = [];
   List<Team> joinRequestsList = [];
   List<bool> isChangingRole = [];
   List<String> roleList = [];
+  final roleOptions = <String>[collaborator, admin];
+
   @override
   void initState() {
     findMemberDetials();
@@ -51,7 +51,48 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
     }
   }
 
-  final roleOptions = <String>[collaborator, admin];
+  void updateRole(String value, int index) {
+    if (membersList[index].role != value) {
+      membersList[index].role = value;
+      isChangingRole[index] = false;
+      controller.update(["role"]);
+      myProjects.changeMemberRole(
+        userName: membersList[index].user!.username!,
+        projectId: widget.projuctDetials.id!,
+        role: value,
+        memberId: membersList[index].user!.id!,
+      );
+    }
+    isChangingRole[index] = false;
+    controller.update(["role"]);
+  }
+
+  Future<void> acceptJoinRequest(int index) async {
+    await myProjects.changeMemberRole(
+      newJoin: true,
+      userName: joinRequestsList[index].user!.username!,
+      projectId: widget.projuctDetials.id!,
+      role: collaborator,
+      memberId: joinRequestsList[index].user!.id!,
+    );
+
+    joinRequestsList[index].role = collaborator;
+    membersList.add(joinRequestsList[index]);
+    isChangingRole.add(false);
+    roleList.add(collaborator);
+    joinRequestsList.remove(joinRequestsList[index]);
+    controller.update(["teamView"]);
+  }
+
+  Future<void> removeMember(int index) async {
+    
+    await myProjects.removeMemberFromProject(
+      userName: membersList[index].user!.username!,
+      projectId: widget.projuctDetials.id!,
+      memberId: membersList[index].user!.id!,
+    );
+    membersList.remove(membersList[index]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +100,6 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     final myRole = findMyRole(widget.projuctDetials.team!);
-    print(myRole);
     return GetBuilder<AppController>(
       id: "teamView",
       builder: (controller) {
@@ -174,19 +214,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                               )
                                               .toList(),
                                           onChanged: (value) {
-                                            membersList[index].role = value;
-                                            isChangingRole[index] = false;
-                                            controller.update(["role"]);
-                                            myProjects.changeMemberRole(
-                                              userName: membersList[index]
-                                                  .user!
-                                                  .username!,
-                                              projectId:
-                                                  widget.projuctDetials.id!,
-                                              role: value!,
-                                              memberId:
-                                                  membersList[index].user!.id!,
-                                            );
+                                            updateRole(value!, index);
                                           },
                                         ),
                                       );
@@ -240,16 +268,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                         controller.update(["role"]);
                                       }
                                       if (value == "2") {
-                                        await myProjects
-                                            .removeMemberFromProject(
-                                          userName: membersList[index]
-                                              .user!
-                                              .username!,
-                                          projectId: widget.projuctDetials.id!,
-                                          memberId:
-                                              membersList[index].user!.id!,
-                                        );
-                                        membersList.remove(membersList[index]);
+                                        removeMember(index);
                                       }
                                     },
                                     icon: Icon(
@@ -345,29 +364,8 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                             ),
                                           ),
                                         ),
-                                        onPressed: () async {
-                                          await myProjects.changeMemberRole(
-                                            newJoin: true,
-                                            userName: joinRequestsList[index]
-                                                .user!
-                                                .username!,
-                                            projectId:
-                                                widget.projuctDetials.id!,
-                                            role: collaborator,
-                                            memberId: joinRequestsList[index]
-                                                .user!
-                                                .id!,
-                                          );
-
-                                          joinRequestsList[index].role =
-                                              collaborator;
-                                          membersList
-                                              .add(joinRequestsList[index]);
-                                          isChangingRole.add(false);
-                                          roleList.add(collaborator);
-                                          joinRequestsList
-                                              .remove(joinRequestsList[index]);
-                                          controller.update(["teamView"]);
+                                        onPressed: () {
+                                          acceptJoinRequest(index);
                                         },
                                         child: Text(
                                           "Accept",
