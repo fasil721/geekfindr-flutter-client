@@ -84,14 +84,47 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
     controller.update(["teamView"]);
   }
 
-  Future<void> removeMember(int index) async {
-    
-    await myProjects.removeMemberFromProject(
-      userName: membersList[index].user!.username!,
-      projectId: widget.projuctDetials.id!,
-      memberId: membersList[index].user!.id!,
+  void removeMember(int index) {
+    Get.defaultDialog(
+      title: "Warning",
+      buttonColor: primaryColor,
+      titleStyle: GoogleFonts.poppins(),
+      confirmTextColor: white,
+      cancelTextColor: primaryColor,
+      content: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Text(
+          "This process is irreversible are you sure?",
+        ),
+      ),
+      cancel: TextButton(
+        onPressed: () {
+          Get.back();
+        },
+        child: Text(
+          "cancel",
+          style: GoogleFonts.roboto(),
+        ),
+      ),
+      confirm: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
+        ),
+        onPressed: () async {
+          await myProjects.removeMemberFromProject(
+            userName: membersList[index].user!.username!,
+            projectId: widget.projuctDetials.id!,
+            memberId: membersList[index].user!.id!,
+          );
+          membersList.remove(membersList[index]);
+          Get.back();
+        },
+        child: Text(
+          "Yes",
+          style: GoogleFonts.roboto(),
+        ),
+      ),
     );
-    membersList.remove(membersList[index]);
   }
 
   @override
