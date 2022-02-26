@@ -159,9 +159,7 @@ class _FeedListState extends State<FeedList> {
                               vertical: 5,
                             ),
                             decoration: BoxDecoration(
-                              color: datas[index].isProject!
-                                  ? Colors.blue[50]!.withOpacity(0.5)
-                                  : secondaryColor,
+                              color: secondaryColor,
                               borderRadius: BorderRadius.circular(
                                 30,
                               ),
@@ -173,9 +171,10 @@ class _FeedListState extends State<FeedList> {
                                   child: Row(
                                     children: [
                                       Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 5),
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(
+                                          borderRadius: BorderRadius.circular(
                                             100,
                                           ),
                                           border: Border.all(
@@ -184,8 +183,7 @@ class _FeedListState extends State<FeedList> {
                                           ),
                                         ),
                                         child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(
+                                          borderRadius: BorderRadius.circular(
                                             100,
                                           ),
                                           child: Material(
@@ -194,9 +192,8 @@ class _FeedListState extends State<FeedList> {
                                               onTap: () async {
                                                 Get.to(
                                                   () => OtherUserProfile(
-                                                    userId: datas[index]
-                                                        .owner!
-                                                        .id!,
+                                                    userId:
+                                                        datas[index].owner!.id!,
                                                   ),
                                                 );
                                               },
@@ -211,8 +208,8 @@ class _FeedListState extends State<FeedList> {
                                                   url,
                                                 ) =>
                                                     Shimmer.fromColors(
-                                                  baseColor: Colors.grey
-                                                      .withOpacity(
+                                                  baseColor:
+                                                      Colors.grey.withOpacity(
                                                     0.3,
                                                   ),
                                                   highlightColor: white,
@@ -222,12 +219,10 @@ class _FeedListState extends State<FeedList> {
                                                   child: Container(
                                                     height: height * 0.04,
                                                     width: height * 0.04,
-                                                    decoration:
-                                                        BoxDecoration(
+                                                    decoration: BoxDecoration(
                                                       color: Colors.grey,
                                                       borderRadius:
-                                                          BorderRadius
-                                                              .circular(
+                                                          BorderRadius.circular(
                                                         100,
                                                       ),
                                                     ),
@@ -568,7 +563,8 @@ class _FeedListState extends State<FeedList> {
                                   message: 'Project',
                                   location: BannerLocation.topEnd,
                                   color: primaryColor,
-                                  textStyle: const TextStyle(
+                                  textStyle: GoogleFonts.roboto(
+                                    fontSize: 10,
                                     fontWeight: FontWeight.normal,
                                   ),
                                   child: SizedBox(

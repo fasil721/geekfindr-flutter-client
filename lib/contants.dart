@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/services/projectServices/project_model_classes.dart';
+
 
 const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
@@ -6,6 +9,7 @@ const secondaryColor = Color(0xffF3F4F7);
 const white = Colors.white;
 final black = Colors.black.withOpacity(0.8);
 const admin = "admin";
+const owner = "owner";
 const collaborator = "collaborator";
 const joinRequest = "joinRequest";
 double textfactorfind(double val) {
@@ -54,4 +58,16 @@ String findDatesDifferenceFromToday(DateTime dateTime) {
   } else {
     return "${diff.inDays * -1} days ago";
   }
+}
+
+String findMyRole(List<Team> members) {
+  final box = Boxes.getInstance();
+  final user = box.get("user");
+  if (members.isNotEmpty) {
+    final member = members.firstWhere(
+      (element) => element.user!.id.toString() == user!.id.toString(),
+    );
+    return member.role!;
+  }
+  return "";
 }

@@ -22,13 +22,8 @@ class ProjectView extends StatelessWidget {
   double height = 0;
   double textFactor = 0;
   int membersCount = 0;
-  final box = Boxes.getInstance();
 
-  String findMyRole(List<Team> members) {
-    final user = box.get("user");
-    final member = members.firstWhere((element) => element.user!.id.toString() == user!.id.toString());
-    return member.role!;
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +41,7 @@ class ProjectView extends StatelessWidget {
             final projectDetials = snapshot.data!;
             final date =
                 findDatesDifferenceFromToday(projectDetials.createdAt!);
+
             final myRole = findMyRole(projectDetials.team!);
             print(myRole);
             return Scaffold(

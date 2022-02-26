@@ -63,6 +63,7 @@ class PostServices {
           } else {
             Fluttertoast.showToast(msg: "Post uploaded");
           }
+          controller.update(["postCount"]);
           Get.back();
         } else if (response3.statusCode == 400 || response3.statusCode == 422) {
           final errorJson = json.decode(response3.body) as Map;
@@ -71,7 +72,6 @@ class PostServices {
             Fluttertoast.showToast(msg: element.message!);
           }
         } else {
-          // print(response3.body);
           Fluttertoast.showToast(msg: "Image not uploaded");
         }
       } else {
