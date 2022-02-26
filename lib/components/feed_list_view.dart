@@ -172,7 +172,8 @@ class _FeedListState extends State<FeedList> {
                                     children: [
                                       Container(
                                         margin: const EdgeInsets.symmetric(
-                                            vertical: 5),
+                                          vertical: 5,
+                                        ),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(
                                             100,
@@ -189,7 +190,7 @@ class _FeedListState extends State<FeedList> {
                                           child: Material(
                                             color: Colors.transparent,
                                             child: InkWell(
-                                              onTap: () async {
+                                              onTap: () {
                                                 Get.to(
                                                   () => OtherUserProfile(
                                                     userId:

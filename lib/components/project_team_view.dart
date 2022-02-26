@@ -84,17 +84,17 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
     controller.update(["teamView"]);
   }
 
-  void removeMember(int index) {
+  void removeMember(int index, String member) {
     Get.defaultDialog(
       title: "Warning",
       buttonColor: primaryColor,
       titleStyle: GoogleFonts.poppins(),
       confirmTextColor: white,
       cancelTextColor: primaryColor,
-      content: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+      content: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Text(
-          "This process is irreversible are you sure?",
+          "This process is irreversible, Are you sure to remove $member?",
         ),
       ),
       cancel: TextButton(
@@ -301,7 +301,10 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                         controller.update(["role"]);
                                       }
                                       if (value == "2") {
-                                        removeMember(index);
+                                        removeMember(
+                                          index,
+                                          membersList[index].user!.username!,
+                                        );
                                       }
                                     },
                                     icon: Icon(

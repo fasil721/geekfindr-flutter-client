@@ -152,7 +152,6 @@ class ProjectServices {
       // final a = jsonDecode(response.body) as Map;
       // print(a.keys.first == "errors");
       if (response.statusCode == 200) {
-        Fluttertoast.showToast(msg: "Removed $userName From project");
         controller.update(["memberList"]);
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
@@ -239,7 +238,7 @@ class ProjectServices {
           "Authorization": "Bearer ${user!.token}",
         },
       );
-      
+
       print(response.statusCode);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "You deleted $projectName");
