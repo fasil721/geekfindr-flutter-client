@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 
 const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
@@ -15,6 +13,7 @@ const noStatus = "No Status";
 const nextUp = "Next Up";
 const inProgress = "In Progress";
 const completed = "Completed";
+
 double textfactorfind(double val) {
   if (val == 0.85) {
     return val + 0.1;
@@ -47,6 +46,7 @@ List<BoxShadow> shadowList = [
     offset: Offset(5, 5),
   )
 ];
+
 String findDatesDifferenceFromToday(DateTime dateTime) {
   final today = DateTime.now();
   final diff = dateTime.difference(today);
@@ -61,16 +61,4 @@ String findDatesDifferenceFromToday(DateTime dateTime) {
   } else {
     return "${diff.inDays * -1} days ago";
   }
-}
-
-String findMyRole(List<Team> members) {
-  final box = Boxes.getInstance();
-  final user = box.get("user");
-  if (members.isNotEmpty) {
-    final member = members.firstWhere(
-      (element) => element.user!.id.toString() == user!.id.toString(),
-    );
-    return member.role!;
-  }
-  return "";
 }

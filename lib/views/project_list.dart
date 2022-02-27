@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/components/edit_description_dialoge.dart';
 import 'package:geek_findr/components/feed_list_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
@@ -35,7 +34,7 @@ class _MyProjectListState extends State<MyProjectList> {
           return FutureBuilder(
             future: myProjects.getMyProjects(),
             builder:
-                (context, AsyncSnapshot<List<ProjectListModel>?> snapshot) {
+                (context, AsyncSnapshot<List<ProjectShortModel>?> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return skeleton(width);
               }

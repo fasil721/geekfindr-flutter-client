@@ -1,18 +1,19 @@
 import 'package:geek_findr/services/postServices/post_models.dart';
 
-class ProjectListModel {
-  ProjectListModel({
+class ProjectShortModel {
+  ProjectShortModel({
     this.project,
     this.role,
   });
 
-  Project? project;
+  ProjectShortDataModel? project;
   String? role;
 
-  factory ProjectListModel.fromJson(Map<String, dynamic> json) =>
-      ProjectListModel(
-        project:
-            Project.fromJson(Map<String, dynamic>.from(json["project"] as Map)),
+  factory ProjectShortModel.fromJson(Map<String, dynamic> json) =>
+      ProjectShortModel(
+        project: ProjectShortDataModel.fromJson(
+          Map<String, dynamic>.from(json["project"] as Map),
+        ),
         role: json["role"] as String,
       );
 
@@ -22,8 +23,8 @@ class ProjectListModel {
       };
 }
 
-class Project {
-  Project({
+class ProjectShortDataModel {
+  ProjectShortDataModel({
     this.description,
     this.name,
     this.owner,
@@ -34,7 +35,8 @@ class Project {
   String? name;
   String? id;
 
-  factory Project.fromJson(Map<String, dynamic> json) => Project(
+  factory ProjectShortDataModel.fromJson(Map<String, dynamic> json) =>
+      ProjectShortDataModel(
         description: json["description"] as String,
         name: json["name"] as String,
         owner: Owner.fromJson(
@@ -49,8 +51,25 @@ class Project {
       };
 }
 
-class ProjuctDetialsModel {
-  ProjuctDetialsModel({
+class ProjectModel {
+  ProjectModel({
+    this.project,
+    this.role,
+  });
+
+  ProjectDataModel? project;
+  String? role;
+
+  factory ProjectModel.fromJson(Map<String, dynamic> json) => ProjectModel(
+        project: ProjectDataModel.fromJson(
+          Map<String, dynamic>.from(json["project"] as Map),
+        ),
+        role: json["role"] as String,
+      );
+}
+
+class ProjectDataModel {
+  ProjectDataModel({
     this.description,
     this.name,
     this.owner,
@@ -72,8 +91,8 @@ class ProjuctDetialsModel {
   DateTime? updatedAt;
   String? id;
 
-  factory ProjuctDetialsModel.fromJson(Map<String, dynamic> json) =>
-      ProjuctDetialsModel(
+  factory ProjectDataModel.fromJson(Map<String, dynamic> json) =>
+      ProjectDataModel(
         description: json["description"] as String,
         name: json["name"] as String,
         owner: Owner.fromJson(

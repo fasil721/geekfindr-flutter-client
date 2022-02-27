@@ -9,9 +9,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProjectTeamView extends StatefulWidget {
-  const ProjectTeamView({Key? key, required this.projuctDetials})
-      : super(key: key);
-  final ProjuctDetialsModel projuctDetials;
+  const ProjectTeamView({
+    Key? key,
+    required this.projuctDetials,
+    required this.myRole,
+  }) : super(key: key);
+  final ProjectDataModel projuctDetials;
+  final String myRole;
 
   @override
   State<ProjectTeamView> createState() => _ProjectTeamViewState();
@@ -132,7 +136,6 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-    final myRole = findMyRole(widget.projuctDetials.team!);
     return GetBuilder<AppController>(
       id: "teamView",
       builder: (controller) {
@@ -264,12 +267,13 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                                   },
                                 ),
                                 Visibility(
-                                  visible: myRole == admin &&
-                                          myRole != membersList[index].role ||
-                                      myRole == owner,
+                                  visible: widget.myRole == admin &&
+                                          widget.myRole !=
+                                              membersList[index].role ||
+                                      widget.myRole == owner,
                                   child: PopupMenuButton(
                                     itemBuilder: (BuildContext bc) => [
-                                      if (myRole == owner)
+                                      if (widget.myRole == owner)
                                         PopupMenuItem(
                                           value: "1",
                                           child: Text(
@@ -355,7 +359,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
                 ),
               ),
               Visibility(
-                visible: myRole == admin || myRole == owner,
+                visible: widget.myRole == admin || widget.myRole == owner,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

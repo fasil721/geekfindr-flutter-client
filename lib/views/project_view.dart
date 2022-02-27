@@ -40,7 +40,7 @@ class _ProjectViewState extends State<ProjectView> {
     return GetBuilder<AppController>(
       id: "projectView",
       builder: (controller) {
-        return FutureBuilder<ProjuctDetialsModel?>(
+        return FutureBuilder<ProjectModel?>(
           future: myProjects.getProjectDetialsById(id: widget.projectId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,11 +48,11 @@ class _ProjectViewState extends State<ProjectView> {
             }
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.data != null) {
-                final projectDetials = snapshot.data!;
+                final projectModel = snapshot.data!;
+                final projectDetials = projectModel.project!;
                 final date =
                     findDatesDifferenceFromToday(projectDetials.createdAt!);
-
-                final myRole = findMyRole(projectDetials.team!);
+                final myRole = projectModel.role!;
                 return Scaffold(
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
@@ -240,13 +240,14 @@ class _ProjectViewState extends State<ProjectView> {
                                     Visibility(
                                       visible: _currentIndex == 1,
                                       child: ProjectTeamView(
-                                        projuctDetials: projectDetials,
+                                        projuctDetials: projectModel.project!,
+                                        myRole: projectModel.role!,
                                       ),
                                     ),
                                     Visibility(
                                       visible: _currentIndex == 2,
                                       child: ProjectTodosView(
-                                        projuctDetials: projectDetials,
+                                        projuctDetials: projectDetials, myRole: projectModel.role!,
                                       ),
                                     ),
                                     Visibility(

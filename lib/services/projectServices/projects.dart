@@ -14,7 +14,7 @@ class ProjectServices {
   final box = Boxes.getInstance();
   final controller = Get.find<AppController>();
 
-  Future<List<ProjectListModel>?> getMyProjects() async {
+  Future<List<ProjectShortModel>?> getMyProjects() async {
     final user = box.get("user");
     const url = "$prodUrl/api/v1/projects/my-projects";
     try {
@@ -29,7 +29,7 @@ class ProjectServices {
         final jsonData = json.decode(response.body) as List;
         final datas = jsonData
             .map(
-              (e) => ProjectListModel.fromJson(
+              (e) => ProjectShortModel.fromJson(
                 Map<String, dynamic>.from(e as Map),
               ),
             )
@@ -56,7 +56,7 @@ class ProjectServices {
     return null;
   }
 
-  Future<ProjuctDetialsModel?> getProjectDetialsById({
+  Future<ProjectModel?> getProjectDetialsById({
     required String id,
   }) async {
     final user = box.get("user");
@@ -71,7 +71,7 @@ class ProjectServices {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as Map;
         final datas =
-            ProjuctDetialsModel.fromJson(Map<String, dynamic>.from(jsonData));
+            ProjectModel.fromJson(Map<String, dynamic>.from(jsonData));
         return datas;
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;

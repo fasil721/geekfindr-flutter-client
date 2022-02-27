@@ -5,11 +5,14 @@ import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ignore: must_be_immutable
 class ProjectTodosView extends StatefulWidget {
-  const ProjectTodosView({Key? key, required this.projuctDetials})
-      : super(key: key);
-  final ProjuctDetialsModel projuctDetials;
+  const ProjectTodosView({
+    Key? key,
+    required this.projuctDetials,
+    required this.myRole,
+  }) : super(key: key);
+  final ProjectDataModel projuctDetials;
+  final String myRole;
 
   @override
   State<ProjectTodosView> createState() => _ProjectTodosViewState();
