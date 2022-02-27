@@ -404,20 +404,16 @@ class _ProfilePageState extends State<ProfilePage>
                                     index: currentIndex,
                                     children: <Widget>[
                                       Visibility(
-                                        maintainState: true,
                                         visible: currentIndex == 0,
                                         child: ProfileAboutView(
                                           userData: userData,
                                         ),
                                       ),
                                       Visibility(
-                                        maintainState: true,
                                         visible: currentIndex == 1,
-                                        child: currentIndex == 1
-                                            ? UserPosts(
-                                                userId: userData.id!,
-                                              )
-                                            : const SizedBox(),
+                                        child: UserPosts(
+                                          userId: userData.id!,
+                                        ),
                                       ),
                                     ],
                                   );

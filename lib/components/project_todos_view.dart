@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
@@ -15,26 +17,32 @@ class ProjectTodosView extends StatefulWidget {
 
 class _ProjectTodosViewState extends State<ProjectTodosView> {
   List<String> noStatusList = [
+    "",
     "haRi",
     "heDDllo",
     "hello",
     "hai",
+    "",
   ];
   List<String> nextUpList = [
+    "",
     "hhnai",
     "hauyi",
     "hettllo",
     "harri",
+    "",
   ];
+  final controller = Get.find<AppController>();
   List<String> inProgressList = [];
   List<String> completedList = [];
+  bool isDragging = false;
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    // final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-    final myRole = findMyRole(widget.projuctDetials.team!);
+    // final myRole = findMyRole(widget.projuctDetials.team!);
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
@@ -49,41 +57,6 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
             ),
           ),
           const Divider(thickness: 1.5),
-
-          // SingleChildScrollView(
-          //   scrollDirection: Axis.horizontal,
-          //   child: Row(
-          //     children: [
-          //       ...noStatusList
-          //           .map(
-          //             (e) => Padding(
-          //               padding: const EdgeInsets.all(8.0),
-          //               child: Text(e),
-          //             ),
-          //           )
-          //           .toList()
-          //     ],
-          //   ),
-          // ),
-          // SizedBox(
-          //   height: height * 0.1,
-          //   child: ListView.builder(
-          //     scrollDirection: Axis.horizontal,
-          //     shrinkWrap: true,
-          //     physics: const BouncingScrollPhysics(),
-          //     itemCount: 20,
-          //     itemBuilder: (context, index) {
-          //       return Padding(
-          //         padding: const EdgeInsets.all(8.0),
-          //         child: Container(
-          //           height: 20,
-          //           width: 20,
-          //           color: primaryColor,
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
           Text(
             noStatus,
             style: GoogleFonts.poppins(
@@ -93,40 +66,89 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
             ),
           ),
           SizedBox(height: height * 0.01),
-          SizedBox(
-            height: height * 0.06,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) =>
-                  buildDraggableListItems(context, index, noStatusList),
-              separatorBuilder: (context, index) =>
-                  buildDragTargets(context, index, noStatusList),
-              itemCount: noStatusList.length,
-            ),
-          ),
-          SizedBox(height: height * 0.01),
-          Text(
-            nextUp,
-            style: GoogleFonts.poppins(
-              fontSize: textFactor * 15,
-              fontWeight: FontWeight.w600,
-              color: black,
-            ),
-          ),
-          SizedBox(height: height * 0.01),
-          SizedBox(
-            height: height * 0.06,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemBuilder: (context, index) =>
-                  buildDraggableListItems(context, index, nextUpList),
-              itemCount: nextUpList.length,
-              separatorBuilder: (context, index) =>
-                  buildDragTargets(context, index, nextUpList),
-            ),
+          GetBuilder<AppController>(
+            id: "todosList",
+            builder: (controller) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: height * 0.06,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          Visibility(
+                            visible: isDragging,
+                            child: buildListDragTarget(noStatusList),
+                          ),
+                          ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) =>
+                                buildDraggableItems(
+                              context,
+                              index,
+                              noStatusList,
+                            ),
+                            separatorBuilder: (context, index) =>
+                                buildDragTargets(
+                              context,
+                              index,
+                              noStatusList,
+                            ), // const SizedBox(width: 5),
+                            itemCount: noStatusList.length,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.01),
+                  Text(
+                    nextUp,
+                    style: GoogleFonts.poppins(
+                      fontSize: textFactor * 15,
+                      fontWeight: FontWeight.w600,
+                      color: black,
+                    ),
+                  ),
+                  SizedBox(height: height * 0.01),
+                  SizedBox(
+                    height: height * 0.06,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          Visibility(
+                            visible: isDragging,
+                            child: buildListDragTarget(nextUpList),
+                          ),
+                          ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) =>
+                                buildDraggableItems(
+                              context,
+                              index,
+                              nextUpList,
+                            ),
+                            separatorBuilder: (context, index) =>
+                                buildDragTargets(
+                              context,
+                              index,
+                              nextUpList,
+                            ), //  const SizedBox(width: 5),
+                            itemCount: nextUpList.length,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           SizedBox(height: height * 0.01),
         ],
@@ -134,60 +156,93 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     );
   }
 
-  Widget buildDraggableListItems(
+  Widget buildListDragTarget(List<String> items) => DragTarget<String>(
+        builder: (context, candidates, rejects) {
+          return candidates.isNotEmpty
+              ? _buildDropPreview(
+                  context,
+                  candidates.first!,
+                )
+              : const Card(
+                  color: white,
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: Icon(Icons.add),
+                  ),
+                );
+        },
+        // onWillAccept: (value) =>
+        //     !noStatusList.contains(value),
+        onAccept: (value) {
+          items.insert(0, value);
+          controller.update(["todosList"]);
+        },
+      );
+
+  Widget buildDraggableItems(
     BuildContext context,
     int index,
     List<String> items,
   ) {
-    return Draggable<String>(
-      data: items[index],
-      // the widget to show under the users finger being dragged
-      feedback: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Center(
-            child: Text(
-              items[index],
-              style: GoogleFonts.roboto(fontSize: 15),
-            ),
-          ),
-        ),
-      ),
-      childWhenDragging: Card(
-        color: Colors.transparent,
-        child: Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(10),
-          child: Center(
-            child: Text(
-              items[index],
-              style: GoogleFonts.roboto(
-                fontSize: 15,
-                color: Colors.transparent,
+    return items[index].isNotEmpty
+        ? Draggable<String>(
+            data: items[index],
+            feedback: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Center(
+                  child: Text(
+                    items[index],
+                    style: GoogleFonts.roboto(fontSize: 15),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-      child: Card(
-        child: Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(10),
-          child: Center(
-            child: Text(
-              items[index],
-              style: GoogleFonts.roboto(fontSize: 15),
+            childWhenDragging: Card(
+              color: Colors.transparent,
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                child: Center(
+                  child: Text(
+                    items[index],
+                    style: GoogleFonts.roboto(
+                      fontSize: 15,
+                      color: Colors.transparent,
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-      onDragCompleted: () {
-        items.remove(items[index]);
-      },
-    );
+            child: Card(
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                child: Center(
+                  child: Text(
+                    items[index],
+                    style: GoogleFonts.roboto(fontSize: 15),
+                  ),
+                ),
+              ),
+            ),
+            onDragCompleted: () {
+              items.remove(items[index]);
+              controller.update(["todosList"]);
+            },
+            // onDragStarted: () {
+            //   isDragging = true;
+            //   controller.update(["todosList"]);
+            // },
+            // onDragEnd: (value) {
+            //   isDragging = false;
+            //   controller.update(["todosList"]);
+            // },
+          )
+        : const SizedBox();
   }
 
-//  builds DragTargets used as separators between list items/widgets for list A
   Widget buildDragTargets(
     BuildContext context,
     int index,
@@ -195,7 +250,6 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
   ) {
     return DragTarget<String>(
       builder: (context, candidates, rejects) {
-        // print(candidates);
         return candidates.isNotEmpty
             ? _buildDropPreview(context, candidates.first!)
             : const SizedBox(
@@ -203,16 +257,14 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                 height: 5,
               );
       },
-      onWillAccept: (value) => !noStatusList.contains(value),
+      onWillAccept: (value) => !items.contains(value),
       onAccept: (value) {
-        setState(() {
-          items.insert(0, value);
-        });
+        items.insert(index + 1, value);
+        controller.update(["todosList"]);
       },
     );
   }
 
-  //  will return a widget used as an indicator for the drop position
   Widget _buildDropPreview(BuildContext context, String value) {
     return Card(
       color: Colors.lightBlue[200],

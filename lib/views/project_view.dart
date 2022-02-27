@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/edit_description_dialoge.dart';
-import 'package:geek_findr/components/project_team_view.dart';
+import 'package:geek_findr/components/project_teams_view.dart';
 import 'package:geek_findr/components/project_todos_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
@@ -57,10 +57,6 @@ class _ProjectViewState extends State<ProjectView> {
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
                       controller.update(["projectView"]);
-                      // for (final e in projectDetials.team!) {
-                      //   print(e.user!.username);
-                      //   print(e.role);
-                      // }
                     },
                   ),
                   backgroundColor: secondaryColor,
@@ -227,24 +223,38 @@ class _ProjectViewState extends State<ProjectView> {
                                 IndexedStack(
                                   index: _currentIndex,
                                   children: [
-                                    projectInfo(
-                                      ownerData: projectDetials.owner!,
-                                      myRole: myRole,
-                                      description: projectDetials.description!,
-                                      name: projectDetials.name!,
-                                      projectId: projectDetials.id!,
+                                    Visibility(
+                                      visible: _currentIndex == 0,
+                                      child: projectInfo(
+                                        ownerData: projectDetials.owner!,
+                                        myRole: myRole,
+                                        description:
+                                            projectDetials.description!,
+                                        name: projectDetials.name!,
+                                        projectId: projectDetials.id!,
+                                      ),
                                     ),
-                                    ProjectTeamView(
-                                      projuctDetials: projectDetials,
+                                    Visibility(
+                                      visible: _currentIndex == 1,
+                                      child: ProjectTeamView(
+                                        projuctDetials: projectDetials,
+                                      ),
                                     ),
-                                    ProjectTodosView(
-                                      projuctDetials: projectDetials,
+                                    Visibility(
+                                      visible: _currentIndex == 2,
+                                      child: ProjectTodosView(
+                                        projuctDetials: projectDetials,
+                                      ),
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.all(20),
-                                      color: black,
-                                      width: width,
-                                      height: 2,
+                                    Visibility(
+                                      maintainState: true,
+                                      visible: _currentIndex == 3,
+                                      child: Container(
+                                        margin: const EdgeInsets.all(20),
+                                        color: black,
+                                        width: width,
+                                        height: 2,
+                                      ),
                                     ),
                                   ],
                                 )
