@@ -57,6 +57,9 @@ class _ProjectViewState extends State<ProjectView> {
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
                       controller.update(["projectView"]);
+                      // print(
+                      //   projectDetials.todo!.map((e) => e.tasks!.map((e) => e)),
+                      // );
                     },
                   ),
                   backgroundColor: secondaryColor,

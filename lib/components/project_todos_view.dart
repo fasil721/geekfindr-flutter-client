@@ -43,6 +43,8 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     // final myRole = findMyRole(widget.projuctDetials.team!);
+    final todos = widget.projuctDetials.todo!;
+    print(todos);
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
@@ -172,8 +174,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                   ),
                 );
         },
-        // onWillAccept: (value) =>
-        //     !noStatusList.contains(value),
+        onWillAccept: (value) => !items.contains(value),
         onAccept: (value) {
           items.insert(0, value);
           controller.update(["todosList"]);
@@ -257,7 +258,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                 height: 5,
               );
       },
-      onWillAccept: (value) => !items.contains(value),
+      // onWillAccept: (value) => !items.contains(value),
       onAccept: (value) {
         items.insert(index + 1, value);
         controller.update(["todosList"]);

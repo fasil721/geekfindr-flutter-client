@@ -66,7 +66,7 @@ class ProjuctDetialsModel {
   String? name;
   Owner? owner;
   List<Team>? team;
-  List<dynamic>? todo;
+  List<Todo>? todo;
   List<dynamic>? task;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -83,7 +83,10 @@ class ProjuctDetialsModel {
           (json["team"] as List)
               .map((x) => Team.fromJson(Map<String, dynamic>.from(x as Map))),
         ),
-        todo: List<dynamic>.from((json["todo"] as List).map((x) => x)),
+        todo: List<Todo>.from(
+          (json["todo"] as List)
+              .map((x) => Todo.fromJson(Map<String, dynamic>.from(x as Map))),
+        ),
         task: List<dynamic>.from((json["task"] as List).map((x) => x)),
         createdAt: DateTime.parse(json["createdAt"] as String),
         updatedAt: DateTime.parse(json["updatedAt"] as String),
@@ -110,5 +113,25 @@ class Team {
   Map<String, dynamic> toJson() => {
         "user": user!.toJson(),
         "role": role,
+      };
+}
+
+class Todo {
+  Todo({
+    this.title,
+    this.tasks,
+  });
+
+  String? title;
+  List<String>? tasks;
+
+  factory Todo.fromJson(Map<String, dynamic> json) => Todo(
+        title: json["title"] as String,
+        tasks: List<String>.from((json["tasks"] as List).map((x) => x)),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "title": title,
+        "tasks": List<String>.from(tasks!.map((x) => x)),
       };
 }
