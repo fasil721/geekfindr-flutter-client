@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/edit_description_dialoge.dart';
-import 'package:geek_findr/components/project_teams_view.dart';
+import 'package:geek_findr/components/project_team_view.dart';
 import 'package:geek_findr/components/project_todos_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
@@ -11,14 +11,20 @@ import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ignore: must_be_immutable
-class ProjectView extends StatelessWidget {
-  ProjectView({
+class ProjectView extends StatefulWidget {
+  const ProjectView({
     Key? key,
     required this.projectId,
   }) : super(key: key);
 
   final String projectId;
+
+  @override
+  State<ProjectView> createState() => _ProjectViewState();
+}
+
+class _ProjectViewState extends State<ProjectView> {
+  final controller = Get.find<AppController>();
   final myProjects = ProjectServices();
   int _currentIndex = 0;
   double width = 0;
@@ -35,7 +41,7 @@ class ProjectView extends StatelessWidget {
       id: "projectView",
       builder: (controller) {
         return FutureBuilder<ProjuctDetialsModel?>(
-          future: myProjects.getProjectDetialsById(id: projectId),
+          future: myProjects.getProjectDetialsById(id: widget.projectId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Scaffold();
@@ -92,7 +98,7 @@ class ProjectView extends StatelessWidget {
                           onSelected: (value) async {
                             if (value == "1") {
                               await myProjects.deleteProject(
-                                projectId: projectId,
+                                projectId: widget.projectId,
                                 projectName: projectDetials.name!,
                               );
                               controller.update(["projectList"]);
