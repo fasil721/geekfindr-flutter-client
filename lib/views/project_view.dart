@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/edit_description_dialoge.dart';
-import 'package:geek_findr/components/project_team_view.dart';
+import 'package:geek_findr/components/project_teams_view.dart';
+import 'package:geek_findr/components/project_todos_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
@@ -230,11 +231,8 @@ class ProjectView extends StatelessWidget {
                                     ProjectTeamView(
                                       projuctDetials: projectDetials,
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.all(20),
-                                      color: primaryColor,
-                                      width: width,
-                                      height: 20,
+                                    ProjectTodosView(
+                                      projuctDetials: projectDetials,
                                     ),
                                     Container(
                                       margin: const EdgeInsets.all(20),

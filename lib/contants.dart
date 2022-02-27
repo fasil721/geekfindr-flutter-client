@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 
-
 const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
 const secondaryColor = Color(0xffF3F4F7);
@@ -12,6 +11,10 @@ const admin = "admin";
 const owner = "owner";
 const collaborator = "collaborator";
 const joinRequest = "joinRequest";
+const noStatus = "No Status";
+const nextUp = "Next Up";
+const inProgress = "In Progress";
+const completed = "Completed";
 double textfactorfind(double val) {
   if (val == 0.85) {
     return val + 0.1;
