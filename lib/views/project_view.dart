@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/components/edit_description_dialoge.dart';
+import 'package:geek_findr/components/project_info_view.dart';
 import 'package:geek_findr/components/project_teams_view.dart';
 import 'package:geek_findr/components/project_todos_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 import 'package:geek_findr/services/projectServices/projects.dart';
-import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -24,24 +22,20 @@ class ProjectView extends StatefulWidget {
 }
 
 class _ProjectViewState extends State<ProjectView> {
-  final controller = Get.find<AppController>();
-  final myProjects = ProjectServices();
+
+  final _myProjects = ProjectServices();
   int _currentIndex = 0;
-  double width = 0;
-  double height = 0;
-  double textFactor = 0;
-  int membersCount = 0;
 
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
-    textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return GetBuilder<AppController>(
       id: "projectView",
       builder: (controller) {
         return FutureBuilder<ProjectModel?>(
-          future: myProjects.getProjectDetialsById(id: widget.projectId),
+          future: _myProjects.getProjectDetialsById(id: widget.projectId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Scaffold();
@@ -52,7 +46,6 @@ class _ProjectViewState extends State<ProjectView> {
                 final projectDetials = projectModel.project!;
                 final date =
                     findDatesDifferenceFromToday(projectDetials.createdAt!);
-                final myRole = projectModel.role!;
                 return Scaffold(
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
@@ -79,7 +72,7 @@ class _ProjectViewState extends State<ProjectView> {
                     ),
                     actions: [
                       Visibility(
-                        visible: myRole == owner,
+                        visible: projectModel.role! == owner,
                         child: PopupMenuButton(
                           itemBuilder: (BuildContext bc) => [
                             PopupMenuItem(
@@ -96,7 +89,7 @@ class _ProjectViewState extends State<ProjectView> {
                           ],
                           onSelected: (value) async {
                             if (value == "1") {
-                              await myProjects.deleteProject(
+                              await _myProjects.deleteProject(
                                 projectId: widget.projectId,
                                 projectName: projectDetials.name!,
                               );
@@ -228,13 +221,9 @@ class _ProjectViewState extends State<ProjectView> {
                                   children: [
                                     Visibility(
                                       visible: _currentIndex == 0,
-                                      child: projectInfo(
-                                        ownerData: projectDetials.owner!,
-                                        myRole: myRole,
-                                        description:
-                                            projectDetials.description!,
-                                        name: projectDetials.name!,
-                                        projectId: projectDetials.id!,
+                                      child: ProjectInfoView(
+                                        projuctDetials: projectModel.project!,
+                                        myRole: projectModel.role!,
                                       ),
                                     ),
                                     Visibility(
@@ -247,7 +236,8 @@ class _ProjectViewState extends State<ProjectView> {
                                     Visibility(
                                       visible: _currentIndex == 2,
                                       child: ProjectTodosView(
-                                        projuctDetials: projectDetials, myRole: projectModel.role!,
+                                        projuctDetials: projectDetials,
+                                        myRole: projectModel.role!,
                                       ),
                                     ),
                                     Visibility(
@@ -278,110 +268,4 @@ class _ProjectViewState extends State<ProjectView> {
       },
     );
   }
-
-  Widget projectInfo({
-    required String name,
-    required String description,
-    required String projectId,
-    required String myRole,
-    required Owner ownerData,
-  }) =>
-      Container(
-        margin: const EdgeInsets.all(20),
-        width: width,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: height * 0.005),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      name,
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: black,
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: myRole == admin || myRole == owner,
-                    child: PopupMenuButton(
-                      itemBuilder: (BuildContext bc) => [
-                        PopupMenuItem(
-                          value: "1",
-                          child: Text(
-                            description.isEmpty
-                                ? "Add Description"
-                                : "Edit Description",
-                            style: GoogleFonts.poppins(
-                              fontSize: textFactor * 15,
-                              color: Colors.black.withOpacity(0.9),
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        )
-                      ],
-                      onSelected: (value) {
-                        if (value == "1") {
-                          Get.dialog(
-                            EditDescriptionDialoge(
-                              description: description,
-                              projectId: projectId,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    "owner name  :  ",
-                    style: GoogleFonts.poppins(
-                      fontSize: textFactor * 14,
-                      fontWeight: FontWeight.w500,
-                      color: black.withOpacity(0.6),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(
-                        () => OtherUserProfile(
-                          userId: ownerData.id!,
-                        ),
-                      );
-                    },
-                    child: Text(
-                      ownerData.username!,
-                      style: GoogleFonts.poppins(
-                        fontSize: textFactor * 14,
-                        fontWeight: FontWeight.w500,
-                        color: black.withOpacity(0.8),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: height * 0.01),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  description,
-                  style: GoogleFonts.poppins(
-                    fontSize: textFactor * 14,
-                    fontWeight: FontWeight.w500,
-                    color: black.withOpacity(0.6),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
 }

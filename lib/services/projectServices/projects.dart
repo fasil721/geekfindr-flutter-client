@@ -111,6 +111,7 @@ class ProjectServices {
       );
       if (response.statusCode == 200) {
         controller.update(["projectList"]);
+        // controller.update(["projectView"]);
         Get.back();
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
