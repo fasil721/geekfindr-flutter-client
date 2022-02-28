@@ -38,6 +38,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
   final _controller = Get.find<AppController>();
   List<Todo> todos = [];
   bool isDragging = false;
+  bool isEditing = false;
   ScrollController? scrollController = ScrollController();
 
   @override
@@ -82,6 +83,8 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index1) {
                         final tasks = todos[index1].tasks!;
+                        // tasks.insert(0, "");
+                        // tasks.insert(todos[index1].tasks!.length, "");
                         return Container(
                           alignment: Alignment.topCenter,
                           width: width * 0.4,
@@ -98,26 +101,78 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: (height * 0.1) * tasks.length,
-                                child: ListView.separated(
-                                  itemCount: tasks.length,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index2) =>
-                                      buildDraggableItems(
-                                    context,
-                                    index2,
-                                    tasks,
-                                    width,
+                              Column(
+                                children: [
+                                  DragTarget<String>(
+                                    builder: (context, candidates, rejects) {
+                                      return candidates.isNotEmpty
+                                          ? _buildChild(
+                                              value: candidates.first!,
+                                              color: Colors.lightBlue[200]!,
+                                            )
+                                          : SizedBox(
+                                              width: width * 0.4,
+                                              height: 5,
+                                            );
+                                    },
+                                    // onWillAccept: (value) =>
+                                    //     !tasks[index1].contains(value!),
+                                    onAccept: (value) {
+                                      // print(todos[index1].tasks!.last);
+                                      todos[index1].tasks!.insert(0, value);
+                                      _controller.update(["todosList"]);
+                                    },
                                   ),
-                                  separatorBuilder: (context, index2) =>
-                                      buildDragTargets(
-                                    context,
-                                    index2,
-                                    tasks,
+                                  SizedBox(
+                                    height: (height * 0.09) * tasks.length,
+                                    child: ListView.separated(
+                                      itemCount: tasks.length,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index2) =>
+                                          buildDraggableItems(
+                                        context,
+                                        index2,
+                                        tasks,
+                                        width,
+                                      ),
+                                      separatorBuilder: (context, index2) =>
+                                          buildDragTargets(
+                                        context,
+                                        index2,
+                                        tasks,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  DragTarget<String>(
+                                    builder: (context, candidates, rejects) {
+                                      return candidates.isNotEmpty
+                                          ? _buildChild(
+                                              value: candidates.first!,
+                                              color: Colors.lightBlue[200]!,
+                                            )
+                                          : SizedBox(
+                                              width: width * 0.4,
+                                              height: 10,
+                                            );
+                                    },
+                                    // onWillAccept: (value) {
+                                    //   if (tasks.isNotEmpty) {
+                                    //     return !tasks[index1].contains(value!);
+                                    //   }
+                                    //   return true;
+                                    // },
+                                    onAccept: (value) {
+                                      // print(todos[index1].tasks!.last);
+                                      todos[index1].tasks!.insert(
+                                            todos[index1].tasks!.length,
+                                            value,
+                                          );
+                                      _controller.update(["todosList"]);
+                                    },
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -256,7 +311,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     List<String> items,
     double width,
   ) {
-    return items[index].isNotEmpty
+    return isEditing
         ? Draggable<String>(
             data: items[index],
             onDragUpdate: (val) {
@@ -264,7 +319,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
               final position = scrollController!.position.pixels;
               final positionMax = scrollController!.position.maxScrollExtent;
 
-              if ((width - 50) < movement &&
+              if ((width - 75) < movement &&
                   movement != (positionMax - 50) &&
                   position < movement) {
                 final forward = position + 100;
@@ -317,32 +372,15 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                 ),
               ),
             ),
-            child: Card(
-              child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                child: Center(
-                  child: Text(
-                    items[index],
-                    style: GoogleFonts.roboto(fontSize: 15),
-                  ),
-                ),
-              ),
+            child: _buildChild(
+              value: items[index],
             ),
             onDragCompleted: () {
               items.remove(items[index]);
               _controller.update(["todosList"]);
             },
-            // onDragStarted: () {
-            //   isDragging = true;
-            //    _controller.update(["todosList"]);
-            // },
-            // onDragEnd: (value) {
-            //   isDragging = false;
-            //    _controller.update(["todosList"]);
-            // },
           )
-        : const SizedBox();
+        : _buildChild(value: items[index]);
   }
 
   Widget buildDragTargets(
@@ -353,13 +391,16 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     return DragTarget<String>(
       builder: (context, candidates, rejects) {
         return candidates.isNotEmpty
-            ? _buildDropPreview(context, candidates.first!)
+            ? _buildChild(
+                value: candidates.first!,
+                color: Colors.lightBlue[200]!,
+              )
             : const SizedBox(
                 width: 5,
                 height: 5,
               );
       },
-      onWillAccept: (value) => !items.contains(value),
+      // onWillAccept: (value) => !items.contains(value),
       onAccept: (value) {
         items.insert(index + 1, value);
         _controller.update(["todosList"]);
@@ -367,9 +408,9 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     );
   }
 
-  Widget _buildDropPreview(BuildContext context, String value) {
+  Widget _buildChild({required String value, Color color = Colors.white}) {
     return Card(
-      color: Colors.lightBlue[200],
+      color: color,
       child: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(10),
