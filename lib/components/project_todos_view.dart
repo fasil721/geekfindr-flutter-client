@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
+import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -40,33 +41,76 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
   bool isDragging = false;
   bool isEditing = false;
   ScrollController? scrollController = ScrollController();
+  final projectServices = ProjectServices();
+  @override
+  void initState() {
+    todos = widget.projuctDetials.todo!;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-    todos = widget.projuctDetials.todo!;
+
     // print("hiiiii");
     // print(todos.map((e) => e.title));
-    return Container(
-      margin: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Status",
-            style: GoogleFonts.poppins(
-              fontSize: textFactor * 18,
-              fontWeight: FontWeight.w600,
-              color: black,
-            ),
-          ),
-          const Divider(thickness: 1.5),
-          GetBuilder<AppController>(
-            id: "todosList",
-            builder: (_controller) {
-              return SizedBox(
+    return GetBuilder<AppController>(
+      id: "todosList",
+      builder: (_controller) {
+        return Container(
+          margin: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Status",
+                    style: GoogleFonts.poppins(
+                      fontSize: textFactor * 18,
+                      fontWeight: FontWeight.w600,
+                      color: black,
+                    ),
+                  ),
+                  Visibility(
+                    visible: widget.myRole == admin,
+                    child: isEditing
+                        ? IconButton(
+                            splashRadius: 25,
+                            onPressed: () {
+                              isEditing = false;
+                              _controller.update(["todosList"]);
+                              projectServices.updateProjectTodos(
+                                projectId: widget.projuctDetials.id!,
+                                todos: todos,
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.check,
+                              size: 22,
+                              color: primaryColor,
+                            ),
+                          )
+                        : IconButton(
+                            splashRadius: 25,
+                            onPressed: () {
+                              isEditing = true;
+                              _controller.update(["todosList"]);
+                            },
+                            icon: Icon(
+                              Icons.edit,
+                              size: 22,
+                              color: black.withOpacity(0.6),
+                            ),
+                          ),
+                  ),
+                ],
+              ),
+              const Divider(thickness: 1.5),
+              SizedBox(
                 height: height,
                 child: Scrollbar(
                   scrollbarOrientation: ScrollbarOrientation.top,
@@ -181,129 +225,13 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                     ),
                   ),
                 ),
-              );
-            },
+              ),
+            ],
           ),
-          // GetBuilder<AppController>(
-          //   id: "todosList",
-          //   builder: (_controller) {
-          //     return Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         Text(
-          //           noStatus,
-          //           style: GoogleFonts.poppins(
-          //             fontSize: textFactor * 15,
-          //             fontWeight: FontWeight.w600,
-          //             color: black,
-          //           ),
-          //         ),
-          //         SizedBox(height: height * 0.01),
-          //         SizedBox(
-          //           height: height * 0.06,
-          //           child: SingleChildScrollView(
-          //             scrollDirection: Axis.horizontal,
-          //             child: Row(
-          //               children: [
-          //                 Visibility(
-          //                   visible: isDragging,
-          //                   child: buildListDragTarget(noStatusList),
-          //                 ),
-          //                 ListView.separated(
-          //                   scrollDirection: Axis.horizontal,
-          //                   shrinkWrap: true,
-          //                   physics: const BouncingScrollPhysics(),
-          //                   itemBuilder: (context, index) =>
-          //                       buildDraggableItems(
-          //                     context,
-          //                     index,
-          //                     noStatusList,
-          //                   ),
-          //                   separatorBuilder: (context, index) =>
-          //                       buildDragTargets(
-          //                     context,
-          //                     index,
-          //                     noStatusList,
-          //                   ), // const SizedBox(width: 5),
-          //                   itemCount: noStatusList.length,
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //         SizedBox(height: height * 0.01),
-          //         Text(
-          //           nextUp,
-          //           style: GoogleFonts.poppins(
-          //             fontSize: textFactor * 15,
-          //             fontWeight: FontWeight.w600,
-          //             color: black,
-          //           ),
-          //         ),
-          //         SizedBox(height: height * 0.01),
-          //         SizedBox(
-          //           height: height * 0.06,
-          //           child: SingleChildScrollView(
-          //             scrollDirection: Axis.horizontal,
-          //             child: Row(
-          //               children: [
-          //                 Visibility(
-          //                   visible: isDragging,
-          //                   child: buildListDragTarget(nextUpList),
-          //                 ),
-          //                 ListView.separated(
-          //                   scrollDirection: Axis.horizontal,
-          //                   shrinkWrap: true,
-          //                   physics: const BouncingScrollPhysics(),
-          //                   itemBuilder: (context, index) =>
-          //                       buildDraggableItems(
-          //                     context,
-          //                     index,
-          //                     nextUpList,
-          //                   ),
-          //                   separatorBuilder: (context, index) =>
-          //                       buildDragTargets(
-          //                     context,
-          //                     index,
-          //                     nextUpList,
-          //                   ), //  const SizedBox(width: 5),
-          //                   itemCount: nextUpList.length,
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     );
-          //   },
-          // ),
-        ],
-      ),
+        );
+      },
     );
   }
-
-  // Widget buildListDragTarget(List<String> items) => DragTarget<String>(
-  //       builder: (context, candidates, rejects) {
-  //         return candidates.isNotEmpty
-  //             ? _buildDropPreview(
-  //                 context,
-  //                 candidates.first!,
-  //               )
-  //             : const Card(
-  //                 color: white,
-  //                 child: SizedBox(
-  //                   width: 50,
-  //                   height: 50,
-  //                   child: Icon(Icons.add),
-  //                 ),
-  //               );
-  //       },
-  //       onWillAccept: (value) => !items.contains(value),
-  //       onAccept: (value) {
-  //         items.insert(0, value);
-  //         _controller.update(["todosList"]);
-  //       },
-  //     );
 
   Widget buildDraggableItems(
     BuildContext context,
