@@ -14,7 +14,6 @@ class ProjectView extends StatefulWidget {
     Key? key,
     required this.projectId,
   }) : super(key: key);
-
   final String projectId;
 
   @override
@@ -22,15 +21,18 @@ class ProjectView extends StatefulWidget {
 }
 
 class _ProjectViewState extends State<ProjectView> {
-
   final _myProjects = ProjectServices();
+  final _controller = Get.find<AppController>();
   int _currentIndex = 0;
+  double width = 0;
+  double height = 0;
+  double textFactor = 0;
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return GetBuilder<AppController>(
       id: "projectView",
       builder: (controller) {
@@ -50,9 +52,6 @@ class _ProjectViewState extends State<ProjectView> {
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
                       controller.update(["projectView"]);
-                      // print(
-                      //   projectDetials.todo!.map((e) => e.tasks!.map((e) => e)),
-                      // );
                     },
                   ),
                   backgroundColor: secondaryColor,
@@ -106,8 +105,8 @@ class _ProjectViewState extends State<ProjectView> {
                     ],
                   ),
                   body: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(height: height * 0.02),
                         Container(
@@ -145,77 +144,7 @@ class _ProjectViewState extends State<ProjectView> {
                           builder: (controller) {
                             return Column(
                               children: [
-                                DefaultTabController(
-                                  // initialIndex: 0,
-                                  length: categories.length,
-                                  child: TabBar(
-                                    // isScrollable: true,
-                                    indicatorColor: Colors.blue,
-                                    physics: const BouncingScrollPhysics(),
-                                    indicatorWeight: .0001,
-                                    onTap: (index) {
-                                      _currentIndex = index;
-                                      controller.update(["projtabs"]);
-                                    },
-                                    tabs: [
-                                      ...categories.map(
-                                        (element) => Container(
-                                          width: width * 0.3,
-                                          height: height * 0.085,
-                                          // margin: const EdgeInsets.symmetric(vertical: 5),
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 5,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: categories[_currentIndex] ==
-                                                    element
-                                                ? primaryColor
-                                                : white,
-                                            // boxShadow: shadowList,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Tab(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Image.asset(
-                                                  element["iconPath"] as String,
-                                                  height: 30,
-                                                  width: 30,
-                                                  color: categories[
-                                                              _currentIndex] ==
-                                                          element
-                                                      ? white
-                                                      : Colors.grey[700],
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                    top: 3,
-                                                  ),
-                                                  child: Text(
-                                                    element['name'] as String,
-                                                    style: GoogleFonts.poppins(
-                                                      color: categories[
-                                                                  _currentIndex] ==
-                                                              element
-                                                          ? white
-                                                          : Colors.grey[700],
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: textFactor * 11,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                buildTabbar(),
                                 IndexedStack(
                                   index: _currentIndex,
                                   children: [
@@ -266,6 +195,67 @@ class _ProjectViewState extends State<ProjectView> {
           },
         );
       },
+    );
+  }
+
+  Widget buildTabbar() {
+    return DefaultTabController(
+      length: categories.length,
+      child: TabBar(
+        indicatorColor: Colors.blue,
+        physics: const BouncingScrollPhysics(),
+        indicatorWeight: .0001,
+        onTap: (index) {
+          _currentIndex = index;
+          _controller.update(["projtabs"]);
+        },
+        tabs: [
+          ...categories.map(
+            (element) => Container(
+              width: width * 0.3,
+              height: height * 0.085,
+              padding: const EdgeInsets.symmetric(
+                vertical: 5,
+              ),
+              decoration: BoxDecoration(
+                color:
+                    categories[_currentIndex] == element ? primaryColor : white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Tab(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      element["iconPath"] as String,
+                      height: 30,
+                      width: 30,
+                      color: categories[_currentIndex] == element
+                          ? white
+                          : Colors.grey[700],
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                        top: 3,
+                      ),
+                      child: Text(
+                        element['name'] as String,
+                        style: GoogleFonts.poppins(
+                          color: categories[_currentIndex] == element
+                              ? white
+                              : Colors.grey[700],
+                          fontWeight: FontWeight.w500,
+                          fontSize: textFactor * 11,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

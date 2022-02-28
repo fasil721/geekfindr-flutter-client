@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/edit_description_dialoge.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProjectInfoView extends StatelessWidget {
-   ProjectInfoView({
+   const ProjectInfoView({
     Key? key,
     required this.projuctDetials,
     required this.myRole,
   }) : super(key: key);
   final ProjectDataModel projuctDetials;
   final String myRole;
-  final _controller = Get.find<AppController>();
 
   @override
   Widget build(BuildContext context) {

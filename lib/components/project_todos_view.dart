@@ -35,19 +35,19 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     "harri",
     "",
   ];
-  final controller = Get.find<AppController>();
-  List<String> inProgressList = [];
-  List<String> completedList = [];
+  final _controller = Get.find<AppController>();
+  List<Todo> todos = [];
   bool isDragging = false;
+  ScrollController? scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    // final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-    // final myRole = findMyRole(widget.projuctDetials.team!);
-    final todos = widget.projuctDetials.todo!;
-    print(todos);
+    todos = widget.projuctDetials.todo!;
+    print("hiiiii");
+    print(todos.map((e) => e.title));
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
@@ -62,136 +62,231 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
             ),
           ),
           const Divider(thickness: 1.5),
-          Text(
-            noStatus,
-            style: GoogleFonts.poppins(
-              fontSize: textFactor * 15,
-              fontWeight: FontWeight.w600,
-              color: black,
-            ),
-          ),
-          SizedBox(height: height * 0.01),
           GetBuilder<AppController>(
             id: "todosList",
-            builder: (controller) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: height * 0.06,
-                    child: SingleChildScrollView(
+            builder: (_controller) {
+              return SizedBox(
+                height: height,
+                child: Scrollbar(
+                  scrollbarOrientation: ScrollbarOrientation.top,
+                  showTrackOnHover: true,
+                  controller: scrollController,
+                  isAlwaysShown: true,
+                  child: ScrollConfiguration(
+                    behavior:
+                        const ScrollBehavior().copyWith(overscroll: false),
+                    child: ListView.builder(
+                      controller: scrollController,
+                      itemCount: todos.length,
+                      shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Visibility(
-                            visible: isDragging,
-                            child: buildListDragTarget(noStatusList),
+                      itemBuilder: (context, index1) {
+                        final tasks = todos[index1].tasks!;
+                        return Container(
+                          alignment: Alignment.topCenter,
+                          width: width * 0.4,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Text(
+                                  todos[index1].title!,
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                    color: black,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: (height * 0.06) * tasks.length,
+                                child: ListView.separated(
+                                  itemCount: tasks.length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index2) =>
+                                      buildDraggableItems(
+                                    context,
+                                    index2,
+                                    tasks,
+                                    width,
+                                  ),
+                                  separatorBuilder: (context, index2) =>
+                                      buildDragTargets(
+                                    context,
+                                    index2,
+                                    tasks,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) =>
-                                buildDraggableItems(
-                              context,
-                              index,
-                              noStatusList,
-                            ),
-                            separatorBuilder: (context, index) =>
-                                buildDragTargets(
-                              context,
-                              index,
-                              noStatusList,
-                            ), // const SizedBox(width: 5),
-                            itemCount: noStatusList.length,
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                   ),
-                  SizedBox(height: height * 0.01),
-                  Text(
-                    nextUp,
-                    style: GoogleFonts.poppins(
-                      fontSize: textFactor * 15,
-                      fontWeight: FontWeight.w600,
-                      color: black,
-                    ),
-                  ),
-                  SizedBox(height: height * 0.01),
-                  SizedBox(
-                    height: height * 0.06,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Visibility(
-                            visible: isDragging,
-                            child: buildListDragTarget(nextUpList),
-                          ),
-                          ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) =>
-                                buildDraggableItems(
-                              context,
-                              index,
-                              nextUpList,
-                            ),
-                            separatorBuilder: (context, index) =>
-                                buildDragTargets(
-                              context,
-                              index,
-                              nextUpList,
-                            ), //  const SizedBox(width: 5),
-                            itemCount: nextUpList.length,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               );
             },
           ),
-          SizedBox(height: height * 0.01),
+          // GetBuilder<AppController>(
+          //   id: "todosList",
+          //   builder: (_controller) {
+          //     return Column(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Text(
+          //           noStatus,
+          //           style: GoogleFonts.poppins(
+          //             fontSize: textFactor * 15,
+          //             fontWeight: FontWeight.w600,
+          //             color: black,
+          //           ),
+          //         ),
+          //         SizedBox(height: height * 0.01),
+          //         SizedBox(
+          //           height: height * 0.06,
+          //           child: SingleChildScrollView(
+          //             scrollDirection: Axis.horizontal,
+          //             child: Row(
+          //               children: [
+          //                 Visibility(
+          //                   visible: isDragging,
+          //                   child: buildListDragTarget(noStatusList),
+          //                 ),
+          //                 ListView.separated(
+          //                   scrollDirection: Axis.horizontal,
+          //                   shrinkWrap: true,
+          //                   physics: const BouncingScrollPhysics(),
+          //                   itemBuilder: (context, index) =>
+          //                       buildDraggableItems(
+          //                     context,
+          //                     index,
+          //                     noStatusList,
+          //                   ),
+          //                   separatorBuilder: (context, index) =>
+          //                       buildDragTargets(
+          //                     context,
+          //                     index,
+          //                     noStatusList,
+          //                   ), // const SizedBox(width: 5),
+          //                   itemCount: noStatusList.length,
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //         ),
+          //         SizedBox(height: height * 0.01),
+          //         Text(
+          //           nextUp,
+          //           style: GoogleFonts.poppins(
+          //             fontSize: textFactor * 15,
+          //             fontWeight: FontWeight.w600,
+          //             color: black,
+          //           ),
+          //         ),
+          //         SizedBox(height: height * 0.01),
+          //         SizedBox(
+          //           height: height * 0.06,
+          //           child: SingleChildScrollView(
+          //             scrollDirection: Axis.horizontal,
+          //             child: Row(
+          //               children: [
+          //                 Visibility(
+          //                   visible: isDragging,
+          //                   child: buildListDragTarget(nextUpList),
+          //                 ),
+          //                 ListView.separated(
+          //                   scrollDirection: Axis.horizontal,
+          //                   shrinkWrap: true,
+          //                   physics: const BouncingScrollPhysics(),
+          //                   itemBuilder: (context, index) =>
+          //                       buildDraggableItems(
+          //                     context,
+          //                     index,
+          //                     nextUpList,
+          //                   ),
+          //                   separatorBuilder: (context, index) =>
+          //                       buildDragTargets(
+          //                     context,
+          //                     index,
+          //                     nextUpList,
+          //                   ), //  const SizedBox(width: 5),
+          //                   itemCount: nextUpList.length,
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     );
+          //   },
+          // ),
         ],
       ),
     );
   }
 
-  Widget buildListDragTarget(List<String> items) => DragTarget<String>(
-        builder: (context, candidates, rejects) {
-          return candidates.isNotEmpty
-              ? _buildDropPreview(
-                  context,
-                  candidates.first!,
-                )
-              : const Card(
-                  color: white,
-                  child: SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Icon(Icons.add),
-                  ),
-                );
-        },
-        onWillAccept: (value) => !items.contains(value),
-        onAccept: (value) {
-          items.insert(0, value);
-          controller.update(["todosList"]);
-        },
-      );
+  // Widget buildListDragTarget(List<String> items) => DragTarget<String>(
+  //       builder: (context, candidates, rejects) {
+  //         return candidates.isNotEmpty
+  //             ? _buildDropPreview(
+  //                 context,
+  //                 candidates.first!,
+  //               )
+  //             : const Card(
+  //                 color: white,
+  //                 child: SizedBox(
+  //                   width: 50,
+  //                   height: 50,
+  //                   child: Icon(Icons.add),
+  //                 ),
+  //               );
+  //       },
+  //       onWillAccept: (value) => !items.contains(value),
+  //       onAccept: (value) {
+  //         items.insert(0, value);
+  //         _controller.update(["todosList"]);
+  //       },
+  //     );
 
   Widget buildDraggableItems(
     BuildContext context,
     int index,
     List<String> items,
+    double width,
   ) {
+    // double forward = 0;
+    // double backward = 0;
+
     return items[index].isNotEmpty
         ? Draggable<String>(
             data: items[index],
+            onDragUpdate: (val) {
+              final movement = val.localPosition.dx;
+              if ((width - 100) < movement &&
+                  movement !=
+                      (scrollController!.position.maxScrollExtent - 50)) {
+                final forward = scrollController!.position.pixels + 200;
+                scrollController!.animateTo(
+                  forward,
+                  curve: Curves.easeOut,
+                  duration: const Duration(milliseconds: 1000),
+                );
+              }
+              // if (100 > movement && movement != 0.0) {
+              //   // print(val.localPosition.dx);
+              //   final move = 100 - movement;
+              //   if (a > move) {
+              //     a = move;
+              //     scrollController!.animateTo(
+              //       a * 10,
+              //       curve: Curves.easeOut,
+              //       duration: const Duration(milliseconds: 500),
+              //     );
+              //   }
+              // }
+            },
             feedback: Card(
               child: Padding(
                 padding: const EdgeInsets.all(10),
@@ -233,15 +328,15 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
             ),
             onDragCompleted: () {
               items.remove(items[index]);
-              controller.update(["todosList"]);
+              _controller.update(["todosList"]);
             },
             // onDragStarted: () {
             //   isDragging = true;
-            //   controller.update(["todosList"]);
+            //    _controller.update(["todosList"]);
             // },
             // onDragEnd: (value) {
             //   isDragging = false;
-            //   controller.update(["todosList"]);
+            //    _controller.update(["todosList"]);
             // },
           )
         : const SizedBox();
@@ -264,7 +359,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
       // onWillAccept: (value) => !items.contains(value),
       onAccept: (value) {
         items.insert(index + 1, value);
-        controller.update(["todosList"]);
+        _controller.update(["todosList"]);
       },
     );
   }

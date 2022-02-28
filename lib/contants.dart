@@ -39,14 +39,6 @@ List<Map> categories = [
   {'name': 'Tasks', 'iconPath': 'assets/icons/to-do-list.png'},
 ];
 
-List<BoxShadow> shadowList = [
-  const BoxShadow(
-    color: Colors.grey,
-    blurRadius: 5,
-    offset: Offset(5, 5),
-  )
-];
-
 String findDatesDifferenceFromToday(DateTime dateTime) {
   final today = DateTime.now();
   final diff = dateTime.difference(today);

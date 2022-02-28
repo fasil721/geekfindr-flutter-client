@@ -27,11 +27,12 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     with TickerProviderStateMixin {
   TabController? tabController;
   int currentIndex = 0;
-  final controller = Get.find<AppController>();
+  final _controller = Get.find<AppController>();
   int followersCount = 0;
-  final box = Boxes.getInstance();
+  final _box = Boxes.getInstance();
   final postServices = PostServices();
   final profileServices = ProfileServices();
+
   @override
   void initState() {
     super.initState();
@@ -47,7 +48,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-    final currentUser = box.get("user");
+    final currentUser = _box.get("user");
     
     return FutureBuilder<UserProfileModel?>(
       future: profileServices.getUserProfilebyId(id: widget.userId),
@@ -464,7 +465,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               isScrollable: true,
                               onTap: (index) {
                                 currentIndex = index;
-                                controller.update(["tabs2"]);
+                                _controller.update(["tabs2"]);
                               },
                               tabs: const [
                                 Tab(

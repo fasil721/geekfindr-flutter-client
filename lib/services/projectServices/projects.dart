@@ -24,7 +24,7 @@ class ProjectServices {
           "Authorization": "Bearer ${user!.token}",
         },
       );
-
+      print(response.statusCode);
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
         final datas = jsonData
@@ -68,6 +68,7 @@ class ProjectServices {
           "Authorization": "Bearer ${user!.token}",
         },
       );
+      print(response.statusCode);
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as Map;
         final datas =
@@ -109,9 +110,9 @@ class ProjectServices {
         },
         body: json.encode(body),
       );
+      print(response.statusCode);
       if (response.statusCode == 200) {
-        controller.update(["projectList"]);
-        // controller.update(["projectView"]);
+        controller.update(["projectList", "projectView"]);
         Get.back();
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
