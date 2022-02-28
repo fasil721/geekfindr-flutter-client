@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
@@ -20,37 +21,46 @@ class ProjectTodosView extends StatefulWidget {
 }
 
 class _ProjectTodosViewState extends State<ProjectTodosView> {
-  List<String> noStatusList = [
-    "",
-    "haRi",
-    "heDDllo",
-    "hello",
-    "hai",
-    "",
-  ];
-  List<String> nextUpList = [
-    "",
-    "hhnai",
-    "hauyi",
-    "hettllo",
-    "harri",
-    "",
-  ];
   final _controller = Get.find<AppController>();
+  final scrollController = ScrollController();
+  final textController = TextEditingController();
+  final projectServices = ProjectServices();
   List<Todo> todos = [];
   bool isDragging = false;
   bool isEditing = false;
-  ScrollController? scrollController = ScrollController();
-  final projectServices = ProjectServices();
+  double width = 0.0;
+
   @override
   void initState() {
     todos = widget.projuctDetials.todo!;
     super.initState();
   }
 
+  void autoScroll(DragUpdateDetails val) {
+    final movement = val.localPosition.dx;
+    final position = scrollController.position.pixels;
+    // final positionMax = scrollController!.position.maxScrollExtent;
+    if ((width - 75) < movement && position < movement) {
+      final forward = position + 150;
+      scrollController.animateTo(
+        forward,
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 250),
+      );
+    }
+    if (75 > movement && position > movement) {
+      final backward = position - 150;
+      scrollController.animateTo(
+        backward,
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 250),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return GetBuilder<AppController>(
@@ -74,8 +84,30 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                   ),
                   Visibility(
                     visible: widget.myRole == owner,
-                    child: isEditing
-                        ? IconButton(
+                    child: Row(
+                      children: [
+                        Visibility(
+                          visible: isEditing,
+                          child: IconButton(
+                            splashRadius: 25,
+                            onPressed: () {
+                              Get.dialog(
+                                _buildTextFieldDialoge(
+                                  hintText: "Add title",
+                                  isTitle: true,
+                                ),
+                              );
+                              // _controller.update(["todosList"]);
+                            },
+                            icon: Icon(
+                              Icons.add,
+                              size: 25,
+                              color: black,
+                            ),
+                          ),
+                        ),
+                        if (isEditing)
+                          IconButton(
                             splashRadius: 25,
                             onPressed: () {
                               isEditing = false;
@@ -91,7 +123,8 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                               color: primaryColor,
                             ),
                           )
-                        : IconButton(
+                        else
+                          IconButton(
                             splashRadius: 25,
                             onPressed: () {
                               isEditing = true;
@@ -103,10 +136,15 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                               color: black.withOpacity(0.6),
                             ),
                           ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const Divider(thickness: 1.5),
+              Visibility(
+                visible: todos.length < 3,
+                child: const Divider(thickness: 1.5),
+              ),
               SizedBox(
                 height: height,
                 child: Scrollbar(
@@ -207,21 +245,42 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                       _controller.update(["todosList"]);
                                     },
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "New",
-                                          style: GoogleFonts.roboto(),
-                                        ),
-                                        SizedBox(width: width * 0.01),
-                                        Icon(Icons.add, color: black)
-                                      ],
+                                  Visibility(
+                                    visible: isEditing,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "New",
+                                            style: GoogleFonts.roboto(),
+                                          ),
+                                          SizedBox(width: width * 0.01),
+                                          IconButton(
+                                            splashRadius: 25,
+                                            onPressed: () {
+                                              print(
+                                                  todos[index1].tasks!.length);
+                                              Get.dialog(
+                                                _buildTextFieldDialoge(
+                                                  hintText: "Add task",
+                                                  index: index1,
+                                                  items: todos[index1].tasks!,
+                                                ),
+                                              );
+                                            },
+                                            icon: Icon(
+                                              Icons.add,
+                                              color: black,
+                                              size: 20,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   )
                                 ],
@@ -251,26 +310,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
         ? Draggable<String>(
             data: items[index],
             onDragUpdate: (val) {
-              final movement = val.localPosition.dx;
-              final position = scrollController!.position.pixels;
-              // final positionMax = scrollController!.position.maxScrollExtent;
-
-              if ((width - 75) < movement && position < movement) {
-                final forward = position + 100;
-                scrollController!.animateTo(
-                  forward,
-                  curve: Curves.easeOut,
-                  duration: const Duration(milliseconds: 250),
-                );
-              }
-              if (75 > movement && position > movement) {
-                final backward = position - 100;
-                scrollController!.animateTo(
-                  backward,
-                  curve: Curves.easeOut,
-                  duration: const Duration(milliseconds: 250),
-                );
-              }
+              autoScroll(val);
             },
             feedback: Card(
               child: SizedBox(
@@ -351,6 +391,94 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextFieldDialoge({
+    int index = 0,
+    List<String> items = const [],
+    required String hintText,
+    bool isTitle = false,
+  }) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: width * 0.8,
+          child: Material(
+            borderRadius: BorderRadius.circular(
+              20,
+            ),
+            color: Colors.white,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(
+                    10.0,
+                  ),
+                  child: TextField(
+                    controller: textController,
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.text,
+                    minLines: 1,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: hintText,
+                      filled: true,
+                      fillColor: white,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all<double>(3),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(primaryColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  onPressed: () async {
+                    await SystemChannels.textInput
+                        .invokeMethod("TextInput.hide");
+                    if (isTitle) {
+                      if (textController.text.isNotEmpty) {
+                        final _todo = Todo();
+                        _todo.title = textController.text;
+                        _todo.tasks = [];
+                        todos.add(_todo);
+                        projectServices.updateProjectTodos(
+                          projectId: widget.projuctDetials.id!,
+                          todos: todos,
+                        );
+                        _controller.update(["todosList"]);
+                        Get.back();
+                      }
+                    } else {
+                      items.add(textController.text);
+                      todos[index].tasks = items;
+                      projectServices.updateProjectTodos(
+                        projectId: widget.projuctDetials.id!,
+                        todos: todos,
+                      );
+                      _controller.update(["todosList"]);
+                      Get.back();
+                      // isEditing = true;
+                    }
+                  },
+                  child: const Text("Save"),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
