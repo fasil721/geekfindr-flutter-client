@@ -46,8 +46,8 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     todos = widget.projuctDetials.todo!;
-    print("hiiiii");
-    print(todos.map((e) => e.title));
+    // print("hiiiii");
+    // print(todos.map((e) => e.title));
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
@@ -99,7 +99,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                 ),
                               ),
                               SizedBox(
-                                height: (height * 0.06) * tasks.length,
+                                height: (height * 0.1) * tasks.length,
                                 child: ListView.separated(
                                   itemCount: tasks.length,
                                   shrinkWrap: true,
@@ -256,22 +256,22 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     List<String> items,
     double width,
   ) {
-    // double forward = 0;
-    // double backward = 0;
-
     return items[index].isNotEmpty
         ? Draggable<String>(
             data: items[index],
             onDragUpdate: (val) {
               final movement = val.localPosition.dx;
-              if ((width - 100) < movement &&
-                  movement !=
-                      (scrollController!.position.maxScrollExtent - 50)) {
-                final forward = scrollController!.position.pixels + 200;
+              final position = scrollController!.position.pixels;
+              final positionMax = scrollController!.position.maxScrollExtent;
+
+              if ((width - 50) < movement &&
+                  movement != (positionMax - 50) &&
+                  position < movement) {
+                final forward = position + 100;
                 scrollController!.animateTo(
                   forward,
                   curve: Curves.easeOut,
-                  duration: const Duration(milliseconds: 1000),
+                  duration: const Duration(milliseconds: 250),
                 );
               }
               // if (100 > movement && movement != 0.0) {
@@ -288,12 +288,15 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
               // }
             },
             feedback: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Center(
-                  child: Text(
-                    items[index],
-                    style: GoogleFonts.roboto(fontSize: 15),
+              child: SizedBox(
+                width: width * 0.38,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Center(
+                    child: Text(
+                      items[index],
+                      style: GoogleFonts.roboto(fontSize: 15),
+                    ),
                   ),
                 ),
               ),
@@ -356,7 +359,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                 height: 5,
               );
       },
-      // onWillAccept: (value) => !items.contains(value),
+      onWillAccept: (value) => !items.contains(value),
       onAccept: (value) {
         items.insert(index + 1, value);
         _controller.update(["todosList"]);
