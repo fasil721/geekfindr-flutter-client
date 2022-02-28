@@ -253,11 +253,9 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
             onDragUpdate: (val) {
               final movement = val.localPosition.dx;
               final position = scrollController!.position.pixels;
-              final positionMax = scrollController!.position.maxScrollExtent;
+              // final positionMax = scrollController!.position.maxScrollExtent;
 
-              if ((width - 75) < movement &&
-                  movement != (positionMax - 50) &&
-                  position < movement) {
+              if ((width - 75) < movement && position < movement) {
                 final forward = position + 100;
                 scrollController!.animateTo(
                   forward,
@@ -265,18 +263,14 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                   duration: const Duration(milliseconds: 250),
                 );
               }
-              // if (100 > movement && movement != 0.0) {
-              //   // print(val.localPosition.dx);
-              //   final move = 100 - movement;
-              //   if (a > move) {
-              //     a = move;
-              //     scrollController!.animateTo(
-              //       a * 10,
-              //       curve: Curves.easeOut,
-              //       duration: const Duration(milliseconds: 500),
-              //     );
-              //   }
-              // }
+              if (75 > movement && position > movement) {
+                final backward = position - 100;
+                scrollController!.animateTo(
+                  backward,
+                  curve: Curves.easeOut,
+                  duration: const Duration(milliseconds: 250),
+                );
+              }
             },
             feedback: Card(
               child: SizedBox(
