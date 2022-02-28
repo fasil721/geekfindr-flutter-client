@@ -280,7 +280,6 @@ class ProjectServices {
         },
         body: json.encode(body),
       );
-
       print(response.statusCode);
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "changes have been saved");

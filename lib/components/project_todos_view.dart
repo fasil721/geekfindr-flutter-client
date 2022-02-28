@@ -53,9 +53,6 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-
-    // print("hiiiii");
-    // print(todos.map((e) => e.title));
     return GetBuilder<AppController>(
       id: "todosList",
       builder: (_controller) {
@@ -76,7 +73,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                     ),
                   ),
                   Visibility(
-                    visible: widget.myRole == admin,
+                    visible: widget.myRole == owner,
                     child: isEditing
                         ? IconButton(
                             splashRadius: 25,
@@ -121,14 +118,13 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                     behavior:
                         const ScrollBehavior().copyWith(overscroll: false),
                     child: ListView.builder(
+                      padding: const EdgeInsets.only(top: 10),
                       controller: scrollController,
                       itemCount: todos.length,
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index1) {
                         final tasks = todos[index1].tasks!;
-                        // tasks.insert(0, "");
-                        // tasks.insert(todos[index1].tasks!.length, "");
                         return Container(
                           alignment: Alignment.topCenter,
                           width: width * 0.4,
@@ -156,38 +152,40 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                             )
                                           : SizedBox(
                                               width: width * 0.4,
-                                              height: 5,
+                                              height: 1,
                                             );
                                     },
                                     // onWillAccept: (value) =>
                                     //     !tasks[index1].contains(value!),
                                     onAccept: (value) {
-                                      // print(todos[index1].tasks!.last);
                                       todos[index1].tasks!.insert(0, value);
                                       _controller.update(["todosList"]);
                                     },
                                   ),
                                   SizedBox(
-                                    height: (height * 0.09) * tasks.length,
-                                    child: ListView.separated(
-                                      itemCount: tasks.length,
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index2) =>
-                                          buildDraggableItems(
-                                        context,
-                                        index2,
-                                        tasks,
-                                        width,
-                                      ),
-                                      separatorBuilder: (context, index2) =>
-                                          buildDragTargets(
-                                        context,
-                                        index2,
-                                        tasks,
-                                      ),
+                                    height: height * 0.005,
+                                  ),
+                                  ListView.separated(
+                                    itemCount: tasks.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index2) =>
+                                        buildDraggableItems(
+                                      context,
+                                      index2,
+                                      tasks,
+                                      width,
                                     ),
+                                    separatorBuilder: (context, index2) =>
+                                        buildDragTargets(
+                                      context,
+                                      index2,
+                                      tasks,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: height * 0.005,
                                   ),
                                   DragTarget<String>(
                                     builder: (context, candidates, rejects) {
@@ -198,17 +196,10 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                             )
                                           : SizedBox(
                                               width: width * 0.4,
-                                              height: 10,
+                                              height: 1,
                                             );
                                     },
-                                    // onWillAccept: (value) {
-                                    //   if (tasks.isNotEmpty) {
-                                    //     return !tasks[index1].contains(value!);
-                                    //   }
-                                    //   return true;
-                                    // },
                                     onAccept: (value) {
-                                      // print(todos[index1].tasks!.last);
                                       todos[index1].tasks!.insert(
                                             todos[index1].tasks!.length,
                                             value,
@@ -216,6 +207,23 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                       _controller.update(["todosList"]);
                                     },
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "New",
+                                          style: GoogleFonts.roboto(),
+                                        ),
+                                        SizedBox(width: width * 0.01),
+                                        Icon(Icons.add, color: black)
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             ],

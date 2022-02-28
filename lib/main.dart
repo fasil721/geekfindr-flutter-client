@@ -7,6 +7,7 @@ import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/test.dart';
 import 'package:geek_findr/theme.dart';
+import 'package:geek_findr/views/chat_page.dart';
 import 'package:geek_findr/views/home_page.dart';
 import 'package:geek_findr/views/login_page.dart';
 import 'package:geek_findr/views/profile_page.dart';
@@ -55,7 +56,7 @@ class _MyAppState extends State<MyApp> {
     final screens = [
       HomePage(),
       MyProjectList(),
-      Drags(),
+      ChatPage(),
       ProfilePage(),
     ];
     return GetBuilder<AppController>(
