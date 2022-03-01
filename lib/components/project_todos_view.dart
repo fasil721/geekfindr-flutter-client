@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
@@ -23,7 +24,7 @@ class ProjectTodosView extends StatefulWidget {
 class _ProjectTodosViewState extends State<ProjectTodosView> {
   final _controller = Get.find<AppController>();
   final scrollController = ScrollController();
-  final textController = TextEditingController();
+
   final projectServices = ProjectServices();
   List<Todo> todos = [];
   bool isDragging = false;
@@ -173,8 +174,9 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                   if (isEditing) {
                                     Get.dialog(
                                       _buildEditDeleteDialoge(
+                                        isTitle: true,
                                         index1: index1,
-                                        text: '',
+                                        text: todos[index1].title!,
                                       ),
                                     );
                                   }
@@ -222,16 +224,17 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                         const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index2) =>
                                         buildDraggableItems(
-                                      context,
-                                      index2,
-                                      tasks,
-                                      width,
+                                      context: context,
+                                      index2: index2,
+                                      index1: index1,
+                                      items: tasks,
+                                      width: width,
                                     ),
                                     separatorBuilder: (context, index2) =>
                                         buildDragTargets(
-                                      context,
-                                      index2,
-                                      tasks,
+                                      context: context,
+                                      index2: index2,
+                                      items: tasks,
                                     ),
                                   ),
                                   SizedBox(
@@ -278,8 +281,9 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                               Get.dialog(
                                                 _buildTextFieldDialoge(
                                                   hintText: "Add task",
-                                                  index: index1,
+                                                  index1: index1,
                                                   items: todos[index1].tasks!,
+                                                  isTask: true,
                                                 ),
                                               );
                                             },
@@ -310,64 +314,78 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     );
   }
 
-  Widget buildDraggableItems(
-    BuildContext context,
-    int index,
-    List<String> items,
-    double width,
-  ) {
+  Widget buildDraggableItems({
+    required BuildContext context,
+    required int index2,
+    required int index1,
+    required List<String> items,
+    required double width,
+  }) {
     return isEditing
-        ? Draggable<String>(
-            data: items[index],
-            onDragUpdate: (val) {
-              autoScroll(val);
+        ? GestureDetector(
+            onLongPress: () {
+              Get.dialog(
+                _buildEditDeleteDialoge(
+                  isTitle: false,
+                  index1: index1,
+                  text: items[index2],
+                  index2: index2,
+                  items: items,
+                ),
+              );
             },
-            feedback: Card(
-              child: SizedBox(
-                width: width * 0.38,
-                child: Padding(
+            child: Draggable<String>(
+              data: items[index2],
+              onDragUpdate: (val) {
+                autoScroll(val);
+              },
+              feedback: Card(
+                child: SizedBox(
+                  width: width * 0.38,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Center(
+                      child: Text(
+                        items[index2],
+                        style: GoogleFonts.roboto(fontSize: 15),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              childWhenDragging: Card(
+                color: Colors.transparent,
+                child: Container(
+                  alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
                   child: Center(
                     child: Text(
-                      items[index],
-                      style: GoogleFonts.roboto(fontSize: 15),
+                      items[index2],
+                      style: GoogleFonts.roboto(
+                        fontSize: 15,
+                        color: Colors.transparent,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            childWhenDragging: Card(
-              color: Colors.transparent,
-              child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                child: Center(
-                  child: Text(
-                    items[index],
-                    style: GoogleFonts.roboto(
-                      fontSize: 15,
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
+              child: _buildChild(
+                value: items[index2],
               ),
+              onDragCompleted: () {
+                items.remove(items[index2]);
+                _controller.update(["todosList"]);
+              },
             ),
-            child: _buildChild(
-              value: items[index],
-            ),
-            onDragCompleted: () {
-              items.remove(items[index]);
-              _controller.update(["todosList"]);
-            },
           )
-        : _buildChild(value: items[index]);
+        : _buildChild(value: items[index2]);
   }
 
-  Widget buildDragTargets(
-    BuildContext context,
-    int index,
-    List<String> items,
-  ) {
+  Widget buildDragTargets({
+    required BuildContext context,
+    required int index2,
+    required List<String> items,
+  }) {
     return DragTarget<String>(
       builder: (context, candidates, rejects) {
         return candidates.isNotEmpty
@@ -382,7 +400,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
       },
       // onWillAccept: (value) => !items.contains(value),
       onAccept: (value) {
-        items.insert(index + 1, value);
+        items.insert(index2 + 1, value);
         _controller.update(["todosList"]);
       },
     );
@@ -405,11 +423,17 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
   }
 
   Widget _buildTextFieldDialoge({
-    int index = 0,
-    List<String> items = const [],
     required String hintText,
     bool isTitle = false,
+    bool isTask = false,
+    int index1 = 0,
+    List<String> items = const [],
+    bool isTitleEdit = false,
+    String text = "",
+    bool isTaskEdit = false,
+    int index2 = 0,
   }) {
+    final textController = TextEditingController(text: text);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -463,23 +487,54 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                         _todo.title = textController.text;
                         _todo.tasks = [];
                         todos.add(_todo);
-                        projectServices.updateProjectTodos(
+                        await projectServices.updateProjectTodos(
                           projectId: widget.projuctDetials.id!,
                           todos: todos,
                         );
                         _controller.update(["todosList"]);
                         Get.back();
+                      } else {
+                        Fluttertoast.showToast(msg: "Field can't be empty");
                       }
-                    } else {
-                      items.add(textController.text);
-                      todos[index].tasks = items;
-                      projectServices.updateProjectTodos(
-                        projectId: widget.projuctDetials.id!,
-                        todos: todos,
-                      );
-                      _controller.update(["todosList"]);
-                      Get.back();
+                    } else if (isTask) {
+                      if (textController.text.isNotEmpty) {
+                        items.add(textController.text);
+                        todos[index1].tasks = items;
+                        await projectServices.updateProjectTodos(
+                          projectId: widget.projuctDetials.id!,
+                          todos: todos,
+                        );
+                        _controller.update(["todosList"]);
+                        Get.back();
+                      } else {
+                        Fluttertoast.showToast(msg: "Field can't be empty");
+                      }
                       // isEditing = true;
+                    } else if (isTitleEdit) {
+                      if (textController.text.isNotEmpty) {
+                        todos[index1].title = textController.text;
+                        await projectServices.updateProjectTodos(
+                          projectId: widget.projuctDetials.id!,
+                          todos: todos,
+                        );
+                        _controller.update(["todosList"]);
+                        Get.back();
+                      } else {
+                        Fluttertoast.showToast(msg: "Field can't be empty");
+                      }
+                    } else if (isTaskEdit) {
+                      if (textController.text.isNotEmpty) {
+                        // print(todos[index1].tasks![index2]);
+                        todos[index1].tasks![index2] = textController.text;
+                        await projectServices.updateProjectTodos(
+                          projectId: widget.projuctDetials.id!,
+                          todos: todos,
+                        );
+                        _controller.update(["todosList"]);
+                        Get.back();
+                      } else {
+                        Fluttertoast.showToast(msg: "Field can't be empty");
+                      }
                     }
                   },
                   child: const Text("Save"),
@@ -493,8 +548,11 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
   }
 
   Widget _buildEditDeleteDialoge({
+    required bool isTitle,
     required int index1,
     required String text,
+    int index2 = 0,
+    List<String> items = const [],
   }) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -510,15 +568,41 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
               children: [
                 ListTile(
                   dense: true,
-                  onTap: () {},
+                  onTap: () {
+                    Get.back();
+                    if (isTitle) {
+                      Get.dialog(
+                        _buildTextFieldDialoge(
+                          hintText: "Edit title",
+                          text: text,
+                          isTitleEdit: true,
+                          index1: index1,
+                        ),
+                      );
+                    } else {
+                      Get.dialog(
+                        _buildTextFieldDialoge(
+                          hintText: "Edit task",
+                          text: text,
+                          isTaskEdit: true,
+                          index1: index1,
+                          index2: index2,
+                          items: items,
+                        ),
+                      );
+                    }
+                  },
                   leading: const Icon(Icons.edit),
                   title: const Text("Edit Title"),
                 ),
                 ListTile(
                   dense: true,
                   onTap: () {
-                    print(todos[index1].title);
-                    todos.remove(todos[index1]);
+                    if (isTitle) {
+                      todos.removeAt(index1);
+                    } else {
+                      todos[index1].tasks!.removeAt(index2);
+                    }
                     _controller.update(["todosList"]);
                     Get.back();
                   },
