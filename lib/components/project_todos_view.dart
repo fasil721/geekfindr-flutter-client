@@ -168,14 +168,26 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                           width: width * 0.4,
                           child: Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  todos[index1].title!,
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w500,
-                                    color: black,
+                              GestureDetector(
+                                onLongPress: () {
+                                  if (isEditing) {
+                                    Get.dialog(
+                                      _buildEditDeleteDialoge(
+                                        index1: index1,
+                                        text: '',
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Text(
+                                    todos[index1].title!,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500,
+                                      color: black,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -263,8 +275,6 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                           IconButton(
                                             splashRadius: 25,
                                             onPressed: () {
-                                              print(
-                                                  todos[index1].tasks!.length);
                                               Get.dialog(
                                                 _buildTextFieldDialoge(
                                                   hintText: "Add task",
@@ -474,6 +484,47 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                   },
                   child: const Text("Save"),
                 )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEditDeleteDialoge({
+    required int index1,
+    required String text,
+  }) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Material(
+            borderRadius: BorderRadius.circular(10),
+            child: Column(
+              children: [
+                ListTile(
+                  dense: true,
+                  onTap: () {},
+                  leading: const Icon(Icons.edit),
+                  title: const Text("Edit Title"),
+                ),
+                ListTile(
+                  dense: true,
+                  onTap: () {
+                    print(todos[index1].title);
+                    todos.remove(todos[index1]);
+                    _controller.update(["todosList"]);
+                    Get.back();
+                  },
+                  leading: const Icon(Icons.delete),
+                  title: const Text("Delete Tast"),
+                ),
               ],
             ),
           ),
