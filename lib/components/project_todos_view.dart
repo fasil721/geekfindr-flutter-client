@@ -204,7 +204,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                             )
                                           : SizedBox(
                                               width: width * 0.4,
-                                              height: 1,
+                                              height: 5,
                                             );
                                     },
                                     // onWillAccept: (value) =>
@@ -249,7 +249,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                                             )
                                           : SizedBox(
                                               width: width * 0.4,
-                                              height: 1,
+                                              height: 5,
                                             );
                                     },
                                     onAccept: (value) {

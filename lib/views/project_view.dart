@@ -105,7 +105,7 @@ class _ProjectViewState extends State<ProjectView> {
                     ],
                   ),
                   body: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
+                    // physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
                         SizedBox(height: height * 0.02),
