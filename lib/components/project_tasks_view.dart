@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
@@ -27,6 +28,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
   final profileServices = ProfileServices();
   final descTextController = TextEditingController();
   final titleTextController = TextEditingController();
+  final serchController = TextEditingController();
   List<Task> tasks = [];
   double height = 0;
   double width = 0;
@@ -118,7 +120,197 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     );
   }
 
-  Widget _buildAddTaskDialoge() => Column();
+  Widget _buildAddTaskDialoge() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Material(
+              color: white,
+              borderRadius: BorderRadius.circular(20),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Text(
+                      "Assign a New Task",
+                      style: GoogleFonts.roboto(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.01),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: TextField(
+                        controller: titleTextController,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.text,
+                        maxLines: null,
+                        minLines: 1,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Title",
+                          hintStyle:
+                              GoogleFonts.roboto(fontSize: textFactor * 15),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: TextField(
+                        controller: descTextController,
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        minLines: 1,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Description",
+                          hintStyle:
+                              GoogleFonts.roboto(fontSize: textFactor * 15),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TypeAheadField<Team?>(
+                        direction: AxisDirection.up,
+                        getImmediateSuggestions: true,
+                        hideSuggestionsOnKeyboardHide: false,
+                        debounceDuration: const Duration(milliseconds: 500),
+                        textFieldConfiguration: TextFieldConfiguration(
+                          controller: serchController,
+                          cursorColor: primaryColor,
+                          decoration: InputDecoration(
+                            focusColor: primaryColor,
+                            iconColor: primaryColor,
+                            border: InputBorder.none,
+                            hintText: 'Search Username',
+                            hintStyle:
+                                GoogleFonts.roboto(fontSize: textFactor * 15),
+                          ),
+                        ),
+                        suggestionsCallback: (value) {
+                          final teams = widget.projuctDetials.team!;
+                          
+                          if (value.isNotEmpty) {
+                            final results = teams
+                                .where(
+                                  (element) => element.user!.username!
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()),
+                                )
+                                .toList();
+                            return results;
+                          }
+                          return teams;
+                        },
+                        itemBuilder: (context, Team? suggestion) {
+                          final user = suggestion!.user!;
+                          return ListTile(
+                            textColor: secondaryColor,
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.network(
+                                user.avatar!,
+                                width: 30,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                  color: Colors.blue,
+                                  height: 130,
+                                  width: 130,
+                                ),
+                              ),
+                            ),
+                            title: Text(
+                              user.username!,
+                              style: GoogleFonts.roboto(color: Colors.black),
+                            ),
+                          );
+                        },
+                        noItemsFoundBuilder: (context) => const SizedBox(),
+                        onSuggestionSelected: (Team? user) {
+                          // ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          // Get.to(() => OtherUserProfile(userId: user!.id!));
+                          print(user!.user!.username);
+                        },
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text(
+                            "Cancel",
+                            style: GoogleFonts.roboto(
+                              color: black,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all<double>(3),
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(primaryColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (descTextController.text.isNotEmpty &&
+                                titleTextController.text.isNotEmpty) {
+                            } else {
+                              // Get.defaultDialog(
+                              //   title: "Validation",
+                              //   content: const Text("Field can't be empty"),
+                              //   confirmTextColor: white,
+                              //   buttonColor: primaryColor,
+                              //   onConfirm: () {
+                              //     Get.back();
+                              //   },
+                              // );
+                              Fluttertoast.showToast(
+                                msg: "Field can't be empty",
+                              );
+                            }
+                          },
+                          child: Text(
+                            "Create",
+                            style: GoogleFonts.roboto(
+                              color: white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5)
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      );
 
   Widget _buildTaskTiles(BuildContext context, int index) => Container(
         decoration: BoxDecoration(
