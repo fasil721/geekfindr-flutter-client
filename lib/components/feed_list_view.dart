@@ -37,6 +37,7 @@ class _FeedListState extends State<FeedList> {
   int dataLength = -1;
   bool isRefresh = true;
   bool isRequested = false;
+  
   Future<void> mockData(String lastId) async {
     if (!allLoaded) {
       isLoading = true;
@@ -122,7 +123,6 @@ class _FeedListState extends State<FeedList> {
                   itemBuilder: (context, index) {
                     if (isRefresh) {
                       itemsSetup(datas);
-                      // print("haiiiii");
                       likesSetUp();
                     }
                     isRefresh = false;

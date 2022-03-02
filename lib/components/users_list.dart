@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/views/other_users_profile.dart';

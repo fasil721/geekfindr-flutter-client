@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/test.dart';
 import 'package:geek_findr/views/chat_view.dart';
 
 class ChatUsersList extends StatefulWidget {
@@ -41,6 +43,10 @@ class _ChatUsersListState extends State<ChatUsersList> {
             Expanded(
               child: Row(
                 children: <Widget>[
+                  // CircleAvatarWithTransition(
+                  //   primaryColor: primaryColor,
+                  //   image: AssetImage(widget.image),
+                  // ),
                   CircleAvatar(
                     backgroundImage: AssetImage(widget.image),
                     maxRadius: 30,

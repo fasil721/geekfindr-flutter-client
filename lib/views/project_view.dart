@@ -52,8 +52,7 @@ class _ProjectViewState extends State<ProjectView> {
                 return Scaffold(
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
-                      // controller.update(["projectView"]);
-                      print(projectDetials.task!.first.toJson());
+                      controller.update(["projectView"]);
                     },
                   ),
                   backgroundColor: secondaryColor,
@@ -81,7 +80,7 @@ class _ProjectViewState extends State<ProjectView> {
                               child: Text(
                                 "Delete Project",
                                 style: GoogleFonts.poppins(
-                                  fontSize: textFactor * 15,
+                                  fontSize: textFactor * 13,
                                   color: Colors.black.withOpacity(0.9),
                                   fontWeight: FontWeight.w400,
                                 ),

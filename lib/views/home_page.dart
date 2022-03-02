@@ -9,13 +9,17 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
+// ignore: must_be_immutable
 class HomePage extends StatelessWidget {
+  HomePage({Key? key}) : super(key: key);
   final _advancedDrawerController = AdvancedDrawerController();
+  double width = 0.0;
+  double height = 0;
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         body: AdvancedDrawer(
@@ -92,85 +96,7 @@ class HomePage extends StatelessWidget {
                         trailing: IconButton(
                           splashRadius: 25,
                           onPressed: () {
-                            Get.bottomSheet(
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  InkWell(
-                                    onTap: () async {
-                                      final image = await pickImage(
-                                        source: ImageSource.camera,
-                                      );
-                                      Get.back();
-                                      if (image != null) {
-                                        Get.dialog(
-                                          PostUploadDialoge(image: image),
-                                        );
-                                      }
-                                    },
-                                    child: Ink(
-                                      height: height * 0.07,
-                                      color: white,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                            Icons.camera_alt,
-                                            size: 25,
-                                            color: primaryColor,
-                                          ),
-                                          SizedBox(width: width * 0.05),
-                                          Text(
-                                            "Open Camara",
-                                            style: GoogleFonts.roboto(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () async {
-                                      final image = await pickImage(
-                                        source: ImageSource.gallery,
-                                      );
-                                      Get.back();
-                                      if (image != null) {
-                                        Get.dialog(
-                                          PostUploadDialoge(image: image),
-                                        );
-                                      }
-                                    },
-                                    child: Ink(
-                                      height: height * 0.07,
-                                      color: white,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                            Icons.image,
-                                            size: 25,
-                                            color: primaryColor,
-                                          ),
-                                          SizedBox(width: width * 0.05),
-                                          Text(
-                                            "Open Gallary",
-                                            style: GoogleFonts.roboto(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
+                            Get.bottomSheet(_buildPhotoOptionShet());
                           },
                           icon: const Icon(
                             Icons.add_a_photo,
@@ -187,6 +113,84 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPhotoOptionShet() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        InkWell(
+          onTap: () async {
+            final image = await pickImage(
+              source: ImageSource.camera,
+            );
+            Get.back();
+            if (image != null) {
+              Get.dialog(
+                PostUploadDialoge(image: image),
+              );
+            }
+          },
+          child: Ink(
+            height: height * 0.07,
+            color: white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.camera_alt,
+                  size: 25,
+                  color: primaryColor,
+                ),
+                SizedBox(width: width * 0.05),
+                Text(
+                  "Open Camara",
+                  style: GoogleFonts.roboto(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () async {
+            final image = await pickImage(
+              source: ImageSource.gallery,
+            );
+            Get.back();
+            if (image != null) {
+              Get.dialog(
+                PostUploadDialoge(image: image),
+              );
+            }
+          },
+          child: Ink(
+            height: height * 0.07,
+            color: white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.image,
+                  size: 25,
+                  color: primaryColor,
+                ),
+                SizedBox(width: width * 0.05),
+                Text(
+                  "Open Gallary",
+                  style: GoogleFonts.roboto(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -14,12 +14,14 @@ class PostUploadDialoge extends StatelessWidget {
     Key? key,
     required this.image,
   }) : super(key: key);
+
   final descTextController = TextEditingController();
   final projTextController = TextEditingController();
-  final File image;
   final controller = Get.find<AppController>();
   final postServices = PostServices();
+  final File image;
   bool isProject = false;
+
   @override
   Widget build(BuildContext context) {
     // final width = MediaQuery.of(context).size.width;
