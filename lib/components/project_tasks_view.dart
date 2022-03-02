@@ -40,6 +40,35 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     super.initState();
   }
 
+  List<Team> findMyControlMembers(String value) {
+    final List<Team> teams = [];
+    if (widget.myRole == admin) {
+      for (final element in widget.projuctDetials.team!) {
+        if (element.role == collaborator) {
+          teams.add(element);
+        }
+      }
+    } else if (widget.myRole == owner) {
+      for (final element in widget.projuctDetials.team!) {
+        if (element.role == collaborator || element.role == admin) {
+          teams.add(element);
+        }
+      }
+    }
+    if (value.isNotEmpty) {
+      final results = teams
+          .where(
+            (element) => element.user!.username!
+                .toLowerCase()
+                .contains(value.toLowerCase()),
+          )
+          .toList();
+      return results;
+    } else {
+      return teams;
+    }
+  }
+
   Future<List<UserProfileModel>> getUsersdetials(int index) async {
     final List<UserProfileModel> users = [];
     for (final element in tasks[index].users!) {
@@ -141,6 +170,64 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                     ),
                     SizedBox(height: height * 0.01),
                     Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TypeAheadField<Team?>(
+                        direction: AxisDirection.up,
+                        getImmediateSuggestions: true,
+                        hideSuggestionsOnKeyboardHide: false,
+                        debounceDuration: const Duration(milliseconds: 500),
+                        textFieldConfiguration: TextFieldConfiguration(
+                          controller: serchController,
+                          cursorColor: primaryColor,
+                          decoration: InputDecoration(
+                            focusColor: primaryColor,
+                            iconColor: primaryColor,
+                            border: InputBorder.none,
+                            hintText: 'Search Username',
+                            hintStyle:
+                                GoogleFonts.roboto(fontSize: textFactor * 15),
+                          ),
+                        ),
+                        suggestionsCallback: (value) =>
+                            findMyControlMembers(value),
+                        itemBuilder: (context, Team? suggestion) {
+                          final user = suggestion!.user!;
+                          final userRole = suggestion.role!;
+                          return ListTile(
+                            textColor: secondaryColor,
+                            dense: true,
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.network(
+                                user.avatar!,
+                                width: 30,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                  color: Colors.blue,
+                                  height: 130,
+                                  width: 130,
+                                ),
+                              ),
+                            ),
+                            title: Text(
+                              user.username!,
+                              style: GoogleFonts.roboto(color: Colors.black),
+                            ),
+                            subtitle: Text(
+                              userRole,
+                              style: GoogleFonts.roboto(color: Colors.grey),
+                            ),
+                          );
+                        },
+                        noItemsFoundBuilder: (context) => const SizedBox(),
+                        onSuggestionSelected: (Team? user) {
+                          // ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          // Get.to(() => OtherUserProfile(userId: user!.id!));
+                          print(user!.user!.username);
+                        },
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextField(
                         controller: titleTextController,
@@ -182,71 +269,6 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                           errorBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TypeAheadField<Team?>(
-                        direction: AxisDirection.up,
-                        getImmediateSuggestions: true,
-                        hideSuggestionsOnKeyboardHide: false,
-                        debounceDuration: const Duration(milliseconds: 500),
-                        textFieldConfiguration: TextFieldConfiguration(
-                          controller: serchController,
-                          cursorColor: primaryColor,
-                          decoration: InputDecoration(
-                            focusColor: primaryColor,
-                            iconColor: primaryColor,
-                            border: InputBorder.none,
-                            hintText: 'Search Username',
-                            hintStyle:
-                                GoogleFonts.roboto(fontSize: textFactor * 15),
-                          ),
-                        ),
-                        suggestionsCallback: (value) {
-                          final teams = widget.projuctDetials.team!;
-                          
-                          if (value.isNotEmpty) {
-                            final results = teams
-                                .where(
-                                  (element) => element.user!.username!
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()),
-                                )
-                                .toList();
-                            return results;
-                          }
-                          return teams;
-                        },
-                        itemBuilder: (context, Team? suggestion) {
-                          final user = suggestion!.user!;
-                          return ListTile(
-                            textColor: secondaryColor,
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.network(
-                                user.avatar!,
-                                width: 30,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Container(
-                                  color: Colors.blue,
-                                  height: 130,
-                                  width: 130,
-                                ),
-                              ),
-                            ),
-                            title: Text(
-                              user.username!,
-                              style: GoogleFonts.roboto(color: Colors.black),
-                            ),
-                          );
-                        },
-                        noItemsFoundBuilder: (context) => const SizedBox(),
-                        onSuggestionSelected: (Team? user) {
-                          // ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                          // Get.to(() => OtherUserProfile(userId: user!.id!));
-                          print(user!.user!.username);
-                        },
                       ),
                     ),
                     Row(
