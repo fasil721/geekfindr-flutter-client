@@ -147,7 +147,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                 child: const Divider(thickness: 1.5),
               ),
               SizedBox(
-                height: height,
+                height: 500,
                 child: Scrollbar(
                   scrollbarOrientation: ScrollbarOrientation.top,
                   showTrackOnHover: true,
@@ -170,10 +170,11 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                           child: Column(
                             children: [
                               GestureDetector(
-                                onLongPress: () {
+                                onTap: () {
                                   if (isEditing) {
                                     Get.dialog(
                                       _buildEditDeleteDialoge(
+                                        title: "Edit title",
                                         isTitle: true,
                                         index1: index1,
                                         text: todos[index1].title!,
@@ -323,9 +324,10 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
   }) {
     return isEditing
         ? GestureDetector(
-            onLongPress: () {
+            onTap: () {
               Get.dialog(
                 _buildEditDeleteDialoge(
+                  title: "Edit task",
                   isTitle: false,
                   index1: index1,
                   text: items[index2],
@@ -335,6 +337,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
               );
             },
             child: Draggable<String>(
+              // affinity: Axis.horizontal,
               data: items[index2],
               onDragUpdate: (val) {
                 autoScroll(val);
@@ -551,6 +554,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
     required bool isTitle,
     required int index1,
     required String text,
+    required String title,
     int index2 = 0,
     List<String> items = const [],
   }) {
@@ -593,7 +597,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                     }
                   },
                   leading: const Icon(Icons.edit),
-                  title: const Text("Edit Title"),
+                  title: Text(title),
                 ),
                 ListTile(
                   dense: true,

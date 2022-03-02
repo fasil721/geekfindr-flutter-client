@@ -51,7 +51,8 @@ class _ProjectViewState extends State<ProjectView> {
                 return Scaffold(
                   floatingActionButton: FloatingActionButton(
                     onPressed: () {
-                      controller.update(["projectView"]);
+                      // controller.update(["projectView"]);
+                      print(projectDetials.task!.first.toJson());
                     },
                   ),
                   backgroundColor: secondaryColor,

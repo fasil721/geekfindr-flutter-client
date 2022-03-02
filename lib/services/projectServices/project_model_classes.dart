@@ -86,7 +86,7 @@ class ProjectDataModel {
   Owner? owner;
   List<Team>? team;
   List<Todo>? todo;
-  List<dynamic>? task;
+  List<Task>? task;
   DateTime? createdAt;
   DateTime? updatedAt;
   String? id;
@@ -106,7 +106,10 @@ class ProjectDataModel {
           (json["todo"] as List)
               .map((x) => Todo.fromJson(Map<String, dynamic>.from(x as Map))),
         ),
-        task: List<dynamic>.from((json["task"] as List).map((x) => x)),
+        task: List<Task>.from(
+          (json["task"] as List)
+              .map((x) => Task.fromJson(Map<String, dynamic>.from(x as Map))),
+        ),
         createdAt: DateTime.parse(json["createdAt"] as String),
         updatedAt: DateTime.parse(json["updatedAt"] as String),
         id: json["id"] as String,
@@ -152,5 +155,37 @@ class Todo {
   Map<String, dynamic> toJson() => {
         "title": title,
         "tasks": List<String>.from(tasks!.map((x) => x)),
+      };
+}
+
+class Task {
+  Task({
+    this.title,
+    this.description,
+    this.users,
+    this.isComplete,
+    this.assignor,
+  });
+
+  String? title;
+  String? description;
+  List<String>? users;
+  bool? isComplete;
+  String? assignor;
+
+  factory Task.fromJson(Map<String, dynamic> json) => Task(
+        title: json["title"] as String,
+        description: json["description"] as String,
+        users: List<String>.from((json["users"] as List).map((x) => x)),
+        isComplete: json["isComplete"] as bool,
+        assignor: json["assignor"] as String,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "title": title,
+        "description": description,
+        "users": List<String>.from(users!.map((x) => x)),
+        "isComplete": isComplete,
+        "assignor": assignor,
       };
 }
