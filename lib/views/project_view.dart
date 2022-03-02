@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/project_info_view.dart';
+import 'package:geek_findr/components/project_tasks_view.dart';
 import 'package:geek_findr/components/project_teams_view.dart';
 import 'package:geek_findr/components/project_todos_view.dart';
 import 'package:geek_findr/contants.dart';
@@ -173,11 +174,9 @@ class _ProjectViewState extends State<ProjectView> {
                                     Visibility(
                                       maintainState: true,
                                       visible: _currentIndex == 3,
-                                      child: Container(
-                                        margin: const EdgeInsets.all(20),
-                                        color: black,
-                                        width: width,
-                                        height: 2,
+                                      child: ProjectTaskView(
+                                        projuctDetials: projectDetials,
+                                        myRole: projectModel.role!,
                                       ),
                                     ),
                                   ],
