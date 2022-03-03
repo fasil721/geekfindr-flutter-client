@@ -341,4 +341,41 @@ class ProjectServices {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
+
+  Future<void> deleteTask({
+    required String projectId,
+    required String taskTitle,
+  }) async {
+    final user = box.get("user");
+    final url = "$prodUrl/api/v1/projects/$projectId/tasks/$taskTitle";
+
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          "Authorization": "Bearer ${user!.token}",
+        },
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(msg: "$taskTitle deleted");
+      } else if (response.statusCode == 422 || response.statusCode == 400) {
+        final errorJson = json.decode(response.body) as Map;
+        final err = ErrorModel.fromJson(errorJson.cast());
+        for (final element in err.errors!) {
+          Fluttertoast.showToast(msg: element.message!);
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Something went wrong");
+      }
+    } on HttpException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on SocketException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on PlatformException {
+      Fluttertoast.showToast(msg: "Invalid Format");
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
 }

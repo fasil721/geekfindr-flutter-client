@@ -61,6 +61,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
           projectId: widget.projuctDetials.id!,
           body: _task.toJson(),
         );
+        tasks.add(_task);
         _controller.update(["taskList"]);
         Get.back();
       } else {
@@ -133,7 +134,6 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-
     return GetBuilder<AppController>(
       id: "taskList",
       builder: (_controller) {
@@ -370,94 +370,105 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     );
   }
 
-  Widget _buildTaskTiles(BuildContext context, int index) => Container(
-        decoration: BoxDecoration(
-          color: white,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: ExpansionTile(
-          textColor: black,
-          iconColor: black,
-          childrenPadding: const EdgeInsets.all(10),
-          title: Text(
-            tasks[index].title!,
-            style: GoogleFonts.roboto(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-            ),
+  Widget _buildTaskTiles(BuildContext context, int index) => GestureDetector(
+        onLongPress: () {
+          projectServices.deleteTask(
+            projectId: widget.projuctDetials.id!,
+            taskTitle: tasks[index].title!,
+          );
+          tasks.remove(tasks[index]);
+          _controller.update(["taskList"]);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: white,
+            borderRadius: BorderRadius.circular(10),
           ),
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      tasks[index].description!,
-                      style: GoogleFonts.roboto(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(height: height * 0.01),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Users : ",
-                          style: GoogleFonts.roboto(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        FutureBuilder<List<UserProfileModel>>(
-                          future: getUsersdetials(index),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              final datas = snapshot.data!;
-                              return Column(
-                                children: [
-                                  ...datas.map(
-                                    (e) => GestureDetector(
-                                      onTap: () {
-                                        Get.to(
-                                          () => OtherUserProfile(userId: e.id!),
-                                        );
-                                      },
-                                      child: Row(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: CachedNetworkImage(
-                                              imageUrl: e.avatar!,
-                                              fit: BoxFit.fitWidth,
-                                              width: width * 0.05,
-                                            ),
-                                          ),
-                                          SizedBox(width: width * 0.02),
-                                          Text(e.username!),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              );
-                            }
-                            return const SizedBox();
-                          },
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+          child: ExpansionTile(
+            textColor: black,
+            iconColor: black,
+            childrenPadding: const EdgeInsets.all(10),
+            title: Text(
+              tasks[index].title!,
+              style: GoogleFonts.roboto(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: height * 0.01),
-          ],
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tasks[index].description!,
+                        style: GoogleFonts.roboto(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(height: height * 0.01),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Users : ",
+                            style: GoogleFonts.roboto(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          FutureBuilder<List<UserProfileModel>>(
+                            future: getUsersdetials(index),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                final datas = snapshot.data!;
+                                return Column(
+                                  children: [
+                                    ...datas.map(
+                                      (e) => GestureDetector(
+                                        onTap: () {
+                                          Get.to(
+                                            () =>
+                                                OtherUserProfile(userId: e.id!),
+                                          );
+                                        },
+                                        child: Row(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              child: CachedNetworkImage(
+                                                imageUrl: e.avatar!,
+                                                fit: BoxFit.fitWidth,
+                                                width: width * 0.05,
+                                              ),
+                                            ),
+                                            SizedBox(width: width * 0.02),
+                                            Text(e.username!),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              }
+                              return const SizedBox();
+                            },
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: height * 0.01),
+            ],
+          ),
         ),
       );
 
