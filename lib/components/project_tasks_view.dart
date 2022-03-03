@@ -46,7 +46,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     super.initState();
   }
 
-  void addNewTask() {
+  Future<void> addNewTask() async {
     if (descTextController.text.isNotEmpty &&
         titleTextController.text.isNotEmpty) {
       if (selectedMembers.isNotEmpty) {
@@ -57,12 +57,11 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
         _task.isComplete = false;
         _task.assignor = currentUser!.id;
         _task.users = selectedMembers.map((e) => e.user!.id!).toList();
-        projectServices.createProjectTask(
+        await projectServices.createProjectTask(
           projectId: widget.projuctDetials.id!,
           body: _task.toJson(),
         );
-        tasks.add(_task);
-        _controller.update(["taskList"]);
+        _controller.update(["projectView"]);
         Get.back();
       } else {
         Fluttertoast.showToast(
@@ -154,6 +153,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                         color: black,
                       ),
                     ),
+                    SizedBox(height: height * 0.05),
                     Visibility(
                       visible: widget.myRole == owner || widget.myRole == admin,
                       child: IconButton(
@@ -370,107 +370,181 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     );
   }
 
-  Widget _buildTaskTiles(BuildContext context, int index) => GestureDetector(
-        onLongPress: () {
-          projectServices.deleteTask(
-            projectId: widget.projuctDetials.id!,
-            taskTitle: tasks[index].title!,
-          );
-          tasks.remove(tasks[index]);
-          _controller.update(["taskList"]);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: ExpansionTile(
-            textColor: black,
-            iconColor: black,
-            childrenPadding: const EdgeInsets.all(10),
-            title: Text(
+  Widget _buildTaskTiles(BuildContext context, int index) {
+    final currentUser = _box.get("user");
+    final assignies = tasks[index].users!.map((e) => e).toList();
+    final isAssignie =
+        assignies.where((element) => element == currentUser!.id!).isNotEmpty;
+    print(isAssignie);
+    return Container(
+      decoration: BoxDecoration(
+        color: tasks[index].isComplete!
+            ? Colors.greenAccent.withOpacity(0.5)
+            : white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ExpansionTile(
+        textColor: black,
+        iconColor: black,
+        childrenPadding: const EdgeInsets.all(10),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
               tasks[index].title!,
               style: GoogleFonts.roboto(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Column(
+            Row(
+              children: [
+                Visibility(
+                  visible: widget.myRole == owner ||
+                      tasks[index].assignor == currentUser!.id,
+                  child: PopupMenuButton(
+                    itemBuilder: (BuildContext bc) => [
+                      PopupMenuItem(
+                        value: "1",
+                        child: Text(
+                          "Delete Task",
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 14,
+                            color: Colors.black.withOpacity(0.9),
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                    onSelected: (value) async {
+                      if (value == "1") {
+                        projectServices.deleteTask(
+                          projectId: widget.projuctDetials.id!,
+                          taskTitle: tasks[index].title!,
+                        );
+                        tasks.remove(tasks[index]);
+                        _controller.update(["taskList"]);
+                      }
+                    },
+                    icon: Icon(
+                      Icons.more_horiz,
+                      size: 22,
+                      color: black,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: isAssignie && !tasks[index].isComplete!,
+                  child: PopupMenuButton(
+                    itemBuilder: (BuildContext bc) => [
+                      PopupMenuItem(
+                        value: "2",
+                        child: Text(
+                          "Mark as Completed",
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 14,
+                            color: Colors.black.withOpacity(0.9),
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      )
+                    ],
+                    onSelected: (value) async {
+                      if (value == "2") {
+                        projectServices.martTaskAsComplete(
+                          projectId: widget.projuctDetials.id!,
+                          taskTitle: tasks[index].title!,
+                        );
+                        tasks[index].isComplete = true;
+                        _controller.update(["taskList"]);
+                      }
+                    },
+                    icon: Icon(
+                      Icons.more_horiz,
+                      size: 22,
+                      color: black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tasks[index].description!,
+                    style: GoogleFonts.roboto(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: height * 0.01),
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        tasks[index].description!,
+                        "Users : ",
                         style: GoogleFonts.roboto(
-                          fontSize: 14,
+                          fontSize: 15,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      SizedBox(height: height * 0.01),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Users : ",
-                            style: GoogleFonts.roboto(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          FutureBuilder<List<UserProfileModel>>(
-                            future: getUsersdetials(index),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                final datas = snapshot.data!;
-                                return Column(
-                                  children: [
-                                    ...datas.map(
-                                      (e) => GestureDetector(
-                                        onTap: () {
-                                          Get.to(
-                                            () =>
-                                                OtherUserProfile(userId: e.id!),
-                                          );
-                                        },
-                                        child: Row(
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              child: CachedNetworkImage(
-                                                imageUrl: e.avatar!,
-                                                fit: BoxFit.fitWidth,
-                                                width: width * 0.05,
-                                              ),
-                                            ),
-                                            SizedBox(width: width * 0.02),
-                                            Text(e.username!),
-                                          ],
+                      FutureBuilder<List<UserProfileModel>>(
+                        future: getUsersdetials(index),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            final datas = snapshot.data!;
+                            return Column(
+                              children: [
+                                ...datas.map(
+                                  (e) => GestureDetector(
+                                    onTap: () {
+                                      Get.to(
+                                        () => OtherUserProfile(userId: e.id!),
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: CachedNetworkImage(
+                                            imageUrl: e.avatar!,
+                                            fit: BoxFit.fitWidth,
+                                            width: width * 0.05,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                );
-                              }
-                              return const SizedBox();
-                            },
-                          )
-                        ],
-                      ),
+                                        SizedBox(width: width * 0.02),
+                                        Text(e.username!),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
+                          }
+                          return const SizedBox();
+                        },
+                      )
                     ],
                   ),
-                ),
+                ],
               ),
-              SizedBox(height: height * 0.01),
-            ],
+            ),
           ),
-        ),
-      );
+          SizedBox(height: height * 0.01),
+        ],
+      ),
+    );
+  }
 
   Widget buildInputChips(List<Team> members) => Wrap(
         spacing: 10,

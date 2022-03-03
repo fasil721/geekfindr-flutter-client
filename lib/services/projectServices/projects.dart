@@ -378,4 +378,44 @@ class ProjectServices {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
+
+  Future<void> martTaskAsComplete({
+    required String projectId,
+    required String taskTitle,
+  }) async {
+    final user = box.get("user");
+    final url =
+        "$prodUrl/api/v1/projects/$projectId/tasks/$taskTitle/completion-status";
+    final body = {"isComplete": true};
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {
+          "Authorization": "Bearer ${user!.token}",
+          "Content-Type": "application/json"
+        },
+        body: json.encode(body),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(msg: "$taskTitle Marked as Completed");
+      } else if (response.statusCode == 422 || response.statusCode == 400) {
+        final errorJson = json.decode(response.body) as Map;
+        final err = ErrorModel.fromJson(errorJson.cast());
+        for (final element in err.errors!) {
+          Fluttertoast.showToast(msg: element.message!);
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Something went wrong");
+      }
+    } on HttpException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on SocketException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on PlatformException {
+      Fluttertoast.showToast(msg: "Invalid Format");
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
 }
