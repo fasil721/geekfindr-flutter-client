@@ -46,6 +46,35 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     super.initState();
   }
 
+  void addNewTask() {
+    if (descTextController.text.isNotEmpty &&
+        titleTextController.text.isNotEmpty) {
+      if (selectedMembers.isNotEmpty) {
+        final currentUser = _box.get("user");
+        final _task = Task();
+        _task.title = titleTextController.text;
+        _task.description = descTextController.text;
+        _task.isComplete = false;
+        _task.assignor = currentUser!.id;
+        _task.users = selectedMembers.map((e) => e.user!.id!).toList();
+        projectServices.createProjectTask(
+          projectId: widget.projuctDetials.id!,
+          body: _task.toJson(),
+        );
+        _controller.update(["taskList"]);
+        Get.back();
+      } else {
+        Fluttertoast.showToast(
+          msg: "Atleast 1 user required to add new task",
+        );
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: "Title and description Fields can't be empty",
+      );
+    }
+  }
+
   List<Team> findMyControlMembers(String value) {
     final List<Team> teams = [];
     if (widget.myRole == admin) {
@@ -72,6 +101,21 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
       return results;
     } else {
       return teams;
+    }
+  }
+
+  void searchUser(Team user) {
+    final isEmpty = selectedMembers
+        .where(
+          (element) => element.user!.id == user.user!.id,
+        )
+        .isEmpty;
+    if (isEmpty) {
+      selectedMembers.add(user);
+      serchController.clear();
+      _controller.update(["selected"]);
+    } else {
+      Fluttertoast.showToast(msg: "You already added");
     }
   }
 
@@ -118,7 +162,6 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                           Get.dialog(
                             _buildAddTaskDialoge(),
                           );
-                          // _controller.update(["taskList"]);
                         },
                         icon: Icon(
                           Icons.add,
@@ -224,20 +267,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                         child: Center(child: Text("0 Result found")),
                       ),
                       onSuggestionSelected: (Team? user) {
-                        // ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        // Get.to(() => OtherUserProfile(userId: user!.id!));
-                        final isEmpty = selectedMembers
-                            .where(
-                              (element) => element.user!.id == user!.user!.id,
-                            )
-                            .isEmpty;
-                        if (isEmpty) {
-                          selectedMembers.add(user!);
-                          serchController.clear();
-                          _controller.update(["selected"]);
-                        } else {
-                          Fluttertoast.showToast(msg: "You already added");
-                        }
+                        searchUser(user!);
                       },
                     ),
                   ),
@@ -318,7 +348,9 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                             ),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          addNewTask();
+                        },
                         child: Text(
                           "Create",
                           style: GoogleFonts.roboto(
