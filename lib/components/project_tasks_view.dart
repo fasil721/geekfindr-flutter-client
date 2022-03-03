@@ -4,9 +4,11 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
+import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,11 +27,15 @@ class ProjectTaskView extends StatefulWidget {
 }
 
 class _ProjectTaskViewState extends State<ProjectTaskView> {
+  final _controller = Get.find<AppController>();
+  final _box = Boxes.getInstance();
   final profileServices = ProfileServices();
+  final projectServices = ProjectServices();
   final descTextController = TextEditingController();
   final titleTextController = TextEditingController();
   final serchController = TextEditingController();
   List<Task> tasks = [];
+  List<Team> selectedMembers = [];
   double height = 0;
   double width = 0;
   double textFactor = 0;
@@ -105,28 +111,20 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                       ),
                     ),
                     Visibility(
-                      visible: widget.myRole == owner,
-                      child: Row(
-                        children: [
-                          Visibility(
-                            visible: widget.myRole == owner ||
-                                widget.myRole == admin,
-                            child: IconButton(
-                              splashRadius: 25,
-                              onPressed: () {
-                                Get.dialog(
-                                  _buildAddTaskDialoge(),
-                                );
-                                // _controller.update(["taskList"]);
-                              },
-                              icon: Icon(
-                                Icons.add,
-                                size: 25,
-                                color: black,
-                              ),
-                            ),
-                          )
-                        ],
+                      visible: widget.myRole == owner || widget.myRole == admin,
+                      child: IconButton(
+                        splashRadius: 25,
+                        onPressed: () {
+                          Get.dialog(
+                            _buildAddTaskDialoge(),
+                          );
+                          // _controller.update(["taskList"]);
+                        },
+                        icon: Icon(
+                          Icons.add,
+                          size: 25,
+                          color: black,
+                        ),
                       ),
                     )
                   ],
@@ -149,190 +147,196 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     );
   }
 
-  Widget _buildAddTaskDialoge() => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Material(
-              color: white,
-              borderRadius: BorderRadius.circular(20),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Text(
-                      "Assign a New Task",
-                      style: GoogleFonts.roboto(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                      ),
+  Widget _buildAddTaskDialoge() {
+    selectedMembers = [];
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Material(
+            color: white,
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(
+                    "Assign a New Task",
+                    style: GoogleFonts.roboto(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(height: height * 0.01),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TypeAheadField<Team?>(
-                        direction: AxisDirection.up,
-                        getImmediateSuggestions: true,
-                        hideSuggestionsOnKeyboardHide: false,
-                        debounceDuration: const Duration(milliseconds: 500),
-                        textFieldConfiguration: TextFieldConfiguration(
-                          controller: serchController,
-                          cursorColor: primaryColor,
-                          decoration: InputDecoration(
-                            focusColor: primaryColor,
-                            iconColor: primaryColor,
-                            border: InputBorder.none,
-                            hintText: 'Search Username',
-                            hintStyle:
-                                GoogleFonts.roboto(fontSize: textFactor * 15),
-                          ),
-                        ),
-                        suggestionsCallback: (value) =>
-                            findMyControlMembers(value),
-                        itemBuilder: (context, Team? suggestion) {
-                          final user = suggestion!.user!;
-                          final userRole = suggestion.role!;
-                          return ListTile(
-                            textColor: secondaryColor,
-                            dense: true,
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.network(
-                                user.avatar!,
-                                width: 30,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Container(
-                                  color: Colors.blue,
-                                  height: 130,
-                                  width: 130,
-                                ),
-                              ),
-                            ),
-                            title: Text(
-                              user.username!,
-                              style: GoogleFonts.roboto(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                              userRole,
-                              style: GoogleFonts.roboto(color: Colors.grey),
-                            ),
-                          );
-                        },
-                        noItemsFoundBuilder: (context) => const SizedBox(),
-                        onSuggestionSelected: (Team? user) {
-                          // ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                          // Get.to(() => OtherUserProfile(userId: user!.id!));
-                          print(user!.user!.username);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TextField(
-                        controller: titleTextController,
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.text,
-                        maxLines: null,
-                        minLines: 1,
+                  ),
+                  SizedBox(height: height * 0.01),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: TypeAheadField<Team?>(
+                      direction: AxisDirection.up,
+                      getImmediateSuggestions: true,
+                      hideSuggestionsOnKeyboardHide: false,
+                      debounceDuration: const Duration(milliseconds: 500),
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: serchController,
+                        cursorColor: primaryColor,
                         decoration: InputDecoration(
+                          focusColor: primaryColor,
+                          iconColor: primaryColor,
                           border: InputBorder.none,
-                          hintText: "Title",
+                          hintText: 'Search Users',
                           hintStyle:
                               GoogleFonts.roboto(fontSize: textFactor * 15),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TextField(
-                        controller: descTextController,
-                        textInputAction: TextInputAction.done,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        minLines: 1,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Description",
-                          hintStyle:
-                              GoogleFonts.roboto(fontSize: textFactor * 15),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          child: Text(
-                            "Cancel",
-                            style: GoogleFonts.roboto(
-                              color: black,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            elevation: MaterialStateProperty.all<double>(3),
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(primaryColor),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                      suggestionsCallback: (value) =>
+                          findMyControlMembers(value),
+                      itemBuilder: (context, Team? suggestion) {
+                        final user = suggestion!.user!;
+                        final userRole = suggestion.role!;
+                        return ListTile(
+                          textColor: secondaryColor,
+                          // dense: true,
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              user.avatar!,
+                              width: 30,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
+                                color: Colors.blue,
+                                height: 130,
+                                width: 130,
                               ),
                             ),
                           ),
-                          onPressed: () {
-                            if (descTextController.text.isNotEmpty &&
-                                titleTextController.text.isNotEmpty) {
-                            } else {
-                              // Get.defaultDialog(
-                              //   title: "Validation",
-                              //   content: const Text("Field can't be empty"),
-                              //   confirmTextColor: white,
-                              //   buttonColor: primaryColor,
-                              //   onConfirm: () {
-                              //     Get.back();
-                              //   },
-                              // );
-                              Fluttertoast.showToast(
-                                msg: "Field can't be empty",
-                              );
-                            }
-                          },
-                          child: Text(
-                            "Create",
-                            style: GoogleFonts.roboto(
-                              color: white,
+                          title: Text(
+                            user.username!,
+                            style: GoogleFonts.roboto(color: Colors.black),
+                          ),
+                          subtitle: Text(
+                            userRole,
+                            style: GoogleFonts.roboto(color: Colors.grey),
+                          ),
+                        );
+                      },
+                      noItemsFoundBuilder: (context) => const SizedBox(
+                        height: 50,
+                        child: Center(child: Text("0 Result found")),
+                      ),
+                      onSuggestionSelected: (Team? user) {
+                        // ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        // Get.to(() => OtherUserProfile(userId: user!.id!));
+                        final isEmpty = selectedMembers
+                            .where(
+                              (element) => element.user!.id == user!.user!.id,
+                            )
+                            .isEmpty;
+                        if (isEmpty) {
+                          selectedMembers.add(user!);
+                          serchController.clear();
+                          _controller.update(["selected"]);
+                        } else {
+                          Fluttertoast.showToast(msg: "You already added");
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TextField(
+                      controller: titleTextController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.text,
+                      maxLines: null,
+                      minLines: 1,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Title",
+                        hintStyle:
+                            GoogleFonts.roboto(fontSize: textFactor * 15),
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TextField(
+                      controller: descTextController,
+                      textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      minLines: 1,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Description",
+                        hintStyle:
+                            GoogleFonts.roboto(fontSize: textFactor * 15),
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  GetBuilder<AppController>(
+                    id: "selected",
+                    builder: (_) {
+                      return buildInputChips(selectedMembers);
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(
+                          "Cancel",
+                          style: GoogleFonts.roboto(
+                            color: black,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          elevation: MaterialStateProperty.all<double>(3),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(primaryColor),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 5)
-                      ],
-                    )
-                  ],
-                ),
+                        onPressed: () {},
+                        child: Text(
+                          "Create",
+                          style: GoogleFonts.roboto(
+                            color: white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5)
+                    ],
+                  )
+                ],
               ),
             ),
-          )
-        ],
-      );
+          ),
+        )
+      ],
+    );
+  }
 
   Widget _buildTaskTiles(BuildContext context, int index) => Container(
         decoration: BoxDecoration(
@@ -423,5 +427,28 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
             SizedBox(height: height * 0.01),
           ],
         ),
+      );
+
+  Widget buildInputChips(List<Team> members) => Wrap(
+        spacing: 10,
+        children: members
+            .map(
+              (e) => InputChip(
+                avatar: CircleAvatar(
+                  backgroundImage: NetworkImage(e.user!.avatar!),
+                ),
+                label: Text(e.user!.username!),
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                onPressed: () {},
+                onDeleted: () {
+                  selectedMembers.remove(e);
+                  _controller.update(["selected"]);
+                },
+              ),
+            )
+            .toList(),
       );
 }
