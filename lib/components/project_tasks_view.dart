@@ -375,7 +375,6 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     final assignies = tasks[index].users!.map((e) => e).toList();
     final isAssignie =
         assignies.where((element) => element == currentUser!.id!).isNotEmpty;
-    print(isAssignie);
     return Container(
       decoration: BoxDecoration(
         color: tasks[index].isComplete!
@@ -466,6 +465,17 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                     ),
                   ),
                 ),
+                Visibility(
+                  visible: tasks[index].isComplete!,
+                  child: Text(
+                    "Completed",
+                    style: GoogleFonts.recursive(
+                      fontSize: textFactor * 13,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
               ],
             ),
           ],
@@ -486,55 +496,37 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                     ),
                   ),
                   SizedBox(height: height * 0.01),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Users : ",
-                        style: GoogleFonts.roboto(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      FutureBuilder<List<UserProfileModel>>(
-                        future: getUsersdetials(index),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            final datas = snapshot.data!;
-                            return Column(
-                              children: [
-                                ...datas.map(
-                                  (e) => GestureDetector(
-                                    onTap: () {
-                                      Get.to(
-                                        () => OtherUserProfile(userId: e.id!),
-                                      );
-                                    },
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: CachedNetworkImage(
-                                            imageUrl: e.avatar!,
-                                            fit: BoxFit.fitWidth,
-                                            width: width * 0.05,
-                                          ),
-                                        ),
-                                        SizedBox(width: width * 0.02),
-                                        Text(e.username!),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                      )
-                    ],
+                  FutureBuilder<List<UserProfileModel>>(
+                    future: getUsersdetials(index),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        final datas = snapshot.data!;
+                        return Wrap(
+                          spacing: 5,
+                          children: [
+                            ...datas.map(
+                              (e) => InputChip(
+                                deleteIcon: const SizedBox(),
+                                avatar: CircleAvatar(
+                                  backgroundImage: NetworkImage(e.avatar!),
+                                ),
+                                label: Text(e.username!),
+                                labelStyle: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  Get.to(
+                                    () => OtherUserProfile(userId: e.id!),
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                      return const SizedBox();
+                    },
                   ),
                 ],
               ),
