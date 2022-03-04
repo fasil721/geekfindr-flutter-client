@@ -121,6 +121,65 @@ class ProfileAboutView extends StatelessWidget {
                 ],
               ),
             ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: secondaryColor, width: 1.5),
+                // color: secondaryColor,
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Skills",
+                      style: GoogleFonts.poppins(
+                        fontSize: textFactor * 16,
+                        color: Colors.black.withOpacity(0.8),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.001),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      children: [
+                        ...userData.skills!.map(
+                          (e) => Container(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 5,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.black.withOpacity(0.9),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(left: 7),
+                                  child: Text(
+                                    e,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: textFactor * 15,
+                                      color: Colors.black.withOpacity(0.8),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: height * 0.01),
             Container(
               decoration: BoxDecoration(
@@ -316,23 +375,6 @@ class ProfileAboutView extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: height * 0.02),
-            expationPanelWidget(
-              img: "assets/icons/office.png",
-              width: width,
-              textFactor: textFactor,
-              title: "Skills",
-              list: [],
-            ),
-            SizedBox(height: height * 0.02),
-            expationPanelWidget(
-              img: "assets/icons/office.png",
-              width: width,
-              textFactor: textFactor,
-              title: "Works",
-              list: [],
-            ),
-            SizedBox(height: height * 0.02),
           ],
         ),
       ),

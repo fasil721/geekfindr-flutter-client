@@ -191,6 +191,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
   }
 
   Widget _buildAddTaskDialoge() {
+    String _dropValue = "Add type";
     selectedMembers = [];
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -321,6 +322,30 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                       return buildInputChips(selectedMembers);
                     },
                   ),
+                  DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _dropValue,
+                      items: dropCatagories
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(
+                                e,
+                                style: TextStyle(
+                                  fontSize: textFactor * 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              onTap: () {
+                                _dropValue = e;
+                                setState(() {});
+                              },
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {},
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -360,7 +385,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                       ),
                       const SizedBox(width: 5)
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -481,62 +506,64 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
           ],
         ),
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    tasks[index].description!,
-                    style: GoogleFonts.roboto(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: height * 0.01),
-                  FutureBuilder<List<UserProfileModel>>(
-                    future: getUsersdetials(index),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        final datas = snapshot.data!;
-                        return Wrap(
-                          spacing: 5,
-                          children: [
-                            ...datas.map(
-                              (e) => InputChip(
-                                deleteIcon: const SizedBox(),
-                                avatar: CircleAvatar(
-                                  backgroundImage: NetworkImage(e.avatar!),
-                                ),
-                                label: Text(e.username!),
-                                labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () {
-                                  Get.to(
-                                    () => OtherUserProfile(userId: e.id!),
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        );
-                      }
-                      return const SizedBox();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+          buildTileChild(index),
           SizedBox(height: height * 0.01),
         ],
       ),
     );
   }
+
+  Widget buildTileChild(int index) => Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                tasks[index].description!,
+                style: GoogleFonts.roboto(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: height * 0.01),
+              FutureBuilder<List<UserProfileModel>>(
+                future: getUsersdetials(index),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    final datas = snapshot.data!;
+                    return Wrap(
+                      spacing: 5,
+                      children: [
+                        ...datas.map(
+                          (e) => InputChip(
+                            deleteIcon: const SizedBox(),
+                            avatar: CircleAvatar(
+                              backgroundImage: NetworkImage(e.avatar!),
+                            ),
+                            label: Text(e.username!),
+                            labelStyle: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Get.to(
+                                () => OtherUserProfile(userId: e.id!),
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                  return const SizedBox();
+                },
+              ),
+            ],
+          ),
+        ),
+      );
 
   Widget buildInputChips(List<Team> members) => Wrap(
         spacing: 10,
@@ -547,11 +574,10 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                   backgroundImage: NetworkImage(e.user!.avatar!),
                 ),
                 label: Text(e.user!.username!),
-                labelStyle: const TextStyle(
+                labelStyle: GoogleFonts.roboto(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
-                onPressed: () {},
                 onDeleted: () {
                   selectedMembers.remove(e);
                   _controller.update(["selected"]);

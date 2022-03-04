@@ -54,3 +54,14 @@ String findDatesDifferenceFromToday(DateTime dateTime) {
     return "${diff.inDays * -1} days ago";
   }
 }
+
+final dropCatagories = [
+  'development',
+  'design',
+  'testing',
+  'deployment',
+  'feature',
+  'hotfix',
+  'issue',
+  'bug'
+];

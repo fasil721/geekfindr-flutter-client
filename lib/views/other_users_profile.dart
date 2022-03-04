@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:geek_findr/components/profile_about_view.dart';
+import 'package:geek_findr/components/user_about_view.dart';
 import 'package:geek_findr/components/profile_loading_screen.dart';
-import 'package:geek_findr/components/user_posts.dart';
+import 'package:geek_findr/components/user_posts_view.dart';
 import 'package:geek_findr/components/users_list.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
