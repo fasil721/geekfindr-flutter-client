@@ -10,20 +10,30 @@ class ProfileAboutView extends StatelessWidget {
   const ProfileAboutView({Key? key, required this.userData}) : super(key: key);
   final UserProfileModel userData;
 
-  Future<void> _launchURL(String email) async {
+  Future<void> _launchEmail(String email) async {
     final Uri params = Uri(
       scheme: 'mailto',
       path: email,
     );
     final String url = params.toString();
-    if (!await launch(url)) {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      Fluttertoast.showToast(msg: 'Could not launch');
+    }
+  }
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
       Fluttertoast.showToast(msg: 'Could not launch');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    // final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return Container(
@@ -336,14 +346,23 @@ class ProfileAboutView extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            Map<String, String>.from(userData.socials!.first)
-                                .values
-                                .first,
-                            style: GoogleFonts.poppins(
-                              fontSize: textFactor * 15,
-                              color: Colors.black.withOpacity(0.8),
-                              fontWeight: FontWeight.w500,
+                          GestureDetector(
+                            onTap: () {
+                              _launchURL(
+                                Map<String, String>.from(
+                                  userData.socials!.first,
+                                ).values.first,
+                              );
+                            },
+                            child: Text(
+                              Map<String, String>.from(userData.socials!.first)
+                                  .values
+                                  .first,
+                              style: GoogleFonts.poppins(
+                                fontSize: textFactor * 15,
+                                color: Colors.blue.withOpacity(0.8),
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ],
@@ -373,14 +392,23 @@ class ProfileAboutView extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            Map<String, String>.from(userData.socials!.last)
-                                .values
-                                .first,
-                            style: GoogleFonts.poppins(
-                              fontSize: textFactor * 15,
-                              color: Colors.black.withOpacity(0.8),
-                              fontWeight: FontWeight.w500,
+                          GestureDetector(
+                            onTap: () {
+                              _launchURL(
+                                Map<String, String>.from(userData.socials!.last)
+                                    .values
+                                    .first,
+                              );
+                            },
+                            child: Text(
+                              Map<String, String>.from(userData.socials!.last)
+                                  .values
+                                  .first,
+                              style: GoogleFonts.poppins(
+                                fontSize: textFactor * 15,
+                                color: Colors.blue.withOpacity(0.8),
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ],
@@ -408,7 +436,7 @@ class ProfileAboutView extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            _launchURL(userData.email!);
+                            _launchEmail(userData.email!);
                           },
                           child: Text(
                             userData.email!,
