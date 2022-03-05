@@ -64,6 +64,7 @@ class UserProfileModel {
         "bio": bio,
         "organizations": List<String>.from(organizations!.map((x) => x)),
         "experience": experience,
+        "skills": skills,
         "education": List<Map<String, String>>.from(education!.cast()),
         "socials": List<Map<String, String>>.from(socials!.cast()),
         "role": role,

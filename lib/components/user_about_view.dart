@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileAboutView extends StatelessWidget {
   const ProfileAboutView({Key? key, required this.userData}) : super(key: key);
   final UserProfileModel userData;
+
+  Future<void> _launchURL(String email) async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: email,
+    );
+    final String url = params.toString();
+    if (!await launch(url)) {
+      Fluttertoast.showToast(msg: 'Could not launch');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -372,6 +386,42 @@ class ProfileAboutView extends StatelessWidget {
                         ],
                       ),
                     ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Text(
+                          "Gmail",
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 15,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "  :  ",
+                          style: GoogleFonts.poppins(
+                            fontSize: textFactor * 13,
+                            color: Colors.black.withOpacity(0.8),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _launchURL(userData.email!);
+                          },
+                          child: Text(
+                            userData.email!,
+                            style: GoogleFonts.poppins(
+                              fontSize: textFactor * 15,
+                              color: Colors.blue.withOpacity(0.8),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
