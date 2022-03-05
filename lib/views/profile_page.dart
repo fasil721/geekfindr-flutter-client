@@ -23,11 +23,13 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with TickerProviderStateMixin {
-  TabController? tabController;
-  int currentIndex = 0;
   final controller = Get.find<AppController>();
   final postServices = PostServices();
   final profileServices = ProfileServices();
+  TabController? tabController;
+  int currentIndex = 0;
+  double textFactor = 0;
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return GetBuilder<AppController>(
       id: "prof",
       builder: (controller) {
@@ -80,347 +82,176 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                   ),
                   body: SafeArea(
-                    child: SingleChildScrollView(
-                      child: Stack(
-                        children: [
-                          ClipShadowPath(
-                            shadow: BoxShadow(
-                              color: Colors.grey.withOpacity(.7),
-                              blurRadius: 3,
-                              spreadRadius: 3,
-                              offset: const Offset(0, 3),
-                            ),
-                            clipper: ConvexClipPath(),
-                            child: Container(
-                              height: height * 0.19,
-                              width: width,
-                              decoration: BoxDecoration(
-                                color: primaryColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(.7),
-                                    blurRadius: 115,
-                                    spreadRadius: 105,
-                                    offset: const Offset(-300, -300),
-                                  ),
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(.7),
-                                    blurRadius: 105,
-                                    spreadRadius: 105,
-                                    offset: const Offset(400, 500),
-                                  ),
-                                ],
+                    child: ScrollConfiguration(
+                      behavior:
+                          const ScrollBehavior().copyWith(overscroll: false),
+                      child: SingleChildScrollView(
+                        child: Stack(
+                          children: [
+                            ClipShadowPath(
+                              shadow: BoxShadow(
+                                color: Colors.grey.withOpacity(.7),
+                                blurRadius: 3,
+                                spreadRadius: 3,
+                                offset: const Offset(0, 3),
                               ),
-                            ),
-                          ),
-                          Column(
-                            children: [
-                              SizedBox(
-                                height: height * .03,
-                              ),
-                              Container(
+                              clipper: ConvexClipPath(),
+                              child: Container(
+                                height: height * 0.19,
+                                width: width,
                                 decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 2,
-                                    color: const Color(0xffE7EAF0),
-                                  ),
-                                  borderRadius: BorderRadius.circular(100),
+                                  color: primaryColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(.7),
+                                      blurRadius: 115,
+                                      spreadRadius: 105,
+                                      offset: const Offset(-300, -300),
+                                    ),
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(.7),
+                                      blurRadius: 105,
+                                      spreadRadius: 105,
+                                      offset: const Offset(400, 500),
+                                    ),
+                                  ],
                                 ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        "${userData.avatar!}&s=${height * 0.15}",
-                                    placeholder: (context, url) =>
-                                        Shimmer.fromColors(
-                                      baseColor: Colors.grey.withOpacity(0.3),
-                                      highlightColor: white,
-                                      period:
-                                          const Duration(milliseconds: 1000),
-                                      child: Container(
-                                        height: height * 0.15,
-                                        width: height * 0.15,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          borderRadius:
-                                              BorderRadius.circular(100),
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: height * .03,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 2,
+                                      color: const Color(0xffE7EAF0),
+                                    ),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "${userData.avatar!}&s=${height * 0.15}",
+                                      placeholder: (context, url) =>
+                                          Shimmer.fromColors(
+                                        baseColor: Colors.grey.withOpacity(0.3),
+                                        highlightColor: white,
+                                        period:
+                                            const Duration(milliseconds: 1000),
+                                        child: Container(
+                                          height: height * 0.15,
+                                          width: height * 0.15,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: height * 0.01,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      userData.username!,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: textFactor * 25,
-                                        color: Colors.black.withOpacity(0.9),
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 25,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        userData.username!,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: textFactor * 25,
+                                          color: Colors.black.withOpacity(0.9),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        userData.role == null
+                                            ? ""
+                                            : userData.role!,
+                                        style: GoogleFonts.roboto(
+                                          fontSize: textFactor * 15,
+                                          color: Colors.black.withOpacity(0.6),
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                buildUserCountItems(userData),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: TabBar(
+                                      labelColor: Colors.black,
+                                      indicatorSize: TabBarIndicatorSize.label,
+                                      labelPadding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                      ),
+                                      unselectedLabelColor: Colors.grey,
+                                      controller: tabController,
+                                      labelStyle: GoogleFonts.roboto(
+                                        fontSize: textFactor * 14,
+                                        color: Colors.black.withOpacity(0.8),
                                         fontWeight: FontWeight.w600,
                                       ),
-                                    ),
-                                    Text(
-                                      userData.role == null
-                                          ? ""
-                                          : userData.role!,
-                                      style: GoogleFonts.roboto(
-                                        fontSize: textFactor * 15,
-                                        color: Colors.black.withOpacity(0.6),
-                                        fontWeight: FontWeight.normal,
+                                      indicator: const CircleTabIndicator(
+                                        color: primaryColor,
+                                        radius: 4,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 15,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () {},
-                                        child: Ink(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            children: [
-                                              GetBuilder<AppController>(
-                                                id: "postCount",
-                                                builder: (context) {
-                                                  return FutureBuilder<
-                                                      List<ImageModel?>>(
-                                                    future: postServices
-                                                        .getMyImages(
-                                                      userData.id!,
-                                                    ),
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      if (snapshot
-                                                              .connectionState ==
-                                                          ConnectionState
-                                                              .done) {
-                                                        final postCount =
-                                                            (snapshot.data)!
-                                                                .length;
-                                                        return Text(
-                                                          postCount.toString(),
-                                                          style: GoogleFonts
-                                                              .poppins(
-                                                            fontSize:
-                                                                textFactor * 17,
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                              0.8,
-                                                            ),
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        );
-                                                      }
-                                                      return Text(
-                                                        "",
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                          fontSize:
-                                                              textFactor * 17,
-                                                          color: Colors.black
-                                                              .withOpacity(0.8),
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                              Text(
-                                                "Posts",
-                                                style: GoogleFonts.roboto(
-                                                  fontSize: textFactor * 13,
-                                                  color: Colors.black
-                                                      .withOpacity(0.8),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                      isScrollable: true,
+                                      onTap: (index) {
+                                        currentIndex = index;
+                                        tabController!.animateTo(index);
+                                        controller.update(["tabs"]);
+                                      },
+                                      tabs: const [
+                                        Tab(
+                                          text: "About",
                                         ),
-                                      ),
+                                        Tab(
+                                          text: "Posts",
+                                        )
+                                      ],
                                     ),
-                                    Container(
-                                      color: Colors.grey,
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 25,
-                                      ),
-                                      height: 20,
-                                      width: 1.5,
-                                    ),
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () {
-                                          if (0 < userData.followersCount!) {
-                                            Get.bottomSheet(
-                                              UsersListView(
-                                                userId: userData.id!,
-                                                type: "followers",
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: Ink(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                userData.followersCount
-                                                    .toString(),
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: textFactor * 17,
-                                                  color: Colors.black
-                                                      .withOpacity(0.8),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              Text(
-                                                " Followers",
-                                                style: GoogleFonts.roboto(
-                                                  fontSize: textFactor * 13,
-                                                  color: Colors.black
-                                                      .withOpacity(0.8),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      color: Colors.grey,
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 25,
-                                      ),
-                                      height: 20,
-                                      width: 1.5,
-                                    ),
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.bottomSheet(
-                                            UsersListView(
-                                              userId: userData.id!,
-                                              type: "following",
-                                            ),
-                                          );
-                                        },
-                                        child: Ink(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                userData.followingCount
-                                                    .toString(),
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: textFactor * 17,
-                                                  color: Colors.black
-                                                      .withOpacity(0.8),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              Text(
-                                                "Followings",
-                                                style: GoogleFonts.roboto(
-                                                  fontSize: textFactor * 12,
-                                                  color: Colors.black
-                                                      .withOpacity(0.8),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: TabBar(
-                                    labelColor: Colors.black,
-                                    indicatorSize: TabBarIndicatorSize.label,
-                                    labelPadding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                    ),
-                                    unselectedLabelColor: Colors.grey,
-                                    controller: tabController,
-                                    labelStyle: GoogleFonts.roboto(
-                                      fontSize: textFactor * 14,
-                                      color: Colors.black.withOpacity(0.8),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    indicator: const CircleTabIndicator(
-                                      color: primaryColor,
-                                      radius: 4,
-                                    ),
-                                    isScrollable: true,
-                                    onTap: (index) {
-                                      currentIndex = index;
-                                      tabController!.animateTo(index);
-                                      controller.update(["tabs"]);
-                                    },
-                                    tabs: const [
-                                      Tab(
-                                        text: "About",
-                                      ),
-                                      Tab(
-                                        text: "Posts",
-                                      )
-                                    ],
                                   ),
                                 ),
-                              ),
-                              GetBuilder<AppController>(
-                                id: "tabs",
-                                builder: (controller) {
-                                  return IndexedStack(
-                                    index: currentIndex,
-                                    children: <Widget>[
-                                      Visibility(
-                                        visible: currentIndex == 0,
-                                        child: ProfileAboutView(
-                                          userData: userData,
+                                GetBuilder<AppController>(
+                                  id: "tabs",
+                                  builder: (controller) {
+                                    return IndexedStack(
+                                      index: currentIndex,
+                                      children: <Widget>[
+                                        Visibility(
+                                          visible: currentIndex == 0,
+                                          child: ProfileAboutView(
+                                            userData: userData,
+                                          ),
                                         ),
-                                      ),
-                                      Visibility(
-                                        visible: currentIndex == 1,
-                                        child: UserPosts(
-                                          userId: userData.id!,
+                                        Visibility(
+                                          visible: currentIndex == 1,
+                                          child: UserPosts(
+                                            userId: userData.id!,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -492,85 +323,88 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
               ),
             ),
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: width,
-                    height: height * .03,
-                  ),
-                  Shimmer.fromColors(
-                    baseColor: Colors.grey.withOpacity(0.3),
-                    highlightColor: white,
-                    period: const Duration(milliseconds: 1000),
-                    child: Container(
-                      height: height * 0.15,
-                      width: height * 0.15,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
+            ScrollConfiguration(
+              behavior: const ScrollBehavior().copyWith(overscroll: false),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: width,
+                      height: height * .03,
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.withOpacity(0.2),
+                      highlightColor: white,
+                      period: const Duration(milliseconds: 1000),
+                      child: Container(
+                        height: height * 0.15,
+                        width: height * 0.15,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                          ),
+                          color: Colors.grey,
+                          shape: BoxShape.circle,
                         ),
-                        color: Colors.grey,
-                        shape: BoxShape.circle,
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: height * 0.02,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Column(
-                      children: [
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.withOpacity(0.3),
-                          highlightColor: white,
-                          period: const Duration(milliseconds: 1000),
-                          child: Container(
-                            height: height * 0.05,
-                            width: width * 0.3,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: height * 0.02,
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.withOpacity(0.3),
-                          highlightColor: white,
-                          period: const Duration(milliseconds: 1000),
-                          child: Container(
-                            height: height * 0.075,
-                            width: width * 0.8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: height * 0.02,
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.withOpacity(0.3),
-                          highlightColor: white,
-                          period: const Duration(milliseconds: 1000),
-                          child: Container(
-                            height: height * 04,
-                            width: width * 0.98,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ],
+                    SizedBox(
+                      height: height * 0.02,
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: Column(
+                        children: [
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.withOpacity(0.2),
+                            highlightColor: white,
+                            period: const Duration(milliseconds: 1000),
+                            child: Container(
+                              height: height * 0.05,
+                              width: width * 0.3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.withOpacity(0.2),
+                            highlightColor: white,
+                            period: const Duration(milliseconds: 1000),
+                            child: Container(
+                              height: height * 0.075,
+                              width: width * 0.8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.withOpacity(0.2),
+                            highlightColor: white,
+                            period: const Duration(milliseconds: 1000),
+                            child: Container(
+                              height: height * 04,
+                              width: width * 0.98,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -578,6 +412,167 @@ class _ProfilePageState extends State<ProfilePage>
       ),
     );
   }
+
+  Widget buildUserCountItems(UserProfileModel userData) => Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 15,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  currentIndex = 1;
+                  tabController!.animateTo(1);
+                  controller.update(["tabs"]);
+                },
+                child: Ink(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      GetBuilder<AppController>(
+                        id: "postCount",
+                        builder: (context) {
+                          return FutureBuilder<List<ImageModel?>>(
+                            future: postServices.getMyImages(
+                              userData.id!,
+                            ),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                final postCount = (snapshot.data)!.length;
+                                return Text(
+                                  postCount.toString(),
+                                  style: GoogleFonts.poppins(
+                                    fontSize: textFactor * 17,
+                                    color: Colors.black.withOpacity(
+                                      0.8,
+                                    ),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                );
+                              }
+                              return Text(
+                                "",
+                                style: GoogleFonts.poppins(
+                                  fontSize: textFactor * 17,
+                                  color: Colors.black.withOpacity(0.8),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      Text(
+                        "Posts",
+                        style: GoogleFonts.roboto(
+                          fontSize: textFactor * 13,
+                          color: Colors.black.withOpacity(0.8),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.grey,
+              margin: const EdgeInsets.symmetric(
+                horizontal: 25,
+              ),
+              height: 20,
+              width: 1.5,
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  if (0 < userData.followersCount!) {
+                    Get.bottomSheet(
+                      UsersListView(
+                        userId: userData.id!,
+                        type: "followers",
+                      ),
+                    );
+                  }
+                },
+                child: Ink(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Text(
+                        userData.followersCount.toString(),
+                        style: GoogleFonts.poppins(
+                          fontSize: textFactor * 17,
+                          color: Colors.black.withOpacity(0.8),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        " Followers",
+                        style: GoogleFonts.roboto(
+                          fontSize: textFactor * 13,
+                          color: Colors.black.withOpacity(0.8),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.grey,
+              margin: const EdgeInsets.symmetric(
+                horizontal: 25,
+              ),
+              height: 20,
+              width: 1.5,
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  Get.bottomSheet(
+                    UsersListView(
+                      userId: userData.id!,
+                      type: "following",
+                    ),
+                  );
+                },
+                child: Ink(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Text(
+                        userData.followingCount.toString(),
+                        style: GoogleFonts.poppins(
+                          fontSize: textFactor * 17,
+                          color: Colors.black.withOpacity(0.8),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Followings",
+                        style: GoogleFonts.roboto(
+                          fontSize: textFactor * 12,
+                          color: Colors.black.withOpacity(0.8),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
 }
 
 class CircleTabIndicator extends Decoration {
