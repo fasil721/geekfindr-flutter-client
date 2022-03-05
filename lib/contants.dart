@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/services/postServices/post_models.dart';
 
 const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
@@ -13,7 +15,7 @@ const noStatus = "No Status";
 const nextUp = "Next Up";
 const inProgress = "In Progress";
 const completed = "Completed";
-
+final box = Boxes.getInstance();
 double textfactorfind(double val) {
   if (val == 0.85) {
     return val + 0.1;
@@ -65,3 +67,9 @@ final dropCatagories = [
   'issue',
   'bug'
 ];
+bool checkRequest(List<Join> requests) {
+  final currentUser = box.get("user");
+  return requests
+      .where((element) => element.owner == currentUser!.id)
+      .isNotEmpty;
+}

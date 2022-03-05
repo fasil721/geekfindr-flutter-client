@@ -28,7 +28,6 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   int currentIndex = 0;
   final _controller = Get.find<AppController>();
   int followersCount = 0;
-  final _box = Boxes.getInstance();
   final postServices = PostServices();
   final profileServices = ProfileServices();
 
@@ -47,7 +46,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
-    final currentUser = _box.get("user");
+    final currentUser = box.get("user");
 
     return FutureBuilder<UserProfileModel?>(
       future: profileServices.getUserProfilebyId(id: widget.userId),

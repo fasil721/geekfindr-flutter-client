@@ -37,7 +37,7 @@ class _FeedListState extends State<FeedList> {
   int dataLength = -1;
   bool isRefresh = true;
   bool isRequested = false;
-  
+
   Future<void> mockData(String lastId) async {
     if (!allLoaded) {
       isLoading = true;
@@ -92,12 +92,7 @@ class _FeedListState extends State<FeedList> {
     }
   }
 
-  bool checkRequest(List<Join> requests) {
-    final currentUser = box.get("user");
-    return requests
-        .where((element) => element.owner == currentUser!.id)
-        .isNotEmpty;
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -204,15 +199,10 @@ class _FeedListState extends State<FeedList> {
                                               child: CachedNetworkImage(
                                                 imageUrl:
                                                     "${datas[index].owner!.avatar}&s=${height * 0.04}",
-                                                placeholder: (
-                                                  context,
-                                                  url,
-                                                ) =>
+                                                placeholder: (context, url) =>
                                                     Shimmer.fromColors(
-                                                  baseColor:
-                                                      Colors.grey.withOpacity(
-                                                    0.3,
-                                                  ),
+                                                  baseColor: Colors.grey
+                                                      .withOpacity(0.3),
                                                   highlightColor: white,
                                                   period: const Duration(
                                                     milliseconds: 1000,
@@ -234,9 +224,7 @@ class _FeedListState extends State<FeedList> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: width * 0.04,
-                                      ),
+                                      SizedBox(width: width * 0.04),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -264,7 +252,7 @@ class _FeedListState extends State<FeedList> {
                                   alignment: Alignment.centerLeft,
                                   padding: const EdgeInsets.only(
                                     left: 10,
-                                    bottom: 10,
+                                    bottom: 10
                                   ),
                                   child: ReadMoreText(
                                     datas[index].description!,

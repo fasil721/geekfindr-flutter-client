@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:geek_findr/components/post_view_dialoge.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
@@ -44,22 +45,24 @@ class UserPosts extends StatelessWidget {
                     mainAxisSpacing: 15,
                     crossAxisSpacing: 15,
                     itemBuilder: (context, index) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: CachedNetworkImage(
-                          fit: BoxFit.fitWidth,
-                          // width: width,
-                          imageUrl: data[index].mediaUrl!,
-                          placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: Colors.grey.withOpacity(0.3),
-                            highlightColor: white,
-                            period: const Duration(milliseconds: 1000),
-                            child: Container(
-                              // height: 300,
-                              // width: width,
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(10),
+                      return GestureDetector(
+                        onTap: () {
+                          Get.dialog(PostViewDialoge(imageModel: data[index]));
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                            fit: BoxFit.fitWidth,
+                            imageUrl: data[index].mediaUrl!,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey.withOpacity(0.3),
+                              highlightColor: white,
+                              period: const Duration(milliseconds: 1000),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             ),
                           ),
@@ -107,36 +110,36 @@ class UserPosts extends StatelessWidget {
                 //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //         children: [
                 //           Expanded(child: Text(data[index].description!)),
-                //           PopupMenuButton(
-                //             itemBuilder: (BuildContext bc) => [
-                //               const PopupMenuItem(
-                //                 value: "2",
-                //                 child: Text("edit post"),
-                //               ),
-                //               const PopupMenuItem(
-                //                 value: "1",
-                //                 child: Text("delete post"),
-                //               ),
-                //             ],
-                //             onSelected: (value) {
-                //               if (value == "1") {
-                //                 deleteImage(imageId: data[index].id!);
-                //                 // SystemChannels.textInput
-                //                 //     .invokeMethod("TextInput.hide");
-                //               }
-                //               if (value == "2") {
-                //                 Get.dialog(
-                //                   PostEditDialoge(
-                //                     imageModel: data[index],
-                //                   ),
-                //                 );
-                //               }
-                //             },
-                //             icon: const Icon(
-                //               Icons.more_horiz,
-                //               color: Colors.black,
-                //             ),
-                //           ),
+                          // PopupMenuButton(
+                          //   itemBuilder: (BuildContext bc) => [
+                          //     const PopupMenuItem(
+                          //       value: "2",
+                          //       child: Text("edit post"),
+                          //     ),
+                          //     const PopupMenuItem(
+                          //       value: "1",
+                          //       child: Text("delete post"),
+                          //     ),
+                          //   ],
+                          //   onSelected: (value) {
+                          //     if (value == "1") {
+                          //       deleteImage(imageId: data[index].id!);
+                          //       // SystemChannels.textInput
+                          //       //     .invokeMethod("TextInput.hide");
+                          //     }
+                          //     if (value == "2") {
+                          //       Get.dialog(
+                          //         PostEditDialoge(
+                          //           imageModel: data[index],
+                          //         ),
+                          //       );
+                          //     }
+                          //   },
+                          //   icon: const Icon(
+                          //     Icons.more_horiz,
+                          //     color: Colors.black,
+                          //   ),
+                          // ),
                 //         ],
                 //       ),
                 //     ),

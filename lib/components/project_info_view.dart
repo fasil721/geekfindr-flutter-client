@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/components/edit_description_dialoge.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
+import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProjectInfoView extends StatelessWidget {
-   const ProjectInfoView({
+class ProjectInfoView extends StatefulWidget {
+  const ProjectInfoView({
     Key? key,
     required this.projuctDetials,
     required this.myRole,
   }) : super(key: key);
   final ProjectDataModel projuctDetials;
   final String myRole;
+
+  @override
+  State<ProjectInfoView> createState() => _ProjectInfoViewState();
+}
+
+class _ProjectInfoViewState extends State<ProjectInfoView> {
+  final myProjects = ProjectServices();
+  TextEditingController? descTextController;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +42,7 @@ class ProjectInfoView extends StatelessWidget {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    projuctDetials.name!,
+                    widget.projuctDetials.name!,
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -42,13 +51,13 @@ class ProjectInfoView extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible: myRole == admin || myRole == owner,
+                  visible: widget.myRole == admin || widget.myRole == owner,
                   child: PopupMenuButton(
                     itemBuilder: (BuildContext bc) => [
                       PopupMenuItem(
                         value: "1",
                         child: Text(
-                          projuctDetials.description!.isEmpty
+                          widget.projuctDetials.description!.isEmpty
                               ? "Add Description"
                               : "Edit Description",
                           style: GoogleFonts.poppins(
@@ -62,9 +71,10 @@ class ProjectInfoView extends StatelessWidget {
                     onSelected: (value) {
                       if (value == "1") {
                         Get.dialog(
-                          EditDescriptionDialoge(
-                            description: projuctDetials.description!,
-                            projectId: projuctDetials.id!,
+                          buildEditDescriptionDialoge(
+                            description: widget.projuctDetials.description!,
+                            projectId: widget.projuctDetials.id!,
+                            width: width,
                           ),
                         );
                       }
@@ -87,12 +97,12 @@ class ProjectInfoView extends StatelessWidget {
                   onTap: () {
                     Get.to(
                       () => OtherUserProfile(
-                        userId: projuctDetials.owner!.id!,
+                        userId: widget.projuctDetials.owner!.id!,
                       ),
                     );
                   },
                   child: Text(
-                    projuctDetials.owner!.username!,
+                    widget.projuctDetials.owner!.username!,
                     style: GoogleFonts.poppins(
                       fontSize: textFactor * 14,
                       fontWeight: FontWeight.w500,
@@ -106,7 +116,7 @@ class ProjectInfoView extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                projuctDetials.description!,
+                widget.projuctDetials.description!,
                 style: GoogleFonts.poppins(
                   fontSize: textFactor * 14,
                   fontWeight: FontWeight.w500,
@@ -117,6 +127,79 @@ class ProjectInfoView extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildEditDescriptionDialoge({
+    required String description,
+    required String projectId,
+    required double width,
+  }) {
+    descTextController = TextEditingController(text: description);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: width * 0.8,
+          child: Material(
+            borderRadius: BorderRadius.circular(
+              20,
+            ),
+            color: Colors.white,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(
+                    10.0,
+                  ),
+                  child: TextField(
+                    controller: descTextController,
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    minLines: 1,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Description",
+                      filled: true,
+                      fillColor: white,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all<double>(3),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(primaryColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    if (descTextController!.text.isNotEmpty) {
+                      final body = {"description": descTextController!.text};
+                      myProjects.editProjectDescription(
+                        projectId: projectId,
+                        body: body,
+                      );
+                    } else {
+                      Fluttertoast.showToast(msg: "Field can't be empty");
+                    }
+                  },
+                  child: const Text("Save"),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
