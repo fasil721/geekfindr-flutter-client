@@ -157,7 +157,11 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                             children: [
                               Expanded(
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    currentIndex = 1;
+                                    tabController!.animateTo(1);
+                                    _controller.update(["tabs2"]);
+                                  },
                                   child: Ink(
                                     padding: const EdgeInsets.all(10),
                                     child: Column(
@@ -379,7 +383,8 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                             followersCount = followersCount + 1;
                                             final body = {"id": user.id};
                                             profileServices.followUsers(
-                                                body: body.cast());
+                                              body: body.cast(),
+                                            );
                                           }
                                         },
                                         child: SizedBox(
@@ -466,6 +471,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               isScrollable: true,
                               onTap: (index) {
                                 currentIndex = index;
+                                tabController!.animateTo(index);
                                 _controller.update(["tabs2"]);
                               },
                               tabs: const [

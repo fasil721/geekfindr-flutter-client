@@ -5,7 +5,6 @@ import 'package:geek_findr/components/heart_animation_widget.dart';
 import 'package:geek_findr/components/liked_users_bottom_list.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/postServices/posts.dart';
@@ -29,6 +28,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   TextEditingController? descTextController;
   final commmentEditController = TextEditingController();
   final postServices = PostServices();
+
   final controller = Get.find<AppController>();
   bool isRequested = false;
   bool isLiked = false;
@@ -288,7 +288,10 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                     ],
                                     onSelected: (value) {
                                       if (value == "1") {
-                                        // po.deleteImage(imageId:widget.imageModel.id!);
+                                        postServices.deleteImage(
+                                          imageId: widget.imageModel.id!,
+                                        );
+                                        Get.back();
                                         // SystemChannels.textInput
                                         //     .invokeMethod("TextInput.hide");
                                       }
