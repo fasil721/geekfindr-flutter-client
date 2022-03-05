@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/user_about_view.dart';
-import 'package:geek_findr/components/profile_loading_screen.dart';
 import 'package:geek_findr/components/user_posts_view.dart';
 import 'package:geek_findr/components/users_list.dart';
 import 'package:geek_findr/contants.dart';
@@ -51,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage>
           future: profileServices.getUserProfileData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const LoadingProfilePage();
+              return builLoadingScreen();
             }
             if (snapshot.connectionState == ConnectionState.done) {
               final userData = snapshot.data;
@@ -432,6 +431,151 @@ class _ProfilePageState extends State<ProfilePage>
           },
         );
       },
+    );
+  }
+
+  Widget builLoadingScreen() {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      backgroundColor: white,
+      appBar: AppBar(
+        leadingWidth: 70,
+        elevation: 0,
+        backgroundColor: primaryColor,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.edit,
+            ),
+          ),
+          const SizedBox(width: 12)
+        ],
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.more_vert,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            ClipShadowPath(
+              shadow: BoxShadow(
+                color: Colors.grey.withOpacity(.7),
+                blurRadius: 3,
+                spreadRadius: 3,
+                offset: const Offset(0, 3),
+              ),
+              clipper: ConvexClipPath(),
+              child: Container(
+                height: height * 0.19,
+                width: width,
+                decoration: BoxDecoration(
+                  color: primaryColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(.7),
+                      blurRadius: 115,
+                      spreadRadius: 105,
+                      offset: const Offset(-300, -300),
+                    ),
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(.7),
+                      blurRadius: 105,
+                      spreadRadius: 105,
+                      offset: const Offset(400, 500),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: width,
+                    height: height * .03,
+                  ),
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey.withOpacity(0.3),
+                    highlightColor: white,
+                    period: const Duration(milliseconds: 1000),
+                    child: Container(
+                      height: height * 0.15,
+                      width: height * 0.15,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2,
+                        ),
+                        color: Colors.grey,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * 0.02,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Column(
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.withOpacity(0.3),
+                          highlightColor: white,
+                          period: const Duration(milliseconds: 1000),
+                          child: Container(
+                            height: height * 0.05,
+                            width: width * 0.3,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.withOpacity(0.3),
+                          highlightColor: white,
+                          period: const Duration(milliseconds: 1000),
+                          child: Container(
+                            height: height * 0.075,
+                            width: width * 0.8,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.withOpacity(0.3),
+                          highlightColor: white,
+                          period: const Duration(milliseconds: 1000),
+                          child: Container(
+                            height: height * 04,
+                            width: width * 0.98,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/user_about_view.dart';
-import 'package:geek_findr/components/profile_loading_screen.dart';
 import 'package:geek_findr/components/user_posts_view.dart';
 import 'package:geek_findr/components/users_list.dart';
 import 'package:geek_findr/contants.dart';
@@ -49,12 +48,12 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     final currentUser = _box.get("user");
-    
+
     return FutureBuilder<UserProfileModel?>(
       future: profileServices.getUserProfilebyId(id: widget.userId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LoadingProfilePage();
+          // return const LoadingProfilePage();
         }
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data != null) {
@@ -165,7 +164,8 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                     child: Column(
                                       children: [
                                         FutureBuilder<List<ImageModel?>>(
-                                          future: postServices.getMyImages(user.id!),
+                                          future: postServices
+                                              .getMyImages(user.id!),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState ==
                                                 ConnectionState.done) {
@@ -342,7 +342,8 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               id: "followers",
                               builder: (_) {
                                 return FutureBuilder<List<UserDetials>>(
-                                  future: profileServices.getUserfollowersAndFollowings(
+                                  future: profileServices
+                                      .getUserfollowersAndFollowings(
                                     id: user.id!,
                                     type: "followers",
                                   ),
@@ -378,7 +379,8 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                           if (!isFollowing) {
                                             followersCount = followersCount + 1;
                                             final body = {"id": user.id};
-                                            profileServices.followUsers(body: body.cast());
+                                            profileServices.followUsers(
+                                                body: body.cast());
                                           }
                                         },
                                         child: SizedBox(
