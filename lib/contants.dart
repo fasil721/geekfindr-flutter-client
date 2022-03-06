@@ -5,7 +5,7 @@ import 'package:geek_findr/services/postServices/post_models.dart';
 const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
 const secondaryColor = Color(0xffF3F4F7);
-const primaryBlue = Color(0xffEFFFFD );
+const primaryBlue = Color(0xffEFFFFD);
 const white = Colors.white;
 final black = Colors.black.withOpacity(0.8);
 const admin = "admin";
@@ -53,7 +53,8 @@ String findDatesDifferenceFromToday(DateTime dateTime) {
   } else if (diff.inDays > -1) {
     return "${diff.inHours * -1} hours ago";
   } else if (diff.inDays < -7) {
-    return "${dateTime.day}-${dateTime.month}-${dateTime.year}";
+    final month = findMonth(dateTime.month.toString());
+    return "${dateTime.day} $month";
   } else {
     return "${diff.inDays * -1} days ago";
   }
@@ -74,4 +75,31 @@ bool checkRequest(List<Join> requests) {
   return requests
       .where((element) => element.owner == currentUser!.id)
       .isNotEmpty;
+}
+
+String findMonth(String month) {
+  if (month == "1") {
+    return "Jan";
+  } else if (month == "2") {
+    return "Feb";
+  } else if (month == "3") {
+    return "Mar";
+  } else if (month == "4") {
+    return "Apr";
+  } else if (month == "5") {
+    return "May";
+  } else if (month == "6") {
+    return "Jun";
+  } else if (month == "7") {
+    return "Jul";
+  } else if (month == "8") {
+    return "Aug";
+  } else if (month == "9") {
+    return "Sep";
+  } else if (month == "10") {
+    return "Octr";
+  } else if (month == "11") {
+    return "Nov";
+  }
+  return "Dec";
 }

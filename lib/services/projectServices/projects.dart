@@ -15,6 +15,7 @@ class ProjectServices {
   final controller = Get.find<AppController>();
 
   Future<List<ProjectShortModel>?> getMyProjects() async {
+    await Future.delayed(const Duration(seconds: 5));
     final user = box.get("user");
     const url = "$prodUrl/api/v1/projects/my-projects";
     try {

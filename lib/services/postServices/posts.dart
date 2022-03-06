@@ -152,8 +152,6 @@ class PostServices {
           Fluttertoast.showToast(msg: element.message!);
         }
       } else {
-        // print(response.statusCode);
-        // print(response.body);
         Fluttertoast.showToast(msg: "Something went wrong");
       }
       return [];
