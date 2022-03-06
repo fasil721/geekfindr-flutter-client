@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/components/feed_list_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
@@ -7,6 +6,7 @@ import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:geek_findr/views/project_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MyProjectList extends StatefulWidget {
   const MyProjectList({Key? key}) : super(key: key);
@@ -24,10 +24,10 @@ class _MyProjectListState extends State<MyProjectList> {
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return Scaffold(
       backgroundColor: secondaryColor,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: white,
-      ),
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   backgroundColor: white,
+      // ),
       body: GetBuilder<AppController>(
         id: "projectList",
         builder: (controller) {
@@ -36,7 +36,7 @@ class _MyProjectListState extends State<MyProjectList> {
             builder:
                 (context, AsyncSnapshot<List<ProjectShortModel>?> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return skeleton(width);
+                return _skeleton(width);
               }
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.data != null) {
@@ -117,6 +117,35 @@ class _MyProjectListState extends State<MyProjectList> {
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget _skeleton(double width) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.withOpacity(0.3),
+      highlightColor: white,
+      period: const Duration(milliseconds: 1000),
+      child: Container(
+        margin: const EdgeInsets.all(10),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: 5,
+          itemBuilder: (context, index) => Column(
+            children: [
+              Container(
+                width: width,
+                height: 115,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 10)
+            ],
+          ),
+        ),
       ),
     );
   }

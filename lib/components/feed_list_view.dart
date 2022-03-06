@@ -94,13 +94,14 @@ class _FeedListState extends State<FeedList> {
 
   @override
   Widget build(BuildContext context) {
+    // dataLength = -1;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return FutureBuilder<List<ImageModel>>(
       future: postServices.getMyFeeds(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return skeleton(width);
+          return _skeleton(width);
         }
         if (snapshot.hasData) {
           if (snapshot.data != null) {
@@ -150,7 +151,9 @@ class _FeedListState extends State<FeedList> {
                           vertical: 5,
                         ),
                         decoration: BoxDecoration(
-                          color: datas[index].isProject! ? primaryBlue : white,
+                          color: datas[index].isProject!
+                              ? primaryBlue
+                              : secondaryColor,
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Column(
@@ -282,77 +285,7 @@ class _FeedListState extends State<FeedList> {
                                 style: GoogleFonts.poppins(color: black),
                               ),
                             ),
-                            GetBuilder<AppController>(
-                              id: "Like",
-                              builder: (controller) {
-                                return GestureDetector(
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: CachedNetworkImage(
-                                          imageUrl: datas[index].mediaUrl!,
-                                          fit: BoxFit.fitWidth,
-                                          width: width,
-                                          placeholder: (context, url) =>
-                                              Shimmer.fromColors(
-                                            baseColor:
-                                                Colors.grey.withOpacity(0.3),
-                                            highlightColor: white,
-                                            period: const Duration(
-                                              milliseconds: 1000,
-                                            ),
-                                            child: Container(
-                                              height: width * 0.65,
-                                              width: width,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  20,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Opacity(
-                                        opacity:
-                                            isHeartAnimatingList[index] ? 1 : 0,
-                                        child: HeartAnimationWidget(
-                                          duration: const Duration(
-                                            milliseconds: 700,
-                                          ),
-                                          isAnimating:
-                                              isHeartAnimatingList[index],
-                                          child: const Icon(
-                                            Icons.favorite,
-                                            color: Colors.white,
-                                            size: 60,
-                                          ),
-                                          onEnd: () {
-                                            isHeartAnimatingList[index] = false;
-                                            controller.update(["Like"]);
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  onDoubleTap: () {
-                                    if (!isLikedList[index]) {
-                                      likesCountList[index] += 1;
-                                      postServices.postLike(
-                                        imageId: datas[index].id!,
-                                      );
-                                    }
-                                    isLikedList[index] = true;
-                                    isHeartAnimatingList[index] = true;
-                                    controller.update(["Like"]);
-                                  },
-                                );
-                              },
-                            ),
+                            buildImage(index, width),
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
@@ -559,9 +492,76 @@ class _FeedListState extends State<FeedList> {
       },
     );
   }
+
+  Widget buildImage(int index, double width) => GetBuilder<AppController>(
+        id: "Like",
+        builder: (controller) {
+          return GestureDetector(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: CachedNetworkImage(
+                    imageUrl: datas[index].mediaUrl!,
+                    fit: BoxFit.fitWidth,
+                    width: width,
+                    placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: Colors.grey.withOpacity(0.3),
+                      highlightColor: white,
+                      period: const Duration(
+                        milliseconds: 1000,
+                      ),
+                      child: Container(
+                        height: width * 0.65,
+                        width: width,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(
+                            20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Opacity(
+                  opacity: isHeartAnimatingList[index] ? 1 : 0,
+                  child: HeartAnimationWidget(
+                    duration: const Duration(
+                      milliseconds: 700,
+                    ),
+                    isAnimating: isHeartAnimatingList[index],
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 60,
+                    ),
+                    onEnd: () {
+                      isHeartAnimatingList[index] = false;
+                      controller.update(["Like"]);
+                    },
+                  ),
+                )
+              ],
+            ),
+            onDoubleTap: () {
+              if (!isLikedList[index]) {
+                likesCountList[index] += 1;
+                postServices.postLike(
+                  imageId: datas[index].id!,
+                );
+              }
+              isLikedList[index] = true;
+              isHeartAnimatingList[index] = true;
+              controller.update(["Like"]);
+            },
+          );
+        },
+      );
 }
 
-Widget skeleton(double width) {
+Widget _skeleton(double width) {
   return Shimmer.fromColors(
     baseColor: Colors.grey.withOpacity(0.3),
     highlightColor: white,

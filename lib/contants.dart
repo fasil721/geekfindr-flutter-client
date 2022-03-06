@@ -70,6 +70,7 @@ final dropCatagories = [
   'issue',
   'bug'
 ];
+
 bool checkRequest(List<Join> requests) {
   final currentUser = box.get("user");
   return requests
