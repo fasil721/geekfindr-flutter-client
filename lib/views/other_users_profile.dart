@@ -13,6 +13,7 @@ import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/views/profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 class OtherUserProfile extends StatefulWidget {
@@ -221,11 +222,13 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
+                                    Get.dialog(loadingIndicator());
                                     final data = await profileServices
                                         .getUserfollowersAndFollowings(
                                       id: user.id!,
                                       type: "followers",
                                     );
+                                    Get.back();
                                     Get.bottomSheet(
                                       UsersListView(
                                         userList: data,
@@ -275,11 +278,13 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
+                                    Get.dialog(loadingIndicator());
                                     final data = await profileServices
                                         .getUserfollowersAndFollowings(
                                       id: user.id!,
                                       type: "following",
                                     );
+                                    Get.back();
                                     Get.bottomSheet(
                                       UsersListView(
                                         userList: data,

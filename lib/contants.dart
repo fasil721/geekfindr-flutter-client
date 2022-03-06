@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
@@ -104,3 +105,20 @@ String findMonth(String month) {
   }
   return "Dec";
 }
+
+Widget loadingIndicator() => const Center(
+      child: SizedBox(
+        height: 50,
+        child: LoadingIndicator(
+          indicatorType: Indicator.ballPulse,
+          colors: [
+            Colors.red,
+            Colors.redAccent,
+            Colors.orange,
+          ],
+          strokeWidth: 2,
+          backgroundColor: Colors.transparent,
+          pathBackgroundColor: Colors.transparent,
+        ),
+      ),
+    );

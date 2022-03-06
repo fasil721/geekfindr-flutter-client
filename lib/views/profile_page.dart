@@ -494,11 +494,13 @@ class _ProfilePageState extends State<ProfilePage>
               child: InkWell(
                 onTap: () async {
                   if (0 < userData.followersCount!) {
+                    Get.dialog(loadingIndicator());
                     final data =
                         await profileServices.getUserfollowersAndFollowings(
                       id: userData.id!,
                       type: "followers",
                     );
+                    Get.back();
                     Get.bottomSheet(
                       UsersListView(
                         userList: data,
@@ -542,11 +544,13 @@ class _ProfilePageState extends State<ProfilePage>
             Expanded(
               child: InkWell(
                 onTap: () async {
+                  Get.dialog(loadingIndicator());
                   final data =
                       await profileServices.getUserfollowersAndFollowings(
                     id: userData.id!,
                     type: "following",
                   );
+                  Get.back();
                   Get.bottomSheet(
                     UsersListView(
                       userList: data,
