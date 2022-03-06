@@ -9,6 +9,7 @@ import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProjectView extends StatefulWidget {
   const ProjectView({
@@ -41,7 +42,7 @@ class _ProjectViewState extends State<ProjectView> {
           future: _myProjects.getProjectDetialsById(id: widget.projectId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold();
+              return _skeleton();
             }
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.data != null) {
@@ -194,6 +195,79 @@ class _ProjectViewState extends State<ProjectView> {
           },
         );
       },
+    );
+  }
+
+  Widget _skeleton() {
+    return Scaffold(
+      backgroundColor: secondaryColor,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: white,
+        leading: IconButton(
+          splashRadius: 25,
+          icon: ImageIcon(
+            const AssetImage("assets/icons/left.png"),
+            color: black,
+            size: 25,
+          ),
+          onPressed: () {
+            Get.back();
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey.withOpacity(0.2),
+                highlightColor: white,
+                period: const Duration(milliseconds: 1000),
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  width: width * 0.3,
+                  height: height * 0.06,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              buildTabbar(),
+              Shimmer.fromColors(
+                baseColor: Colors.grey.withOpacity(0.2),
+                highlightColor: white,
+                period: const Duration(milliseconds: 1000),
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  width: width,
+                  height: height * 0.075,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              Shimmer.fromColors(
+                baseColor: Colors.grey.withOpacity(0.2),
+                highlightColor: white,
+                period: const Duration(milliseconds: 1000),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  width: width,
+                  height: height * 0.2,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
