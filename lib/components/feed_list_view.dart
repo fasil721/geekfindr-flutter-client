@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/components/comment_bottom_sheet.dart';
 import 'package:geek_findr/components/heart_animation_widget.dart';
 import 'package:geek_findr/components/liked_users_bottom_list.dart';
+import 'package:geek_findr/components/users_list_dialoge.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
@@ -302,9 +303,16 @@ class _FeedListState extends State<FeedList> {
                                         builder: (_) {
                                           return InkWell(
                                             onTap: () async {
+                                              final data = await postServices
+                                                  .getLikedUsers(
+                                                imageId: datas[index].id!,
+                                              );
+                                              final userList = data!
+                                                  .map((e) => e.owner!)
+                                                  .toList();
                                               Get.bottomSheet(
-                                                LikedUsersBottomSheet(
-                                                  imageId: datas[index].id!,
+                                                UsersListView(
+                                                  userList: userList,
                                                 ),
                                               );
                                             },

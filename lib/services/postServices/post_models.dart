@@ -1,3 +1,5 @@
+import 'package:geek_findr/services/profileServices/user_profile_model.dart';
+
 class Owner {
   Owner({
     this.username,
@@ -27,15 +29,15 @@ class LikedUsers {
     this.owner,
   });
 
-  Owner? owner;
+  UserDetials? owner;
 
   factory LikedUsers.fromJson(Map<String, dynamic> json) => LikedUsers(
-        owner: Owner.fromJson(Map<String, String>.from(json["owner"] as Map)),
+        owner: UserDetials.fromJson(
+          Map<String, String>.from(json["owner"] as Map),
+        ),
       );
 
-  Map<String, dynamic> toJson() => {
-        "owner": owner!.toJson(),
-      };
+  Map<String, dynamic> toJson() => {"owner": owner!.toJson()};
 }
 
 class CommentedUsers {

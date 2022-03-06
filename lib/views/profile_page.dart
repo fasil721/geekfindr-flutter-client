@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/user_about_view.dart';
 import 'package:geek_findr/components/user_posts_view.dart';
-import 'package:geek_findr/components/users_list.dart';
+import 'package:geek_findr/components/users_list_dialoge.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
@@ -492,12 +492,16 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             Expanded(
               child: InkWell(
-                onTap: () {
+                onTap: () async {
                   if (0 < userData.followersCount!) {
+                    final data =
+                        await profileServices.getUserfollowersAndFollowings(
+                      id: userData.id!,
+                      type: "followers",
+                    );
                     Get.bottomSheet(
                       UsersListView(
-                        userId: userData.id!,
-                        type: "followers",
+                        userList: data,
                       ),
                     );
                   }
@@ -537,11 +541,15 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             Expanded(
               child: InkWell(
-                onTap: () {
+                onTap: () async {
+                  final data =
+                      await profileServices.getUserfollowersAndFollowings(
+                    id: userData.id!,
+                    type: "following",
+                  );
                   Get.bottomSheet(
                     UsersListView(
-                      userId: userData.id!,
-                      type: "following",
+                      userList: data,
                     ),
                   );
                 },

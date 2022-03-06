@@ -87,7 +87,7 @@ class UserDetials {
   factory UserDetials.fromJson(Map<String, String> json) => UserDetials(
         username: json["username"],
         avatar: json["avatar"],
-        role: json["role"],
+        role: json["role"] ?? "",
         id: json["id"],
       );
 

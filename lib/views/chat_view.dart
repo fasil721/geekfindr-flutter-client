@@ -65,6 +65,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 const SizedBox(
                   height: 16,
                 ),
+                
                 Center(
                   child: Container(
                     height: 4,

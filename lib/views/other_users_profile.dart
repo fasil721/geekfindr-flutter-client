@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/user_about_view.dart';
 import 'package:geek_findr/components/user_posts_view.dart';
-import 'package:geek_findr/components/users_list.dart';
+import 'package:geek_findr/components/users_list_dialoge.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
@@ -30,6 +30,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   int followersCount = 0;
   final postServices = PostServices();
   final profileServices = ProfileServices();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -219,11 +220,15 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               ),
                               Expanded(
                                 child: InkWell(
-                                  onTap: () {
+                                  onTap: () async {
+                                    final data = await profileServices
+                                        .getUserfollowersAndFollowings(
+                                      id: user.id!,
+                                      type: "followers",
+                                    );
                                     Get.bottomSheet(
                                       UsersListView(
-                                        userId: user.id!,
-                                        type: "followers",
+                                        userList: data,
                                       ),
                                     );
                                   },
@@ -269,11 +274,15 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               ),
                               Expanded(
                                 child: InkWell(
-                                  onTap: () {
+                                  onTap: () async {
+                                    final data = await profileServices
+                                        .getUserfollowersAndFollowings(
+                                      id: user.id!,
+                                      type: "following",
+                                    );
                                     Get.bottomSheet(
                                       UsersListView(
-                                        userId: user.id!,
-                                        type: "following",
+                                        userList: data,
                                       ),
                                     );
                                   },
