@@ -5,6 +5,7 @@ import 'package:geek_findr/services/postServices/post_models.dart';
 const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
 const secondaryColor = Color(0xffF3F4F7);
+const primaryBlue = Color(0xffEFFFFD );
 const white = Colors.white;
 final black = Colors.black.withOpacity(0.8);
 const admin = "admin";
@@ -16,6 +17,7 @@ const nextUp = "Next Up";
 const inProgress = "In Progress";
 const completed = "Completed";
 final box = Boxes.getInstance();
+
 double textfactorfind(double val) {
   if (val == 0.85) {
     return val + 0.1;

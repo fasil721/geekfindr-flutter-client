@@ -80,10 +80,11 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               decoration: BoxDecoration(
-                color: white,
+                color: secondaryColor,
                 borderRadius: BorderRadius.circular(30),
               ),
               child: Material(
+                color: secondaryColor,
                 borderRadius: BorderRadius.circular(30),
                 child: SingleChildScrollView(
                   child: Column(
@@ -146,6 +147,21 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                           ],
                         ),
                       ),
+                      // Visibility(
+                      //   visible: widget.imageModel.isProject!,
+                      //   child: Container(
+                      //     alignment: Alignment.centerLeft,
+                      //     padding: const EdgeInsets.only(left: 10, bottom: 5),
+                      //     child: Text(
+                      //       widget.imageModel.projectName!,
+                      //       style: GoogleFonts.poppins(
+                      //         fontSize: 13,
+                      //         color: black,
+                      //         fontWeight: FontWeight.w600,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(left: 10, bottom: 10),
@@ -367,72 +383,70 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   Widget buildLikesAndCommentRow({required bool isCurrentUser}) {
     final icon = isLiked ? Icons.favorite : Icons.favorite_border_outlined;
     final color = isLiked ? primaryColor : black;
-    return Visibility(
-      visible: !isCurrentUser,
-      child: Row(
-        children: [
-          HeartAnimationWidget(
-            isAnimating: isLiked,
-            child: IconButton(
-              splashRadius: 28,
-              onPressed: () {
-                if (!isLiked) {
-                  likesCount += 1;
-                  postServices.postLike(
-                    imageId: widget.imageModel.id!,
-                  );
-                }
-                isLiked = true;
-                controller.update(["postView"]);
-              },
-              icon: Icon(
-                icon,
-                color: color,
-                size: 28,
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.mode_comment_outlined,
-              color: black,
-              size: 28,
-            ),
-            splashRadius: 25,
-            tooltip: 'comment',
+    return Row(
+      children: [
+        HeartAnimationWidget(
+          isAnimating: isLiked,
+          child: IconButton(
+            splashRadius: 28,
             onPressed: () {
-              Get.bottomSheet(
-                CommentBottomSheet(
+              if (!isLiked) {
+                likesCount += 1;
+                postServices.postLike(
                   imageId: widget.imageModel.id!,
-                ),
-              );
+                );
+              }
+              isLiked = true;
               controller.update(["postView"]);
             },
-          ),
-          Visibility(
-            visible: widget.imageModel.isProject! && !isRequested,
-            child: IconButton(
-              icon: ImageIcon(
-                const AssetImage(
-                  "assets/icons/people.png",
-                ),
-                color: black,
-                size: 23,
-              ),
-              splashRadius: 25,
-              tooltip: 'join request',
-              onPressed: () {
-                postServices.sendJoinRequest(
-                  projectName: widget.imageModel.projectName!,
-                  projectId: widget.imageModel.id!,
-                );
-                isRequested = false;
-                controller.update(["dataList"]);
-              },
+            icon: Icon(
+              icon,
+              color: color,
+              size: 28,
             ),
           ),
-        ],
-      ),
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.mode_comment_outlined,
+            color: black,
+            size: 28,
+          ),
+          splashRadius: 25,
+          tooltip: 'comment',
+          onPressed: () {
+            Get.bottomSheet(
+              CommentBottomSheet(
+                imageId: widget.imageModel.id!,
+              ),
+            );
+            controller.update(["postView"]);
+          },
+        ),
+        Visibility(
+          visible:
+              !isCurrentUser && widget.imageModel.isProject! && !isRequested,
+          child: IconButton(
+            icon: ImageIcon(
+              const AssetImage(
+                "assets/icons/people.png",
+              ),
+              color: black,
+              size: 23,
+            ),
+            splashRadius: 25,
+            tooltip: 'join request',
+            onPressed: () {
+              postServices.sendJoinRequest(
+                projectName: widget.imageModel.projectName!,
+                projectId: widget.imageModel.id!,
+              );
+              isRequested = false;
+              controller.update(["dataList"]);
+            },
+          ),
+        ),
+      ],
     );
   }
 }
