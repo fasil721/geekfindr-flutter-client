@@ -5,8 +5,8 @@ import 'package:geek_findr/components/project_teams_view.dart';
 import 'package:geek_findr/components/project_todos_view.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
-import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -23,8 +23,6 @@ class ProjectView extends StatefulWidget {
 }
 
 class _ProjectViewState extends State<ProjectView> {
-  final _myProjects = ProjectServices();
-  final _controller = Get.find<AppController>();
   int _currentIndex = 0;
   double width = 0;
   double height = 0;
@@ -39,7 +37,7 @@ class _ProjectViewState extends State<ProjectView> {
       id: "projectView",
       builder: (controller) {
         return FutureBuilder<ProjectModel?>(
-          future: _myProjects.getProjectDetialsById(id: widget.projectId),
+          future: myProjects.getProjectDetialsById(id: widget.projectId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return _skeleton();
@@ -90,7 +88,7 @@ class _ProjectViewState extends State<ProjectView> {
                           ],
                           onSelected: (value) async {
                             if (value == "1") {
-                              await _myProjects.deleteProject(
+                              await myProjects.deleteProject(
                                 projectId: widget.projectId,
                                 projectName: projectDetials.name!,
                               );
@@ -280,7 +278,7 @@ class _ProjectViewState extends State<ProjectView> {
         indicatorWeight: .0001,
         onTap: (index) {
           _currentIndex = index;
-          _controller.update(["projtabs"]);
+          controller.update(["projtabs"]);
         },
         tabs: [
           ...categories.map(
@@ -300,7 +298,7 @@ class _ProjectViewState extends State<ProjectView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      element["iconPath"] as String,
+                      element["iconPath"]!,
                       height: 30,
                       width: 30,
                       color: categories[_currentIndex] == element
@@ -312,7 +310,7 @@ class _ProjectViewState extends State<ProjectView> {
                         top: 3,
                       ),
                       child: Text(
-                        element['name'] as String,
+                        element['name']!,
                         style: GoogleFonts.poppins(
                           color: categories[_currentIndex] == element
                               ? white

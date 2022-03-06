@@ -2,18 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/user_about_view.dart';
 import 'package:geek_findr/components/user_posts_view.dart';
-import 'package:geek_findr/components/users_list_dialoge.dart';
+import 'package:geek_findr/components/users_list_bottomsheet.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
-import 'package:geek_findr/services/postServices/posts.dart';
-import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/views/profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 class OtherUserProfile extends StatefulWidget {
@@ -27,10 +24,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     with TickerProviderStateMixin {
   TabController? tabController;
   int currentIndex = 0;
-  final _controller = Get.find<AppController>();
   int followersCount = 0;
-  final postServices = PostServices();
-  final profileServices = ProfileServices();
   bool isLoading = false;
 
   @override
@@ -162,7 +156,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                   onTap: () {
                                     currentIndex = 1;
                                     tabController!.animateTo(1);
-                                    _controller.update(["tabs2"]);
+                                    controller.update(["tabs2"]);
                                   },
                                   child: Ink(
                                     padding: const EdgeInsets.all(10),
@@ -486,7 +480,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               onTap: (index) {
                                 currentIndex = index;
                                 tabController!.animateTo(index);
-                                _controller.update(["tabs2"]);
+                                controller.update(["tabs2"]);
                               },
                               tabs: const [
                                 Tab(

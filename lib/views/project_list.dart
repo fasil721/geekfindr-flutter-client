@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
-import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:geek_findr/views/project_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MyProjectList extends StatefulWidget {
+class MyProjectList extends StatelessWidget {
   const MyProjectList({Key? key}) : super(key: key);
-
-  @override
-  _MyProjectListState createState() => _MyProjectListState();
-}
-
-class _MyProjectListState extends State<MyProjectList> {
-  final myProjects = ProjectServices();
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -24,10 +17,6 @@ class _MyProjectListState extends State<MyProjectList> {
     final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
     return Scaffold(
       backgroundColor: secondaryColor,
-      // appBar: AppBar(
-      //   elevation: 0,
-      //   backgroundColor: white,
-      // ),
       body: GetBuilder<AppController>(
         id: "projectList",
         builder: (controller) {

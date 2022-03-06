@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/comment_bottom_sheet.dart';
 import 'package:geek_findr/components/heart_animation_widget.dart';
-import 'package:geek_findr/components/liked_users_bottom_list.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_model.dart';
@@ -246,11 +245,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                               children: [
                                 InkWell(
                                   onTap: () async {
-                                    Get.bottomSheet(
-                                      LikedUsersBottomSheet(
-                                        imageId: widget.imageModel.id!,
-                                      ),
-                                    );
+                                    buildLikedUsersBottomSheet;
                                   },
                                   child: Ink(
                                     padding: const EdgeInsets.all(5),
@@ -449,6 +444,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
       ],
     );
   }
+
 }
 
 //   @override

@@ -2,12 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/user_about_view.dart';
 import 'package:geek_findr/components/user_posts_view.dart';
-import 'package:geek_findr/components/users_list_dialoge.dart';
+import 'package:geek_findr/components/users_list_bottomsheet.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
-import 'package:geek_findr/services/postServices/posts.dart';
-import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/views/profile_edit_page.dart';
 import 'package:get/get.dart';
@@ -16,16 +15,12 @@ import 'package:shimmer/shimmer.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
-
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage>
     with TickerProviderStateMixin {
-  final controller = Get.find<AppController>();
-  final postServices = PostServices();
-  final profileServices = ProfileServices();
   TabController? tabController;
   int currentIndex = 0;
   double textFactor = 0;

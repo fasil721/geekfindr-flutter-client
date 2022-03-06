@@ -96,7 +96,7 @@ class HomePage extends StatelessWidget {
                         trailing: IconButton(
                           splashRadius: 25,
                           onPressed: () {
-                            Get.bottomSheet(_buildPhotoOptionShet());
+                            Get.bottomSheet(_buildPhotoOptionSheet());
                           },
                           icon: const Icon(
                             Icons.add_a_photo,
@@ -116,7 +116,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildPhotoOptionShet() {
+  Widget _buildPhotoOptionSheet() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [

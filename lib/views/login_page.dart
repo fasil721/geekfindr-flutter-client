@@ -2,8 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/authServices/auth.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/views/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,8 +19,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final passwordController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
-  final controller = Get.find<AppController>();
-  final authServices = AuthServices();
   bool isVisible = true;
 
   @override
