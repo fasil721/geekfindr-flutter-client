@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/user_model.dart';
-import 'package:geek_findr/test.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/chat_page.dart';
 import 'package:geek_findr/views/home_page.dart';
@@ -55,9 +54,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final screens = [
       HomePage(),
-      MyProjectList(),
-      ChatPage(),
-      ProfilePage(),
+      const MyProjectList(),
+      const ChatPage(),
+      const ProfilePage(),
     ];
     return GetBuilder<AppController>(
       id: "home",

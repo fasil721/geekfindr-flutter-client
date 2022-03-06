@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
@@ -33,10 +34,11 @@ class ProfileAboutView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return Container(
+      width: width,
       margin: const EdgeInsets.symmetric(
         horizontal: 25,
         vertical: 20,

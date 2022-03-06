@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return GetBuilder<AppController>(
       id: "prof",
       builder: (controller) {

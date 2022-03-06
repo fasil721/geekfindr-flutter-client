@@ -4,9 +4,9 @@ import 'package:geek_findr/components/comment_bottom_sheet.dart';
 import 'package:geek_findr/components/heart_animation_widget.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
-import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
@@ -26,9 +26,6 @@ class PostViewDialoge extends StatefulWidget {
 class _PostEditDialogeState extends State<PostViewDialoge> {
   TextEditingController? descTextController;
   final commmentEditController = TextEditingController();
-  final postServices = PostServices();
-
-  final controller = Get.find<AppController>();
   bool isRequested = false;
   bool isLiked = false;
   bool isHeartAnimating = false;
@@ -244,8 +241,10 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                             Row(
                               children: [
                                 InkWell(
-                                  onTap: () async {
-                                    buildLikedUsersBottomSheet;
+                                  onTap: () {
+                                    buildLikedUsersBottomSheet(
+                                      widget.imageModel.id!,
+                                    );
                                   },
                                   child: Ink(
                                     padding: const EdgeInsets.all(5),
@@ -326,51 +325,6 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
             );
           },
         ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 10),
-        //   child: Material(
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //       children: [
-        //         Row(
-        //           children: [
-        //             IconButton(
-        //               onPressed: () async {
-        //                 // image = await pickImage(source: ImageSource.gallery);
-        //                 // controller.update(["img"]);
-        //               },
-        //               icon: const Icon(Icons.image),
-        //             ),
-        //             IconButton(
-        //               onPressed: () async {
-        //                 // image = await pickImage(source: ImageSource.camera);
-        //                 // controller.update(["img"]);
-        //               },
-        //               icon: const Icon(Icons.camera),
-        //             )
-        //           ],
-        //         ),
-        //         Padding(
-        //           padding: const EdgeInsets.symmetric(horizontal: 10),
-        //           child: ElevatedButton(
-        //             onPressed: () {
-        //               if (descTextController!.text.isNotEmpty &&
-        //                   descTextController!.text !=
-        //                       widget.imageModel.description) {
-        //                 final body = {"description": descTextController!.text};
-        //                 postServices.editImage(
-        //                   imageId: widget.imageModel.id!,
-        //                   body: body,
-        //                 );
-        //               }
-        //             },
-        //             child: const Text("Save"),
-        //           ),
-        //         )
-        //       ],
-        //     ),
-        //   ),
-        // )
       ],
     );
   }
@@ -444,7 +398,6 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
       ],
     );
   }
-
 }
 
 //   @override

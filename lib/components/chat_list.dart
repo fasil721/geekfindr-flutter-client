@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/test.dart';
 import 'package:geek_findr/views/chat_view.dart';
 
 class ChatUsersList extends StatefulWidget {

@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
@@ -132,7 +132,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return GetBuilder<AppController>(
       id: "taskList",
       builder: (_controller) {

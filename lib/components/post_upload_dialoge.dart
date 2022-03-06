@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/postServices/posts.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -17,8 +17,6 @@ class PostUploadDialoge extends StatelessWidget {
 
   final descTextController = TextEditingController();
   final projTextController = TextEditingController();
-  final controller = Get.find<AppController>();
-  final postServices = PostServices();
   final File image;
   bool isProject = false;
 
@@ -26,7 +24,8 @@ class PostUploadDialoge extends StatelessWidget {
   Widget build(BuildContext context) {
     // final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
 
     return GetBuilder<AppController>(
       id: "img",

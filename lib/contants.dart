@@ -22,7 +22,7 @@ final controller = Get.find<AppController>();
 final postServices = PostServices();
 final profileServices = ProfileServices();
 final authServices = AuthServices();
-final myProjects = ProjectServices();
+final projectServices = ProjectServices();
 
 final categories = [
   {"name": "Info", 'iconPath': 'assets/icons/info.png'},

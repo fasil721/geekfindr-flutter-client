@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
@@ -15,9 +14,7 @@ class UsersListView extends StatelessWidget {
     required this.userList,
   }) : super(key: key);
   final List<UserDetials> userList;
-  final profileServices = ProfileServices();
   final searchController = TextEditingController();
-  final _controller = Get.find<AppController>();
 
   List<UserDetials> searchUser() {
     if (searchController.text.isEmpty) {
@@ -207,7 +204,7 @@ class UsersListView extends StatelessWidget {
           ],
         ),
         child: TextField(
-          onChanged: (value) => _controller.update(["searching"]),
+          onChanged: (value) => controller.update(["searching"]),
           controller: searchController,
           decoration: const InputDecoration(
             prefixIcon: Icon(

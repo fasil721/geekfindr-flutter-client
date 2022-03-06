@@ -5,17 +5,15 @@ import 'package:geek_findr/components/post_view_dialoge.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
-import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 class UserPosts extends StatelessWidget {
-  UserPosts({
+  const UserPosts({
     Key? key,
     required this.userId,
   }) : super(key: key);
   final String userId;
-  final postServices = PostServices();
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;

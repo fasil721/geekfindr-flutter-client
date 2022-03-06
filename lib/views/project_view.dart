@@ -32,12 +32,12 @@ class _ProjectViewState extends State<ProjectView> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return GetBuilder<AppController>(
       id: "projectView",
       builder: (controller) {
         return FutureBuilder<ProjectModel?>(
-          future: myProjects.getProjectDetialsById(id: widget.projectId),
+          future: projectServices.getProjectDetialsById(id: widget.projectId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return _skeleton();
@@ -88,7 +88,7 @@ class _ProjectViewState extends State<ProjectView> {
                           ],
                           onSelected: (value) async {
                             if (value == "1") {
-                              await myProjects.deleteProject(
+                              await projectServices.deleteProject(
                                 projectId: widget.projectId,
                                 projectName: projectDetials.name!,
                               );

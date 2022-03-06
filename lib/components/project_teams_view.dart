@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
-import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -22,8 +22,6 @@ class ProjectTeamView extends StatefulWidget {
 }
 
 class _ProjectTeamViewState extends State<ProjectTeamView> {
-  final myProjects = ProjectServices();
-  final controller = Get.find<AppController>();
   List<Team> membersList = [];
   List<Team> joinRequestsList = [];
   List<bool> isChangingRole = [];
@@ -60,7 +58,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
       membersList[index].role = value;
       isChangingRole[index] = false;
       controller.update(["role"]);
-      myProjects.changeMemberRole(
+      projectServices.changeMemberRole(
         userName: membersList[index].user!.username!,
         projectId: widget.projuctDetials.id!,
         role: value,
@@ -72,7 +70,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
   }
 
   Future<void> acceptJoinRequest(int index) async {
-    await myProjects.changeMemberRole(
+    await projectServices.changeMemberRole(
       newJoin: true,
       userName: joinRequestsList[index].user!.username!,
       projectId: widget.projuctDetials.id!,
@@ -115,7 +113,7 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
           backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
         ),
         onPressed: () async {
-          await myProjects.removeMemberFromProject(
+          await projectServices.removeMemberFromProject(
             userName: membersList[index].user!.username!,
             projectId: widget.projuctDetials.id!,
             memberId: membersList[index].user!.id!,
@@ -135,7 +133,8 @@ class _ProjectTeamViewState extends State<ProjectTeamView> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return GetBuilder<AppController>(
       id: "teamView",
       builder: (controller) {

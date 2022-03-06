@@ -14,14 +14,15 @@ class MyProjectList extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return Scaffold(
       backgroundColor: secondaryColor,
       body: GetBuilder<AppController>(
         id: "projectList",
         builder: (controller) {
           return FutureBuilder(
-            future: myProjects.getMyProjects(),
+            future: projectServices.getMyProjects(),
             builder:
                 (context, AsyncSnapshot<List<ProjectShortModel>?> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

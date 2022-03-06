@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
-import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,10 +22,7 @@ class ProjectTodosView extends StatefulWidget {
 }
 
 class _ProjectTodosViewState extends State<ProjectTodosView> {
-  final _controller = Get.find<AppController>();
   final scrollController = ScrollController();
-
-  final projectServices = ProjectServices();
   List<Todo> todos = [];
   bool isDragging = false;
   bool isEditing = false;
@@ -63,7 +60,8 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return GetBuilder<AppController>(
       id: "todosList",
       builder: (_controller) {
@@ -377,7 +375,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
               ),
               onDragCompleted: () {
                 items.remove(items[index2]);
-                _controller.update(["todosList"]);
+                controller.update(["todosList"]);
               },
             ),
           )
@@ -404,7 +402,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
       // onWillAccept: (value) => !items.contains(value),
       onAccept: (value) {
         items.insert(index2 + 1, value);
-        _controller.update(["todosList"]);
+        controller.update(["todosList"]);
       },
     );
   }
@@ -494,7 +492,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                           projectId: widget.projuctDetials.id!,
                           todos: todos,
                         );
-                        _controller.update(["todosList"]);
+                        controller.update(["todosList"]);
                         Get.back();
                       } else {
                         Fluttertoast.showToast(msg: "Field can't be empty");
@@ -507,7 +505,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                           projectId: widget.projuctDetials.id!,
                           todos: todos,
                         );
-                        _controller.update(["todosList"]);
+                        controller.update(["todosList"]);
                         Get.back();
                       } else {
                         Fluttertoast.showToast(msg: "Field can't be empty");
@@ -520,7 +518,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                           projectId: widget.projuctDetials.id!,
                           todos: todos,
                         );
-                        _controller.update(["todosList"]);
+                        controller.update(["todosList"]);
                         Get.back();
                       } else {
                         Fluttertoast.showToast(msg: "Field can't be empty");
@@ -533,7 +531,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                           projectId: widget.projuctDetials.id!,
                           todos: todos,
                         );
-                        _controller.update(["todosList"]);
+                        controller.update(["todosList"]);
                         Get.back();
                       } else {
                         Fluttertoast.showToast(msg: "Field can't be empty");
@@ -607,7 +605,7 @@ class _ProjectTodosViewState extends State<ProjectTodosView> {
                     } else {
                       todos[index1].tasks!.removeAt(index2);
                     }
-                    _controller.update(["todosList"]);
+                    controller.update(["todosList"]);
                     Get.back();
                   },
                   leading: const Icon(Icons.delete),

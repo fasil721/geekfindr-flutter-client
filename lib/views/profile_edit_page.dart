@@ -131,7 +131,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
     final user = box.get("user");
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
 
     final bioField = TextField(
       controller: bioController,

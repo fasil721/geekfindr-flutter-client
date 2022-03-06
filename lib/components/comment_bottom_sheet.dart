@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/services/postServices/posts.dart';
-import 'package:get/get.dart';
 
 class CommentBottomSheet extends StatelessWidget {
   CommentBottomSheet({
@@ -11,7 +8,6 @@ class CommentBottomSheet extends StatelessWidget {
   }) : super(key: key);
   final String imageId;
   final commmentEditController = TextEditingController();
-  final postServices = PostServices();  final controller = Get.find<AppController>();
   @override
   Widget build(BuildContext context) {
     // final width = MediaQuery.of(context).size.width;

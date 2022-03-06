@@ -2,12 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/comment_bottom_sheet.dart';
 import 'package:geek_findr/components/heart_animation_widget.dart';
-import 'package:geek_findr/components/users_list_bottomsheet.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
-import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,9 +21,6 @@ class FeedList extends StatefulWidget {
 
 class _FeedListState extends State<FeedList> {
   final commmentEditController = TextEditingController();
-  final postServices = PostServices();
-  final controller = Get.find<AppController>();
-  final box = Boxes.getInstance();
   List<bool> isCommenting = [];
   List<int> likesCountList = [];
   List<int> commentCountList = [];
@@ -92,10 +87,8 @@ class _FeedListState extends State<FeedList> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    // dataLength = -1;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return FutureBuilder<List<ImageModel>>(
@@ -302,7 +295,9 @@ class _FeedListState extends State<FeedList> {
                                         id: "likes",
                                         builder: (_) => InkWell(
                                           onTap: () {
-                                            buildLikedUsersBottomSheet(index);
+                                            buildLikedUsersBottomSheet(
+                                              datas[index].id!,
+                                            );
                                           },
                                           child: Ink(
                                             padding: const EdgeInsets.all(

@@ -13,7 +13,7 @@ bool checkRequest(List<Join> requests) {
       .isNotEmpty;
 }
 
-double textfactorfind(double val) {
+double textfactorCustomize(double val) {
   if (val == 0.85) {
     return val + 0.1;
   } else if (val == 1.00) {

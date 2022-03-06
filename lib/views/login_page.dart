@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorfind(MediaQuery.textScaleFactorOf(context));
+    final textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
 
     if (MediaQuery.of(context).viewInsets.bottom > 20) {
       isVisible = false;
