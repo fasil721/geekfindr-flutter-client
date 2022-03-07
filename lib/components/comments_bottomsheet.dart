@@ -29,6 +29,8 @@ class CommentBottomSheet extends StatelessWidget {
       imageId: imageId,
       comment: text,
     );
+    
+    //checking which side want to update comment feed side or user post side count
     if (isFeed) {
       postController.feedCommentCountList[index] += 1;
     } else {

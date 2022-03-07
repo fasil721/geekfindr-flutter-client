@@ -31,7 +31,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   bool isRequested = false;
   bool isLiked = false;
   bool isHeartAnimating = false;
-
+  bool isCommenting = false;
   UserModel? currentUser;
 
   @override
@@ -65,13 +65,14 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
         findDatesDifferenceFromToday(widget.imageModel.createdAt!);
     final isCurrentUser = currentUser!.id == widget.imageModel.owner!.id;
     itemsSetUp();
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        GetBuilder<AppController>(
-          id: "postView",
-          builder: (controller) {
-            return Container(
+    return GetBuilder<AppController>(
+      id: "postView",
+      builder: (controller) {
+        return Column(
+          mainAxisAlignment:
+              isCommenting ? MainAxisAlignment.start : MainAxisAlignment.center,
+          children: [
+            Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               decoration: BoxDecoration(
@@ -318,8 +319,6 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                           imageId: widget.imageModel.id!,
                                         );
                                         Get.back();
-                                        // SystemChannels.textInput
-                                        //     .invokeMethod("TextInput.hide");
                                       }
                                       if (value == "2") {}
                                     },
@@ -334,16 +333,51 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                           ],
                         ),
                       ),
+                      _buildCommentField(widget.index)
                     ],
                   ),
                 ),
               ),
-            );
-          },
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
+
+  Widget _buildCommentField(int index) => GetBuilder<AppController>(
+        id: "comments",
+        builder: (_) => Visibility(
+          visible: isCommenting,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: TextField(
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  splashRadius: 25,
+                  icon: const Icon(
+                    Icons.send_rounded,
+                  ),
+                  onPressed: () async {
+                    if (commmentEditController.text.isNotEmpty) {
+                      await postServices.postComment(
+                        imageId: widget.imageModel.id!,
+                        comment: commmentEditController.text,
+                      );
+                      postController.userPostCommentCountList[index] += 1;
+                      isCommenting = false;
+                      controller.update(["comments", "postView"]);
+                    }
+                  },
+                ),
+                border: InputBorder.none,
+                hintText: 'Add comment',
+              ),
+              controller: commmentEditController,
+            ),
+          ),
+        ),
+      );
 
   Widget buildLikesAndCommentRow({required bool isCurrentUser}) {
     final icon = isLiked ? Icons.favorite : Icons.favorite_border_outlined;
@@ -380,12 +414,13 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
           splashRadius: 25,
           tooltip: 'comment',
           onPressed: () {
-            // Get.bottomSheet(
-            //   CommentBottomSheet(
-            //     imageId: widget.imageModel.id!,
-            //   ),
-            // );
-            // controller.update(["postView"]);
+            if (isCommenting) {
+              isCommenting = false;
+            } else {
+              isCommenting = true;
+            }
+            controller.update(["comments"]);
+            commmentEditController.clear();
           },
         ),
         Visibility(
@@ -415,102 +450,3 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
     );
   }
 }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final width = MediaQuery.of(context).size.width;
-//     final height = MediaQuery.of(context).size.height;
-//     return Column(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         GetBuilder<AppController>(
-//           builder: (controller) {
-//             return Container(
-//               margin: const EdgeInsets.symmetric(horizontal: 10),
-//               color: white,
-//               height: height * 0.5,
-//               child: Material(
-//                 child: SingleChildScrollView(
-//                   child: Column(
-//                     children: [
-//                       TextField(
-//                         controller: descTextController,
-//                         textInputAction: TextInputAction.done,
-//                         keyboardType: TextInputType.multiline,
-//                         maxLines: null,
-//                         minLines: 1,
-//                         decoration: const InputDecoration(
-//                           border: InputBorder.none,
-//                           hintText: "Description",
-//                           filled: true,
-//                           fillColor: white,
-//                           focusedBorder: InputBorder.none,
-//                           enabledBorder: InputBorder.none,
-//                           errorBorder: InputBorder.none,
-//                           disabledBorder: InputBorder.none,
-//                         ),
-//                       ),
-//                       SizedBox(
-//                         height: height * 0.43,
-//                         child: Image.network(
-//                           widget.imageModel.mediaUrl!,
-//                           width: double.infinity,
-//                           fit: BoxFit.fitHeight,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             );
-//           },
-//         ),
-//         Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 10),
-//           child: Material(
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Row(
-//                   children: [
-//                     IconButton(
-//                       onPressed: () async {
-//                         // image = await pickImage(source: ImageSource.gallery);
-//                         // controller.update(["img"]);
-//                       },
-//                       icon: const Icon(Icons.image),
-//                     ),
-//                     IconButton(
-//                       onPressed: () async {
-//                         // image = await pickImage(source: ImageSource.camera);
-//                         // controller.update(["img"]);
-//                       },
-//                       icon: const Icon(Icons.camera),
-//                     )
-//                   ],
-//                 ),
-//                 Padding(
-//                   padding: const EdgeInsets.symmetric(horizontal: 10),
-//                   child: ElevatedButton(
-//                     onPressed: () {
-//                       if (descTextController!.text.isNotEmpty &&
-//                           descTextController!.text !=
-//                               widget.imageModel.description) {
-//                         final body = {"description": descTextController!.text};
-//                         postServices.editImage(
-//                           imageId: widget.imageModel.id!,
-//                           body: body,
-//                         );
-//                       }
-//                     },
-//                     child: const Text("Save"),
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ),
-//         )
-//       ],
-//     );
-//   }
-// }
