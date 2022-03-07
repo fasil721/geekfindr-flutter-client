@@ -76,46 +76,6 @@ class UsersListView extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: results.length,
                       itemBuilder: (context, index) {
-                        // return ListTile(
-                        //   // dense: true,
-                        //   onTap: () {
-                        // Get.back();
-                        // Get.back();
-                        // Get.to(
-                        //   () => OtherUserProfile(userId: userList[index].id!),
-                        // );
-                        //   },
-                        //   leading: Padding(
-                        //     padding: const EdgeInsets.only(top: 5, left: 2),
-                        // child: ClipRRect(
-                        //   borderRadius: BorderRadius.circular(100),
-                        //   child: CachedNetworkImage(
-                        //     imageUrl: userList[index].avatar!,
-                        //     fit: BoxFit.fitWidth,
-                        //     width: 30,
-                        //     placeholder: (context, url) => Shimmer.fromColors(
-                        //       baseColor: Colors.grey.withOpacity(0.3),
-                        //       highlightColor: white,
-                        //       period: const Duration(
-                        //         milliseconds: 1000,
-                        //       ),
-                        //       child: Container(
-                        //         height: 300,
-                        //         width: width,
-                        //         decoration: BoxDecoration(
-                        //           color: Colors.grey,
-                        //           borderRadius: BorderRadius.circular(
-                        //             100,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   title: Text(userList[index].username!),
-                        //   subtitle: Text(userList[index].role!),
-                        // );
                         return InkWell(
                           onTap: () {
                             Get.back();
@@ -142,8 +102,8 @@ class UsersListView extends StatelessWidget {
                                       milliseconds: 1000,
                                     ),
                                     child: Container(
-                                      height: 35,
-                                      width: width,
+                                      height: width * 0.1,
+                                      width: width * 0.1,
                                       decoration: BoxDecoration(
                                         color: Colors.grey,
                                         borderRadius:

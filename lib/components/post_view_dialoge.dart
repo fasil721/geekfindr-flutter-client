@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:geek_findr/components/comment_bottom_sheet.dart';
+import 'package:geek_findr/components/comments_bottomsheet.dart';
 import 'package:geek_findr/components/heart_animation_widget.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
@@ -261,11 +261,11 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    Get.bottomSheet(
-                                      CommentBottomSheet(
-                                        imageId: widget.imageModel.id!,
-                                      ),
-                                    );
+                                    // Get.bottomSheet(
+                                    //   CommentBottomSheet(
+                                    //     imageId: widget.imageModel.id!,
+                                    //   ),
+                                    // );
                                   },
                                   child: Ink(
                                     padding: const EdgeInsets.all(5),
@@ -366,12 +366,12 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
           splashRadius: 25,
           tooltip: 'comment',
           onPressed: () {
-            Get.bottomSheet(
-              CommentBottomSheet(
-                imageId: widget.imageModel.id!,
-              ),
-            );
-            controller.update(["postView"]);
+            // Get.bottomSheet(
+            //   CommentBottomSheet(
+            //     imageId: widget.imageModel.id!,
+            //   ),
+            // );
+            // controller.update(["postView"]);
           },
         ),
         Visibility(

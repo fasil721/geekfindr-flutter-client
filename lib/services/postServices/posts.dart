@@ -299,6 +299,7 @@ class PostServices {
         },
         body: json.encode(body),
       );
+      print(response.statusCode);
       if (response.statusCode == 200) {
         controller.update(["commentCount"]);
       } else if (response.statusCode == 422 || response.statusCode == 400) {
@@ -322,6 +323,7 @@ class PostServices {
   Future<List<CommentedUsers>?> getCommentedUsers({
     required String imageId,
   }) async {
+    await Future.delayed(const Duration(seconds: 1));
     final user = box.get("user");
     final url = "$prodUrl/api/v1/posts/$imageId/comments";
 

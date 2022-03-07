@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:geek_findr/components/comment_bottom_sheet.dart';
+import 'package:geek_findr/components/comments_bottomsheet.dart';
 import 'package:geek_findr/components/heart_animation_widget.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
@@ -85,6 +85,24 @@ class _FeedListState extends State<FeedList> {
     for (final e in values) {
       commentCountList.add(e.commentCount!);
     }
+  }
+
+  Future<void> _buildCommentBottomSheet(String imageId, int index) async {
+    Get.dialog(loadingIndicator());
+    final data = await postServices.getCommentedUsers(
+      imageId: imageId,
+    );
+    Get.back();
+    Get.bottomSheet(
+      CommentBottomSheet(
+        imageId: imageId,
+        userList: data!,
+      ),
+    );
+    isCommenting[index] = false;
+    controller.update(
+      ["comments"],
+    );
   }
 
   @override
@@ -329,14 +347,9 @@ class _FeedListState extends State<FeedList> {
                                         id: "commentCount",
                                         builder: (_) => InkWell(
                                           onTap: () {
-                                            Get.bottomSheet(
-                                              CommentBottomSheet(
-                                                imageId: datas[index].id!,
-                                              ),
-                                            );
-                                            isCommenting[index] = false;
-                                            controller.update(
-                                              ["comments"],
+                                            _buildCommentBottomSheet(
+                                              datas[index].id!,
+                                              index,
                                             );
                                           },
                                           child: Ink(
@@ -555,31 +568,31 @@ class _FeedListState extends State<FeedList> {
           },
         ),
       );
-}
 
-Widget _skeleton(double width) => Shimmer.fromColors(
-      baseColor: Colors.grey.withOpacity(0.3),
-      highlightColor: white,
-      period: const Duration(milliseconds: 1000),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: 2,
-          itemBuilder: (context, index) => Column(
-            children: [
-              Container(
-                width: width,
-                height: 350,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.grey,
+  Widget _skeleton(double width) => Shimmer.fromColors(
+        baseColor: Colors.grey.withOpacity(0.3),
+        highlightColor: white,
+        period: const Duration(milliseconds: 1000),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: 2,
+            itemBuilder: (context, index) => Column(
+              children: [
+                Container(
+                  width: width,
+                  height: 350,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20)
-            ],
+                const SizedBox(height: 20)
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+}
