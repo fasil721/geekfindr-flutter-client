@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
@@ -15,11 +16,36 @@ class CommentBottomSheet extends StatelessWidget {
     required this.imageId,
     required this.userList,
     required this.index,
+    this.isFeed = false,
   }) : super(key: key);
   final List<CommentedUsers> userList;
   final String imageId;
   final int index;
+  final bool isFeed;
   final commmentEditController = TextEditingController();
+
+  Future<void> _addComment(String text) async {
+    await postServices.postComment(
+      imageId: imageId,
+      comment: text,
+    );
+    if (isFeed) {
+      postController.feedCommentCountList[index] += 1;
+    } else {
+      postController.userPostCommentCountList[index] += 1;
+    }
+    controller.update(["commentCount"]);
+    commmentEditController.clear();
+
+    //to update the new comment to this bottomsheet
+    final _commentedUser = CommentedUsers();
+    final _owner = getUserDatAsOwnerModel();
+    _commentedUser.owner = _owner;
+    _commentedUser.comment = text;
+    userList.add(_commentedUser);
+    controller.update(["commentsList"]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -57,21 +83,11 @@ class CommentBottomSheet extends StatelessWidget {
                   icon: const Icon(
                     Icons.send_rounded,
                   ),
-                  onPressed: () async {
+                  onPressed: () {
                     if (commmentEditController.text.isNotEmpty) {
-                      await postServices.postComment(
-                        imageId: imageId,
-                        comment: commmentEditController.text,
-                      );
-                      feedController.commentCountList[index] += 1;
-                      controller.update(["commentCount"]);
-                      commmentEditController.clear();
-                      final _commentedUser = CommentedUsers();
-                      final _owner = getUserDatAsOwnerModel();
-                      _commentedUser.comment = commmentEditController.text;
-                      _commentedUser.owner = _owner;
-                      userList.add(_commentedUser);
-                      controller.update(["commentsList"]);
+                      _addComment(commmentEditController.text);
+                    } else {
+                      Fluttertoast.showToast(msg: "Field can't be empty");
                     }
                   },
                 ),

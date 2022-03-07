@@ -16,8 +16,10 @@ class PostViewDialoge extends StatefulWidget {
   const PostViewDialoge({
     Key? key,
     required this.imageModel,
+    required this.index,
   }) : super(key: key);
   final ImageModel imageModel;
+  final int index;
 
   @override
   State<PostViewDialoge> createState() => _PostEditDialogeState();
@@ -29,8 +31,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   bool isRequested = false;
   bool isLiked = false;
   bool isHeartAnimating = false;
-  late int likesCount;
-  late int commentsCount;
+
   UserModel? currentUser;
 
   @override
@@ -42,8 +43,6 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   }
 
   Future<void> itemsSetUp() async {
-    likesCount = widget.imageModel.likeCount!;
-    commentsCount = widget.imageModel.commentCount!;
     if (widget.imageModel.isProject!) {
       isRequested = checkRequest(widget.imageModel.teamJoinRequests!);
     }
@@ -220,7 +219,8 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                         ),
                         onDoubleTap: () {
                           if (!isLiked) {
-                            likesCount += 1;
+                            postController
+                                .userPostLikesCountList[widget.index] += 1;
                             postServices.postLike(
                               imageId: widget.imageModel.id!,
                             );
@@ -242,7 +242,9 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    if (0 < likesCount) {
+                                    if (0 <
+                                        postController.userPostLikesCountList[
+                                            widget.index]) {
                                       buildLikedUsersBottomSheet(
                                         widget.imageModel.id!,
                                       );
@@ -251,7 +253,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                   child: Ink(
                                     padding: const EdgeInsets.all(5),
                                     child: Text(
-                                      "$likesCount Likes",
+                                      "${postController.userPostLikesCountList[widget.index]} Likes",
                                       style: GoogleFonts.roboto(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -260,17 +262,29 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: () {
-                                    // Get.bottomSheet(
-                                    //   CommentBottomSheet(
-                                    //     imageId: widget.imageModel.id!,
-                                    //   ),
-                                    // );
+                                  onTap: () async {
+                                    if (0 <
+                                        postController.userPostCommentCountList[
+                                            widget.index]) {
+                                      Get.dialog(loadingIndicator());
+                                      final data =
+                                          await postServices.getCommentedUsers(
+                                        imageId: widget.imageModel.id!,
+                                      );
+                                      Get.back();
+                                      Get.bottomSheet(
+                                        CommentBottomSheet(
+                                          index: widget.index,
+                                          imageId: widget.imageModel.id!,
+                                          userList: data!,
+                                        ),
+                                      );
+                                    }
                                   },
                                   child: Ink(
                                     padding: const EdgeInsets.all(5),
                                     child: Text(
-                                      "$commentsCount Comments",
+                                      "${postController.userPostCommentCountList[widget.index]} Comments",
                                       style: GoogleFonts.roboto(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -342,7 +356,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
             splashRadius: 28,
             onPressed: () {
               if (!isLiked) {
-                likesCount += 1;
+                postController.userPostLikesCountList[widget.index] += 1;
                 postServices.postLike(
                   imageId: widget.imageModel.id!,
                 );

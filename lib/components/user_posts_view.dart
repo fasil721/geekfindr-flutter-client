@@ -14,6 +14,7 @@ class UserPosts extends StatelessWidget {
     required this.userId,
   }) : super(key: key);
   final String userId;
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -30,6 +31,7 @@ class UserPosts extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               final data = snapshot.data;
               if (data != null) {
+                postController.likesAndCommentsCountSetUp(data);
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -45,7 +47,12 @@ class UserPosts extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          Get.dialog(PostViewDialoge(imageModel: data[index]));
+                          Get.dialog(
+                            PostViewDialoge(
+                              imageModel: data[index],
+                              index: index,
+                            ),
+                          );
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
@@ -108,36 +115,36 @@ class UserPosts extends StatelessWidget {
                 //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //         children: [
                 //           Expanded(child: Text(data[index].description!)),
-                          // PopupMenuButton(
-                          //   itemBuilder: (BuildContext bc) => [
-                          //     const PopupMenuItem(
-                          //       value: "2",
-                          //       child: Text("edit post"),
-                          //     ),
-                          //     const PopupMenuItem(
-                          //       value: "1",
-                          //       child: Text("delete post"),
-                          //     ),
-                          //   ],
-                          //   onSelected: (value) {
-                          //     if (value == "1") {
-                          //       deleteImage(imageId: data[index].id!);
-                          //       // SystemChannels.textInput
-                          //       //     .invokeMethod("TextInput.hide");
-                          //     }
-                          //     if (value == "2") {
-                          //       Get.dialog(
-                          //         PostEditDialoge(
-                          //           imageModel: data[index],
-                          //         ),
-                          //       );
-                          //     }
-                          //   },
-                          //   icon: const Icon(
-                          //     Icons.more_horiz,
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
+                // PopupMenuButton(
+                //   itemBuilder: (BuildContext bc) => [
+                //     const PopupMenuItem(
+                //       value: "2",
+                //       child: Text("edit post"),
+                //     ),
+                //     const PopupMenuItem(
+                //       value: "1",
+                //       child: Text("delete post"),
+                //     ),
+                //   ],
+                //   onSelected: (value) {
+                //     if (value == "1") {
+                //       deleteImage(imageId: data[index].id!);
+                //       // SystemChannels.textInput
+                //       //     .invokeMethod("TextInput.hide");
+                //     }
+                //     if (value == "2") {
+                //       Get.dialog(
+                //         PostEditDialoge(
+                //           imageModel: data[index],
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   icon: const Icon(
+                //     Icons.more_horiz,
+                //     color: Colors.black,
+                //   ),
+                // ),
                 //         ],
                 //       ),
                 //     ),

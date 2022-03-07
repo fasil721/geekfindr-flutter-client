@@ -29,7 +29,7 @@ Future<void> main() async {
   ]);
   final isLoggedIn = pref.getBool("user");
   Get.put(AppController());
-  Get.put(FeedController());
+  Get.put(PostsController());
   final mobileTheme = SchedulerBinding.instance!.window.platformBrightness;
 
   runApp(

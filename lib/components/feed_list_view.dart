@@ -78,10 +78,10 @@ class _FeedListState extends State<FeedList> {
       isHeartAnimatingList.add(false);
     }
     for (final e in values) {
-      feedController.likesCountList.add(e.likeCount!);
+      postController.feedLikesCountList.add(e.likeCount!);
     }
     for (final e in values) {
-      feedController.commentCountList.add(e.commentCount!);
+      postController.feedCommentCountList.add(e.commentCount!);
     }
   }
 
@@ -93,6 +93,7 @@ class _FeedListState extends State<FeedList> {
     Get.back();
     Get.bottomSheet(
       CommentBottomSheet(
+        isFeed: true,
         index: index,
         imageId: imageId,
         userList: data!,
@@ -323,8 +324,9 @@ class _FeedListState extends State<FeedList> {
                                         builder: (_) => InkWell(
                                           onTap: () {
                                             if (0 <
-                                                feedController
-                                                    .likesCountList[index]) {
+                                                postController
+                                                        .feedLikesCountList[
+                                                    index]) {
                                               buildLikedUsersBottomSheet(
                                                 datas[index].id!,
                                               );
@@ -335,7 +337,7 @@ class _FeedListState extends State<FeedList> {
                                               5,
                                             ),
                                             child: Text(
-                                              "${feedController.likesCountList[index]} Likes",
+                                              "${postController.feedLikesCountList[index]} Likes",
                                               style: GoogleFonts.roboto(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600,
@@ -348,17 +350,22 @@ class _FeedListState extends State<FeedList> {
                                         id: "commentCount",
                                         builder: (_) => InkWell(
                                           onTap: () {
-                                            _buildCommentBottomSheet(
-                                              datas[index].id!,
-                                              index,
-                                            );
+                                            if (0 <
+                                                postController
+                                                        .feedCommentCountList[
+                                                    index]) {
+                                              _buildCommentBottomSheet(
+                                                datas[index].id!,
+                                                index,
+                                              );
+                                            }
                                           },
                                           child: Ink(
                                             padding: const EdgeInsets.all(
                                               5,
                                             ),
                                             child: Text(
-                                              "${feedController.commentCountList[index]} Comments",
+                                              "${postController.feedCommentCountList[index]} Comments",
                                               style: GoogleFonts.roboto(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600,
@@ -386,7 +393,8 @@ class _FeedListState extends State<FeedList> {
                                               splashRadius: 28,
                                               onPressed: () {
                                                 if (!isLikedList[index]) {
-                                                  feedController.likesCountList[
+                                                  postController
+                                                          .feedLikesCountList[
                                                       index] += 1;
                                                   postServices.postLike(
                                                     imageId: datas[index].id!,
@@ -477,8 +485,8 @@ class _FeedListState extends State<FeedList> {
                                               comment:
                                                   commmentEditController.text,
                                             );
-                                            feedController
-                                                .commentCountList[index] += 1;
+                                            postController.feedCommentCountList[
+                                                index] += 1;
                                             isCommenting[index] = false;
                                             controller.update(["comments"]);
                                           }
@@ -560,7 +568,7 @@ class _FeedListState extends State<FeedList> {
           ),
           onDoubleTap: () {
             if (!isLikedList[index]) {
-              feedController.likesCountList[index] += 1;
+              postController.feedLikesCountList[index] += 1;
               postServices.postLike(
                 imageId: datas[index].id!,
               );
