@@ -106,3 +106,12 @@ Future<void> buildLikedUsersBottomSheet(String imageId) async {
     ),
   );
 }
+
+Owner getUserDatAsOwnerModel() {
+  final currentUser = box.get("user")!;
+  final _owner = Owner();
+  _owner.avatar = currentUser.avatar;
+  _owner.id = currentUser.id;
+  _owner.username = currentUser.username;
+  return _owner;
+}

@@ -1,7 +1,8 @@
-
-import 'package:geek_findr/models/user_model.dart';
 import 'package:get/get.dart';
 
-class AppController extends GetxController {
-  UserModel? user;
+class AppController extends GetxController {}
+
+class FeedController extends GetxController {
+  List<int> likesCountList = [];
+  List<int> commentCountList = [];
 }

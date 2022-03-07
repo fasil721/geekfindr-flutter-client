@@ -19,6 +19,7 @@ const collaborator = "collaborator";
 const joinRequest = "joinRequest";
 final box = Boxes.getInstance();
 final controller = Get.find<AppController>();
+final feedController = Get.find<FeedController>();
 final postServices = PostServices();
 final profileServices = ProfileServices();
 final authServices = AuthServices();

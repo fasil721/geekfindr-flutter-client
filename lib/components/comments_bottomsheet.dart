@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
@@ -12,9 +14,11 @@ class CommentBottomSheet extends StatelessWidget {
     Key? key,
     required this.imageId,
     required this.userList,
+    required this.index,
   }) : super(key: key);
   final List<CommentedUsers> userList;
   final String imageId;
+  final int index;
   final commmentEditController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -59,8 +63,15 @@ class CommentBottomSheet extends StatelessWidget {
                         imageId: imageId,
                         comment: commmentEditController.text,
                       );
+                      feedController.commentCountList[index] += 1;
                       controller.update(["commentCount"]);
                       commmentEditController.clear();
+                      final _commentedUser = CommentedUsers();
+                      final _owner = getUserDatAsOwnerModel();
+                      _commentedUser.comment = commmentEditController.text;
+                      _commentedUser.owner = _owner;
+                      userList.add(_commentedUser);
+                      controller.update(["commentsList"]);
                     }
                   },
                 ),
@@ -72,11 +83,12 @@ class CommentBottomSheet extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: userList.length,
-                itemBuilder: (context, index) {
-                  return Row(
+              child: GetBuilder<AppController>(
+                id: "commentsList",
+                builder: (_controller) => ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: userList.length,
+                  itemBuilder: (context, index) => Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
@@ -141,10 +153,10 @@ class CommentBottomSheet extends StatelessWidget {
                         ],
                       ),
                     ],
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) =>
-                    SizedBox(height: height * 0.015),
+                  ),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      SizedBox(height: height * 0.015),
+                ),
               ),
             ),
           )
