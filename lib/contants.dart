@@ -23,15 +23,13 @@ final postServices = PostServices();
 final profileServices = ProfileServices();
 final authServices = AuthServices();
 final projectServices = ProjectServices();
-
-final categories = [
+const categories = [
   {"name": "Info", 'iconPath': 'assets/icons/info.png'},
   {'name': 'Teams', 'iconPath': 'assets/icons/team.png'},
   {'name': 'Status', 'iconPath': 'assets/icons/todo-list.png'},
   {'name': 'Tasks', 'iconPath': 'assets/icons/to-do-list.png'},
 ];
-
-final dropCatagories = [
+const dropCatagories = [
   'development',
   'design',
   'testing',

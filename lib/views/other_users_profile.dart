@@ -41,14 +41,15 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     final currentUser = box.get("user");
 
     return FutureBuilder<UserProfileModel?>(
       future: profileServices.getUserProfilebyId(id: widget.userId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // return const LoadingProfilePage();
+          return _buildLoadingScreen();
         }
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data != null) {
@@ -216,18 +217,20 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
-                                    Get.dialog(loadingIndicator());
-                                    final data = await profileServices
-                                        .getUserfollowersAndFollowings(
-                                      id: user.id!,
-                                      type: "followers",
-                                    );
-                                    Get.back();
-                                    Get.bottomSheet(
-                                      UsersListView(
-                                        userList: data,
-                                      ),
-                                    );
+                                    if (0 < user.followersCount!) {
+                                      Get.dialog(loadingIndicator());
+                                      final data = await profileServices
+                                          .getUserfollowersAndFollowings(
+                                        id: user.id!,
+                                        type: "followers",
+                                      );
+                                      Get.back();
+                                      Get.bottomSheet(
+                                        UsersListView(
+                                          userList: data,
+                                        ),
+                                      );
+                                    }
                                   },
                                   child: Ink(
                                     padding: const EdgeInsets.all(10),
@@ -263,27 +266,28 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               ),
                               Container(
                                 color: Colors.grey,
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 25,
-                                ),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 25),
                                 height: 20,
                                 width: 1.5,
                               ),
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
-                                    Get.dialog(loadingIndicator());
-                                    final data = await profileServices
-                                        .getUserfollowersAndFollowings(
-                                      id: user.id!,
-                                      type: "following",
-                                    );
-                                    Get.back();
-                                    Get.bottomSheet(
-                                      UsersListView(
-                                        userList: data,
-                                      ),
-                                    );
+                                    if (0 < user.followingCount!) {
+                                      Get.dialog(loadingIndicator());
+                                      final data = await profileServices
+                                          .getUserfollowersAndFollowings(
+                                        id: user.id!,
+                                        type: "following",
+                                      );
+                                      Get.back();
+                                      Get.bottomSheet(
+                                        UsersListView(
+                                          userList: data,
+                                        ),
+                                      );
+                                    }
                                   },
                                   child: Ink(
                                     padding: const EdgeInsets.all(10),
@@ -525,6 +529,119 @@ class _OtherUserProfileState extends State<OtherUserProfile>
         }
         return Container();
       },
+    );
+  }
+
+  Widget _buildLoadingScreen() {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      backgroundColor: white,
+      appBar: AppBar(
+        leadingWidth: 70,
+        elevation: 0,
+        backgroundColor: white,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: ScrollConfiguration(
+          behavior: const ScrollBehavior().copyWith(overscroll: false),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(width: width, height: height * .03),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.withOpacity(0.2),
+                  highlightColor: white,
+                  period: const Duration(milliseconds: 1000),
+                  child: Container(
+                    height: height * 0.15,
+                    width: height * 0.15,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 2,
+                      ),
+                      color: Colors.grey,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                SizedBox(height: height * 0.02),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Column(
+                    children: [
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey.withOpacity(0.2),
+                        highlightColor: white,
+                        period: const Duration(milliseconds: 1000),
+                        child: Container(
+                          height: height * 0.05,
+                          width: width * 0.3,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: height * 0.02),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey.withOpacity(0.2),
+                        highlightColor: white,
+                        period: const Duration(milliseconds: 1000),
+                        child: Container(
+                          height: height * 0.075,
+                          width: width * 0.8,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: height * 0.02),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey.withOpacity(0.2),
+                        highlightColor: white,
+                        period: const Duration(milliseconds: 1000),
+                        child: Container(
+                          height: height * 0.075,
+                          width: width * 0.8,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: height * 0.02),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey.withOpacity(0.2),
+                        highlightColor: white,
+                        period: const Duration(milliseconds: 1000),
+                        child: Container(
+                          height: height * 0.5,
+                          width: width * 0.98,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

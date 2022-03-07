@@ -5,6 +5,7 @@ import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
@@ -52,10 +53,11 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
       if (selectedMembers.isNotEmpty) {
         final currentUser = _box.get("user");
         final _task = Task();
+        final _owner = Owner(id: currentUser!.id);
         _task.title = titleTextController.text;
         _task.description = descTextController.text;
         _task.isComplete = false;
-        _task.assignor = currentUser!.id;
+        _task.assignor = _owner;
         _task.users = selectedMembers.map((e) => e.user!.id!).toList();
         await projectServices.createProjectTask(
           projectId: widget.projuctDetials.id!,
@@ -191,7 +193,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
   }
 
   Widget _buildAddTaskDialoge() {
-    String _dropValue = "Add type";
+    // const  _dropValue = "Add type";
     selectedMembers = [];
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -322,30 +324,30 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                       return buildInputChips(selectedMembers);
                     },
                   ),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _dropValue,
-                      items: dropCatagories
-                          .map(
-                            (e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(
-                                e,
-                                style: TextStyle(
-                                  fontSize: textFactor * 15,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              onTap: () {
-                                _dropValue = e;
-                                setState(() {});
-                              },
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {},
-                    ),
-                  ),
+                  // DropdownButtonHideUnderline(
+                  //   child: DropdownButton<String>(
+                  //     value: _dropValue,
+                  //     items: dropCatagories
+                  //         .map(
+                  //           (e) => DropdownMenuItem(
+                  //             value: e,
+                  //             child: Text(
+                  //               e,
+                  //               style: TextStyle(
+                  //                 fontSize: textFactor * 15,
+                  //                 fontWeight: FontWeight.w500,
+                  //               ),
+                  //             ),
+                  //             onTap: () {
+                  //               _dropValue = e;
+                  //               setState(() {});
+                  //             },
+                  //           ),
+                  //         )
+                  //         .toList(),
+                  //     onChanged: (value) {},
+                  //   ),
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -425,7 +427,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
               children: [
                 Visibility(
                   visible: widget.myRole == owner ||
-                      tasks[index].assignor == currentUser!.id,
+                      tasks[index].assignor!.id == currentUser!.id,
                   child: PopupMenuButton(
                     itemBuilder: (BuildContext bc) => [
                       PopupMenuItem(

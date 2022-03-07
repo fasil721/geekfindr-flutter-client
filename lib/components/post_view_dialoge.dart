@@ -242,9 +242,11 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    buildLikedUsersBottomSheet(
-                                      widget.imageModel.id!,
-                                    );
+                                    if (0 < likesCount) {
+                                      buildLikedUsersBottomSheet(
+                                        widget.imageModel.id!,
+                                      );
+                                    }
                                   },
                                   child: Ink(
                                     padding: const EdgeInsets.all(5),

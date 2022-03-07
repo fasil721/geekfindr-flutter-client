@@ -3,17 +3,12 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileServices {
-  final box = Boxes.getInstance();
-  final controller = Get.find<AppController>();
-
   Future<UserProfileModel?> getUserProfileData() async {
     final user = box.get("user");
     const url = "$prodUrl/api/v1/profiles/my-profile/";
@@ -92,9 +87,7 @@ class ProfileServices {
     try {
       final response = await client.get(
         Uri.parse(url),
-        headers: {
-          "Authorization": "Bearer ${user!.token}",
-        },
+        headers: {"Authorization": "Bearer ${user!.token}"},
       );
 
       if (response.statusCode == 200) {
@@ -182,9 +175,7 @@ class ProfileServices {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {
-          "Authorization": "Bearer ${user!.token}",
-        },
+        headers: {"Authorization": "Bearer ${user!.token}"},
       );
 
       if (response.statusCode == 200) {
@@ -221,14 +212,13 @@ class ProfileServices {
   Future<UserProfileModel?> getUserProfilebyId({
     required String id,
   }) async {
+    await Future.delayed(const Duration(milliseconds: 500));
     final user = box.get("user");
     final url = "$prodUrl/api/v1/profiles/$id";
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {
-          "Authorization": "Bearer ${user!.token}",
-        },
+        headers: {"Authorization": "Bearer ${user!.token}"},
       );
 
       if (response.statusCode == 200) {

@@ -1,3 +1,4 @@
+import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 
 class ProjectShortModel {
@@ -171,14 +172,15 @@ class Task {
   String? description;
   List<String>? users;
   bool? isComplete;
-  String? assignor;
+  Owner? assignor;
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
         title: json["title"] as String,
         description: json["description"] as String,
         users: List<String>.from((json["users"] as List).map((x) => x)),
         isComplete: json["isComplete"] as bool,
-        assignor: json["assignor"] as String,
+        assignor:
+            Owner.fromJson(Map<String, String>.from(json["assignor"] as Map)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -186,6 +188,6 @@ class Task {
         "description": description,
         "users": List<String>.from(users!.map((x) => x)),
         "isComplete": isComplete,
-        "assignor": assignor,
+        "assignor": assignor!.id,
       };
 }

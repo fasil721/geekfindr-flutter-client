@@ -47,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage>
           future: profileServices.getUserProfileData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return builLoadingScreen();
+              return _buildLoadingScreen();
             }
             if (snapshot.connectionState == ConnectionState.done) {
               final userData = snapshot.data;
@@ -260,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget builLoadingScreen() {
+  Widget _buildLoadingScreen() {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -539,18 +539,20 @@ class _ProfilePageState extends State<ProfilePage>
             Expanded(
               child: InkWell(
                 onTap: () async {
-                  Get.dialog(loadingIndicator());
-                  final data =
-                      await profileServices.getUserfollowersAndFollowings(
-                    id: userData.id!,
-                    type: "following",
-                  );
-                  Get.back();
-                  Get.bottomSheet(
-                    UsersListView(
-                      userList: data,
-                    ),
-                  );
+                  if (0 < userData.followingCount!) {
+                    Get.dialog(loadingIndicator());
+                    final data =
+                        await profileServices.getUserfollowersAndFollowings(
+                      id: userData.id!,
+                      type: "following",
+                    );
+                    Get.back();
+                    Get.bottomSheet(
+                      UsersListView(
+                        userList: data,
+                      ),
+                    );
+                  }
                 },
                 child: Ink(
                   padding: const EdgeInsets.all(10),

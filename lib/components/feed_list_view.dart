@@ -222,10 +222,20 @@ class _FeedListState extends State<FeedList> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            datas[index].owner!.username!,
-                                            style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.bold,
+                                          GestureDetector(
+                                            onTap: () {
+                                              Get.to(
+                                                () => OtherUserProfile(
+                                                  userId:
+                                                      datas[index].owner!.id!,
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              datas[index].owner!.username!,
+                                              style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                           Text(
@@ -295,9 +305,11 @@ class _FeedListState extends State<FeedList> {
                                         id: "likes",
                                         builder: (_) => InkWell(
                                           onTap: () {
-                                            buildLikedUsersBottomSheet(
-                                              datas[index].id!,
-                                            );
+                                            if (0 < likesCountList[index]) {
+                                              buildLikedUsersBottomSheet(
+                                                datas[index].id!,
+                                              );
+                                            }
                                           },
                                           child: Ink(
                                             padding: const EdgeInsets.all(
