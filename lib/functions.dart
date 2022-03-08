@@ -2,16 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/components/users_list_bottomsheet.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
-import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
-bool checkRequest(List<Join> requests) {
-  final currentUser = box.get("user");
-  return requests
-      .where((element) => element.owner == currentUser!.id)
-      .isNotEmpty;
-}
+bool checkRequest(List<Join> requests) =>
+    requests.where((element) => element.owner == currentUser.id).isNotEmpty;
 
 double textfactorCustomize(double val) {
   if (val == 0.85) {
@@ -93,7 +88,6 @@ Widget loadingIndicator() => const Center(
     );
 
 Future<void> buildLikedUsersBottomSheet(String imageId) async {
-  final postServices = PostServices();
   Get.dialog(loadingIndicator());
   final data = await postServices.getLikedUsers(
     imageId: imageId,
@@ -108,7 +102,6 @@ Future<void> buildLikedUsersBottomSheet(String imageId) async {
 }
 
 Owner getUserDatAsOwnerModel() {
-  final currentUser = box.get("user")!;
   final _owner = Owner();
   _owner.avatar = currentUser.avatar;
   _owner.id = currentUser.id;

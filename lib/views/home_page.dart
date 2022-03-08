@@ -9,12 +9,43 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
-// ignore: must_be_immutable
-class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final _advancedDrawerController = AdvancedDrawerController();
-  double width = 0.0;
   double height = 0;
+  double width = 0.0;
+  // final scrollcontroller = ScrollController();
+  // bool isReversing = false;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   scrollcontroller.addListener(() {
+  //     listenScrolling();
+  //   });
+  // }
+
+  // void listenScrolling() {
+  //   // if (scrollcontroller.position.atEdge) {
+  //   //   final isTop = scrollcontroller.position.pixels == 0;
+  //   // }
+  //   if (scrollcontroller.position.userScrollDirection ==
+  //       ScrollDirection.forward) {
+  //     isReversing = true;
+  //     print("reverse");
+  //   }
+  //   if (scrollcontroller.position.userScrollDirection ==
+  //       ScrollDirection.reverse) {
+  //     isReversing = false;
+  //     print("forward");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +72,7 @@ class HomePage extends StatelessWidget {
             resizeToAvoidBottomInset: true,
             backgroundColor: white,
             body: NestedScrollView(
+              // controller: scrollcontroller,
               physics: const BouncingScrollPhysics(),
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                 SliverAppBar(

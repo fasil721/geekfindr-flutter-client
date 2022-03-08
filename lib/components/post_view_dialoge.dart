@@ -38,7 +38,6 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   void initState() {
     descTextController =
         TextEditingController(text: widget.imageModel.description);
-    currentUser = box.get("user");
     super.initState();
   }
 
@@ -69,12 +68,15 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
       id: "postView",
       builder: (controller) {
         return Column(
-          mainAxisAlignment:
-              isCommenting ? MainAxisAlignment.start : MainAxisAlignment.center,
+          mainAxisAlignment: isCommenting
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.center,
           children: [
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               decoration: BoxDecoration(
                 color: secondaryColor,
                 borderRadius: BorderRadius.circular(30),
@@ -190,9 +192,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                     width: width,
                                     decoration: BoxDecoration(
                                       color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(
-                                        20,
-                                      ),
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
                                   ),
                                 ),
@@ -201,9 +201,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                             Opacity(
                               opacity: isHeartAnimating ? 1 : 0,
                               child: HeartAnimationWidget(
-                                duration: const Duration(
-                                  milliseconds: 700,
-                                ),
+                                duration: const Duration(milliseconds: 700),
                                 isAnimating: isHeartAnimating,
                                 child: const Icon(
                                   Icons.favorite,
@@ -265,11 +263,12 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                 InkWell(
                                   onTap: () async {
                                     if (0 <
-                                        postController.userPostCommentCountList[
+                                        postController
+                                                .userPostCommentCountList[
                                             widget.index]) {
                                       Get.dialog(loadingIndicator());
-                                      final data =
-                                          await postServices.getCommentedUsers(
+                                      final data = await postServices
+                                          .getCommentedUsers(
                                         imageId: widget.imageModel.id!,
                                       );
                                       Get.back();
@@ -391,9 +390,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
             onPressed: () {
               if (!isLiked) {
                 postController.userPostLikesCountList[widget.index] += 1;
-                postServices.postLike(
-                  imageId: widget.imageModel.id!,
-                );
+                postServices.postLike(imageId: widget.imageModel.id!);
               }
               isLiked = true;
               controller.update(["postView"]);
@@ -406,11 +403,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
           ),
         ),
         IconButton(
-          icon: Icon(
-            Icons.mode_comment_outlined,
-            color: black,
-            size: 28,
-          ),
+          icon: Icon(Icons.mode_comment_outlined, color: black, size: 28),
           splashRadius: 25,
           tooltip: 'comment',
           onPressed: () {

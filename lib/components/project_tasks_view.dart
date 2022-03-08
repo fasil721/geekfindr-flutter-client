@@ -4,12 +4,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
-import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
-import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/profileServices/user_profile_model.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
-import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,10 +25,6 @@ class ProjectTaskView extends StatefulWidget {
 }
 
 class _ProjectTaskViewState extends State<ProjectTaskView> {
-  final _controller = Get.find<AppController>();
-  final _box = Boxes.getInstance();
-  final profileServices = ProfileServices();
-  final projectServices = ProjectServices();
   final descTextController = TextEditingController();
   final titleTextController = TextEditingController();
   final serchController = TextEditingController();
@@ -51,9 +44,8 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     if (descTextController.text.isNotEmpty &&
         titleTextController.text.isNotEmpty) {
       if (selectedMembers.isNotEmpty) {
-        final currentUser = _box.get("user");
         final _task = Task();
-        final _owner = Owner(id: currentUser!.id);
+        final _owner = Owner(id: currentUser.id);
         _task.title = titleTextController.text;
         _task.description = descTextController.text;
         _task.isComplete = false;
@@ -63,7 +55,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
           projectId: widget.projuctDetials.id!,
           body: _task.toJson(),
         );
-        _controller.update(["projectView"]);
+        controller.update(["projectView"]);
         Get.back();
       } else {
         Fluttertoast.showToast(
@@ -115,7 +107,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
     if (isEmpty) {
       selectedMembers.add(user);
       serchController.clear();
-      _controller.update(["selected"]);
+      controller.update(["selected"]);
     } else {
       Fluttertoast.showToast(msg: "You already added");
     }
@@ -398,10 +390,9 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
   }
 
   Widget _buildTaskTiles(BuildContext context, int index) {
-    final currentUser = _box.get("user");
     final assignies = tasks[index].users!.map((e) => e).toList();
     final isAssignie =
-        assignies.where((element) => element == currentUser!.id!).isNotEmpty;
+        assignies.where((element) => element == currentUser.id!).isNotEmpty;
     return Container(
       decoration: BoxDecoration(
         color: tasks[index].isComplete!
@@ -427,7 +418,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
               children: [
                 Visibility(
                   visible: widget.myRole == owner ||
-                      tasks[index].assignor!.id == currentUser!.id,
+                      tasks[index].assignor!.id == currentUser.id,
                   child: PopupMenuButton(
                     itemBuilder: (BuildContext bc) => [
                       PopupMenuItem(
@@ -449,7 +440,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                           taskTitle: tasks[index].title!,
                         );
                         tasks.remove(tasks[index]);
-                        _controller.update(["taskList"]);
+                        controller.update(["taskList"]);
                       }
                     },
                     icon: Icon(
@@ -482,7 +473,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                           taskTitle: tasks[index].title!,
                         );
                         tasks[index].isComplete = true;
-                        _controller.update(["taskList"]);
+                        controller.update(["taskList"]);
                       }
                     },
                     icon: Icon(
@@ -582,7 +573,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                 ),
                 onDeleted: () {
                   selectedMembers.remove(e);
-                  _controller.update(["selected"]);
+                  controller.update(["selected"]);
                 },
               ),
             )

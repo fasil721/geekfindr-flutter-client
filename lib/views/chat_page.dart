@@ -1,11 +1,17 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:geek_findr/components/chat_list.dart';
+
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
   @override
   _ChatPageState createState() => _ChatPageState();
 }
+
+late io.Socket socket;
 
 class _ChatPageState extends State<ChatPage> {
   List<ChatUsers> chatUsers = [
@@ -61,6 +67,28 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          print("------------");
+          // connectSocket();
+          //  callChat();
+          // final data = await chatServices.getMyChats();
+          // final a = data!.first.participants!
+          //     .firstWhere((element) => element.id != currentUser.id);
+          // print(a.toJson());
+          // final io.Socket socket =
+          //     io.io('$prodUrl/api/v1/chats', <String, dynamic>{
+          //   "transports": ["websocket"],
+          //   "autoConnect": true,
+          // });
+          // print(socket.connected);
+          // socket.connect();
+          // socket.onConnect((_) => print('connect'));
+          // socket.onDisconnect((_) => print('disconnect'));
+          // print(socket.connected);
+          print("-----------");
+        },
+      ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(

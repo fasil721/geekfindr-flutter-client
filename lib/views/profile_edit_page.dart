@@ -128,7 +128,6 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   String? long;
   @override
   Widget build(BuildContext context) {
-    final user = box.get("user");
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
@@ -199,7 +198,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: Image.network(
-                    "${user!.avatar!}&s=120",
+                    "${currentUser.avatar!}&s=120",
                     // loadingBuilder: (context, child, loadingProgress) =>
                     //     const SizedBox(
                     //   height: 120,
@@ -217,7 +216,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   height: height * 0.02,
                 ),
                 Text(
-                  user.username!,
+                  currentUser.username!,
                   style: GoogleFonts.roboto(
                     fontSize: textFactor * 22,
                     color: Colors.black.withOpacity(0.9),

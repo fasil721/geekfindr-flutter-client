@@ -4,14 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class PostServices {
-  final box = Boxes.getInstance();
   final controller = Get.find<AppController>();
 
   Future<void> uploadImage({
@@ -20,14 +18,13 @@ class PostServices {
     required bool isProject,
     String projectName = "",
   }) async {
-    final user = box.get("user");
     const getUrl =
         "$prodUrl/api/v1/uploads/signed-url?fileType=image&fileSubType=jpg";
     const postUrl = "$prodUrl/api/v1/posts/";
     try {
       final response1 = await http.get(
         Uri.parse(getUrl),
-        headers: {"Authorization": "Bearer ${user!.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
       final jsonData = json.decode(response1.body) as Map;
       final data = Signedurl.fromJson(jsonData.cast());
@@ -49,7 +46,7 @@ class PostServices {
           Uri.parse(postUrl),
           body: json.encode(imageModel.toJson()),
           headers: {
-            "Authorization": "Bearer ${user.token}",
+            "Authorization": "Bearer ${currentUser.token}",
             "Content-Type": "application/json"
           },
         );
@@ -88,13 +85,13 @@ class PostServices {
 
   Future<List<ImageModel>> getMyImages(String id) async {
     // await Future.delayed(Duration(seconds: 5));
-    final user = box.get("user");
+
     final url = "$prodUrl/api/v1/posts/by-users/$id";
 
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${user!.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
@@ -127,7 +124,6 @@ class PostServices {
 
   Future<List<ImageModel>> getMyFeeds({String? lastId}) async {
     // await Future.delayed(const Duration(seconds: 5));
-    final user = box.get("user");
     String url = "$prodUrl/api/v1/posts/my-feed?limit=5";
     if (lastId != null) {
       url = "$prodUrl/api/v1/posts/my-feed?limit=5&lastId=$lastId";
@@ -135,7 +131,7 @@ class PostServices {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${user!.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
@@ -154,11 +150,10 @@ class PostServices {
       } else {
         Fluttertoast.showToast(msg: "Something went wrong");
       }
-      return [];
     } on HttpException {
       Fluttertoast.showToast(msg: "No Internet");
     } on SocketException {
-      Fluttertoast.showToast(msg: "No Internet");
+      Fluttertoast.showToast(msg: "No Internet connection");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
     }
@@ -166,13 +161,12 @@ class PostServices {
   }
 
   Future<void> deleteImage({required String imageId}) async {
-    final user = box.get("user");
     final url = "$prodUrl/api/v1/posts/$imageId";
 
     try {
       final response = await http.delete(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${user!.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "Image deleted successfully");
@@ -190,7 +184,6 @@ class PostServices {
   }
 
   Future<void> editImage({required String imageId, required Map body}) async {
-    final user = box.get("user");
     final url = "$prodUrl/api/v1/posts/$imageId";
 
     try {
@@ -198,7 +191,7 @@ class PostServices {
         Uri.parse(url),
         body: json.encode(body),
         headers: {
-          "Authorization": "Bearer ${user!.token}",
+          "Authorization": "Bearer ${currentUser.token}",
           "Content-Type": "application/json"
         },
       );
@@ -219,13 +212,12 @@ class PostServices {
   }
 
   Future<void> postLike({required String imageId}) async {
-    final user = box.get("user");
     final url = "$prodUrl/api/v1/posts/$imageId/likes";
 
     try {
       final response = await http.post(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${user!.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
       if (response.statusCode == 200) {
         controller.update(["likes"]);
@@ -248,13 +240,12 @@ class PostServices {
   }
 
   Future<List<LikedUsers>?> getLikedUsers({required String imageId}) async {
-    final user = box.get("user");
     final url = "$prodUrl/api/v1/posts/$imageId/likes";
 
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${user!.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
@@ -287,14 +278,13 @@ class PostServices {
     required String imageId,
     required String comment,
   }) async {
-    final user = box.get("user");
     final url = "$prodUrl/api/v1/posts/$imageId/comments";
     final body = {"comment": comment};
     try {
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${user!.token}",
+          "Authorization": "Bearer ${currentUser.token}",
           "Content-Type": "application/json"
         },
         body: json.encode(body),
@@ -324,13 +314,13 @@ class PostServices {
     required String imageId,
   }) async {
     await Future.delayed(const Duration(seconds: 1));
-    final user = box.get("user");
+
     final url = "$prodUrl/api/v1/posts/$imageId/comments";
 
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${user!.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
@@ -364,13 +354,12 @@ class PostServices {
     required String projectId,
     required String projectName,
   }) async {
-    final user = box.get("user");
     final url = "$prodUrl/api/v1/posts/$projectId/team-join-requests";
     try {
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${user!.token}",
+          "Authorization": "Bearer ${currentUser.token}",
         },
       );
       print(response.statusCode);

@@ -43,7 +43,6 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final height = MediaQuery.of(context).size.height;
     final textFactor =
         textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-    final currentUser = box.get("user");
 
     return FutureBuilder<UserProfileModel?>(
       future: profileServices.getUserProfilebyId(id: widget.userId),
@@ -369,7 +368,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                       final isFollowing = followersList
                                           .where(
                                             (element) =>
-                                                element.id == currentUser!.id,
+                                                element.id == currentUser.id,
                                           )
                                           .isNotEmpty;
                                       return ElevatedButton(

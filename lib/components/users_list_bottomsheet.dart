@@ -82,7 +82,7 @@ class UsersListView extends StatelessWidget {
                             Get.back();
                             Get.to(
                               () =>
-                                  OtherUserProfile(userId: userList[index].id!),
+                                  OtherUserProfile(userId: results[index].id!),
                             );
                             searchController.clear();
                           },

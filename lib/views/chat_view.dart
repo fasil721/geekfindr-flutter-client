@@ -65,7 +65,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 const SizedBox(
                   height: 16,
                 ),
-                
                 Center(
                   child: Container(
                     height: 4,
@@ -113,6 +112,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+     
       appBar: ChatDetailPageAppBar(),
       body: Stack(
         children: <Widget>[

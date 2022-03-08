@@ -48,7 +48,6 @@ class _FeedListState extends State<FeedList> {
   }
 
   Future<void> likesSetUp() async {
-    final currentUser = box.get("user");
     final values = <bool>[];
     for (int i = 0; i < datas.length; i++) {
       final likedUsers = await postServices.getLikedUsers(
@@ -56,7 +55,7 @@ class _FeedListState extends State<FeedList> {
       );
       final isLiked = likedUsers!
           .where(
-            (element) => element.owner!.id == currentUser!.id,
+            (element) => element.owner!.id == currentUser.id,
           )
           .isNotEmpty;
       values.add(isLiked);
@@ -574,7 +573,7 @@ class _FeedListState extends State<FeedList> {
         highlightColor: white,
         period: const Duration(milliseconds: 1000),
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
           child: ListView.builder(
             shrinkWrap: true,

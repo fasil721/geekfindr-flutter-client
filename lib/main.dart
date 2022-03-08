@@ -51,13 +51,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    final screens = [
+    const screens = [
       HomePage(),
-      const MyProjectList(),
-      const ChatPage(),
-      const ProfilePage(),
+      MyProjectList(),
+      ChatPage(),
+      ProfilePage(),
     ];
     return GetBuilder<AppController>(
       id: "home",

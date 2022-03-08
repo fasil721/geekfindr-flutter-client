@@ -29,7 +29,7 @@ class CommentBottomSheet extends StatelessWidget {
       imageId: imageId,
       comment: text,
     );
-    
+
     //checking which side want to update comment feed side or user post side count
     if (isFeed) {
       postController.feedCommentCountList[index] += 1;
@@ -122,7 +122,7 @@ class CommentBottomSheet extends StatelessWidget {
                           child: CachedNetworkImage(
                             imageUrl: userList[index].owner!.avatar!,
                             fit: BoxFit.fitWidth,
-                            width: width * 0.08,
+                            width: width * 0.09,
                             placeholder: (context, url) => Shimmer.fromColors(
                               baseColor: Colors.grey.withOpacity(0.3),
                               highlightColor: white,
@@ -130,8 +130,8 @@ class CommentBottomSheet extends StatelessWidget {
                                 milliseconds: 1000,
                               ),
                               child: Container(
-                                height: width * 0.07,
-                                width: width * 0.07,
+                                height: width * 0.09,
+                                width: width * 0.09,
                                 decoration: BoxDecoration(
                                   color: Colors.grey,
                                   borderRadius: BorderRadius.circular(100),
@@ -173,7 +173,7 @@ class CommentBottomSheet extends StatelessWidget {
                     ],
                   ),
                   separatorBuilder: (BuildContext context, int index) =>
-                      SizedBox(height: height * 0.015),
+                      SizedBox(height: height * 0.02),
                 ),
               ),
             ),

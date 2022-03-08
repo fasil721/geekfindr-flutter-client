@@ -16,22 +16,57 @@ class MyProjectList extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     final textFactor =
         textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-    return Scaffold(
-      backgroundColor: secondaryColor,
-      body: GetBuilder<AppController>(
-        id: "projectList",
-        builder: (controller) {
-          return FutureBuilder(
-            future: projectServices.getMyProjects(),
-            builder:
-                (context, AsyncSnapshot<List<ProjectShortModel>?> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return _skeleton(width);
-              }
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.data != null) {
-                  final datas = snapshot.data!;
-                  return Padding(
+    return GetBuilder<AppController>(
+      id: "projectList",
+      builder: (controller) {
+        return FutureBuilder(
+          future: projectServices.getMyProjects(),
+          builder: (context, AsyncSnapshot<List<ProjectShortModel>?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _skeleton(width, textFactor);
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.data != null) {
+                final datas = snapshot.data!;
+                return Scaffold(
+                  appBar: AppBar(
+                    elevation: 0,
+                    backgroundColor: white,
+                    title: Text(
+                      "Your Projects",
+                      style: GoogleFonts.recursive(
+                        fontSize: textFactor * 17,
+                        color: black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    actions: [
+                      PopupMenuButton(
+                        itemBuilder: (BuildContext bc) => [
+                          PopupMenuItem(
+                            value: "1",
+                            child: Text(
+                              "",
+                              style: GoogleFonts.poppins(
+                                fontSize: textFactor * 13,
+                                color: Colors.black.withOpacity(0.9),
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          )
+                        ],
+                        onSelected: (value) async {
+                          if (value == "1") {}
+                        },
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  backgroundColor: secondaryColor,
+                  body: Padding(
                     padding: const EdgeInsets.all(10),
                     child: ListView.separated(
                       itemCount: datas.length,
@@ -100,40 +135,78 @@ class MyProjectList extends StatelessWidget {
                       separatorBuilder: (BuildContext context, int index) =>
                           const SizedBox(height: 10),
                     ),
-                  );
-                }
+                  ),
+                );
               }
-              return const SizedBox();
-            },
-          );
-        },
-      ),
+            }
+            return const SizedBox();
+          },
+        );
+      },
     );
   }
 
-  Widget _skeleton(double width) {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey.withOpacity(0.3),
-      highlightColor: white,
-      period: const Duration(milliseconds: 1000),
-      child: Container(
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: 5,
-          itemBuilder: (context, index) => Column(
-            children: [
-              Container(
-                width: width,
-                height: 115,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey,
+  Widget _skeleton(double width, double textFactor) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: white,
+        title: Text(
+          "Your Projects",
+          style: GoogleFonts.recursive(
+            fontSize: textFactor * 17,
+            color: black,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (BuildContext bc) => [
+              PopupMenuItem(
+                value: "1",
+                child: Text(
+                  "Delete Project",
+                  style: GoogleFonts.poppins(
+                    fontSize: textFactor * 13,
+                    color: Colors.black.withOpacity(0.9),
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10)
+              )
             ],
+            onSelected: (value) async {
+              if (value == "1") {}
+            },
+            icon: Icon(
+              Icons.more_vert,
+              color: black,
+            ),
+          ),
+        ],
+      ),
+      body: Shimmer.fromColors(
+        baseColor: Colors.grey.withOpacity(0.3),
+        highlightColor: white,
+        period: const Duration(milliseconds: 1000),
+        child: Container(
+          margin: const EdgeInsets.all(15),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: 5,
+            itemBuilder: (context, index) => Column(
+              children: [
+                Container(
+                  width: width,
+                  height: 115,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 15)
+              ],
+            ),
           ),
         ),
       ),
