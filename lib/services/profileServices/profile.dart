@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/models/error_model.dart';
-import 'package:geek_findr/services/profileServices/user_profile_model.dart';
+import 'package:geek_findr/services/profileServices/profile_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 

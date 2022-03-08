@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/profileServices/user_profile_model.dart';
+import 'package:geek_findr/services/profileServices/profile_model.dart';
 import 'package:geek_findr/views/other_users_profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

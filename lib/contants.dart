@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/authServices/auth.dart';
-// import 'package:geek_findr/services/chatServices/chat_apis.dart';
+import 'package:geek_findr/services/chatServices/chat_apis.dart';
 import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/projectServices/projects.dart';
@@ -23,7 +23,7 @@ final controller = Get.find<AppController>();
 final postController = Get.find<PostsController>();
 final postServices = PostServices();
 final profileServices = ProfileServices();
-// final chatServices = ChatServices();
+final chatServices = ChatServices();
 final authServices = AuthServices();
 final projectServices = ProjectServices();
 const categories = [
