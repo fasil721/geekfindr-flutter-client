@@ -43,7 +43,6 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final height = MediaQuery.of(context).size.height;
     final textFactor =
         textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-
     return FutureBuilder<UserProfileModel?>(
       future: profileServices.getUserProfilebyId(id: widget.userId),
       builder: (context, snapshot) {

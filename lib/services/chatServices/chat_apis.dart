@@ -48,4 +48,53 @@ class ChatServices {
     }
     return null;
   }
+
+  Future<List<MyChatList>?> create1to1Conversation({
+    required String userId,
+  }) async {
+    const url = "$prodUrl/api/v1/chats/conversations";
+    final body = {
+      "isRoom": false,
+      "participants": [userId]
+    };
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "Authorization": "Bearer ${currentUser.token}",
+          "Content-Type": "application/json",
+        },
+        body: json.encode(body),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body) as List;
+        final datas = jsonData
+            .map(
+              (e) => MyChatList.fromJson(
+                Map<String, dynamic>.from(e as Map),
+              ),
+            )
+            .toList();
+        return datas;
+      } else if (response.statusCode == 422 || response.statusCode == 400) {
+        final errorJson = json.decode(response.body) as Map;
+        final err = ErrorModel.fromJson(errorJson.cast());
+        for (final element in err.errors!) {
+          Fluttertoast.showToast(msg: element.message!);
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Something went wrong");
+      }
+    } on HttpException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on SocketException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on PlatformException {
+      Fluttertoast.showToast(msg: "Invalid Format");
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+    return null;
+  }
 }

@@ -1,13 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:geek_findr/components/chat_list.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/services/chatServices/chat_class_models.dart';
 import 'package:geek_findr/services/profileServices/profile_model.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -21,24 +23,25 @@ class _ChatPageState extends State<ChatPage> {
   bool istexting = false;
   late double height;
   late double width;
-  late ChatController _chatController;
-  final focusNode = FocusNode();
+
+  // late ChatController _chatController;
+
   @override
   void initState() {
-    _chatController = Get.put(ChatController());
-    // focusNode.addListener(() {
-    //   if (focusNode.hasFocus) {
-    //     istexting = true;
-    //     _chatController.update(["search"]);
-    //   }
-    // });
+    // _chatController =
+    Get.put(ChatController());
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    focusNode.dispose();
+  List<Participant> findMy1to1chatUsers(List<MyChatList> datas) {
+    final List<Participant> chatUsers = [];
+    final myList = datas.where((element) => element.isRoom == false).toList();
+    for (final e in myList) {
+      final user =
+          e.participants!.firstWhere((element) => element.id != currentUser.id);
+      chatUsers.add(user);
+    }
+    return chatUsers;
   }
 
   @override
@@ -48,15 +51,15 @@ class _ChatPageState extends State<ChatPage> {
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           // connectSocket();
           // connectToServer();
           //  callChat();
           // initsocket();
-          // final data = await chatServices.getMyChats();
-          // final a = data!.first.participants!
-          //     .firstWhere((element) => element.id != currentUser.id);
-          // print(a.toJson());
+          final data = await chatServices.getMyChats();
+          final a = data!.first.participants!
+              .firstWhere((element) => element.id != currentUser.id);
+          print(a.toJson());
         },
       ),
       body: SafeArea(
@@ -113,19 +116,29 @@ class _ChatPageState extends State<ChatPage> {
                 ),
                 SizedBox(height: height * 0.015),
                 buildSearchField(),
-                SizedBox(height: height * 0.015),
-                ListView.builder(
-                  itemCount: chatUsers.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return ChatUsersList(
-                      text: chatUsers[index].text,
-                      secondaryText: chatUsers[index].secondaryText,
-                      image: chatUsers[index].image,
-                      time: chatUsers[index].time,
-                      isMessageRead: index == 0 || index == 2 || index == 3,
-                    );
+                SizedBox(height: height * 0.02),
+                FutureBuilder<List<MyChatList>?>(
+                  future: chatServices.getMyChats(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return _buildLoadingScreen();
+                    }
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.data != null) {
+                        final datas = snapshot.data!;
+                        final chatUsers = findMy1to1chatUsers(datas);
+                        return ListView.separated(
+                          itemCount: chatUsers.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) =>
+                              buildUsersTile(chatUsers, index),
+                          separatorBuilder: (BuildContext context, int index) =>
+                              SizedBox(height: height * 0.015),
+                        );
+                      }
+                    }
+                    return const SizedBox();
                   },
                 ),
               ],
@@ -135,6 +148,100 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
+
+  Widget _buildLoadingScreen() => ListView.separated(
+        itemCount: 7,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) => Shimmer.fromColors(
+          baseColor: Colors.grey.withOpacity(0.2),
+          highlightColor: white,
+          period: const Duration(milliseconds: 1000),
+          child: Container(
+            height: height * 0.06,
+            width: width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        separatorBuilder: (BuildContext context, int index) =>
+            SizedBox(height: height * 0.015),
+      );
+
+  Widget buildUsersTile(List<Participant> items, int index) => GestureDetector(
+        onTap: () {},
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: CachedNetworkImage(
+                      imageUrl: items[index].avatar!,
+                      fit: BoxFit.fitWidth,
+                      width: width * 0.1,
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: Colors.grey.withOpacity(0.3),
+                        highlightColor: white,
+                        period: const Duration(
+                          milliseconds: 1000,
+                        ),
+                        child: Container(
+                          height: width * 0.1,
+                          width: width * 0.1,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: width * 0.03,
+                  ),
+                  Expanded(
+                    child: Container(
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            items[index].username!,
+                            style: GoogleFonts.recursive(
+                              fontSize: 16,
+                              color: black,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Text(
+                            items[index].username!,
+                            style: GoogleFonts.roboto(
+                              fontSize: 14,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Text(
+              "Now",
+              style: TextStyle(
+                fontSize: 12,
+                color: primaryColor,
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget buildSearchField() => GetBuilder<ChatController>(
         id: "search",
@@ -223,68 +330,4 @@ class _ChatPageState extends State<ChatPage> {
           );
         },
       );
-
-  List<ChatUsers> chatUsers = [
-    ChatUsers(
-      text: "Jane Russel",
-      secondaryText: "Awesome Setup",
-      image: "assets/images/logo.png",
-      time: "Now",
-    ),
-    ChatUsers(
-      text: "Glady's Murphy",
-      secondaryText: "That's Great",
-      image: "assets/images/logo.png",
-      time: "Yesterday",
-    ),
-    ChatUsers(
-      text: "Jorge Henry",
-      secondaryText: "Hey where are you?",
-      image: "assets/images/logo.png",
-      time: "31 Mar",
-    ),
-    ChatUsers(
-      text: "Philip Fox",
-      secondaryText: "Busy! Call me in 20 mins",
-      image: "assets/images/logo.png",
-      time: "28 Mar",
-    ),
-    ChatUsers(
-      text: "Debra Hawkins",
-      secondaryText: "Thankyou, It's awesome",
-      image: "assets/images/logo.png",
-      time: "23 Mar",
-    ),
-    ChatUsers(
-      text: "Jacob Pena",
-      secondaryText: "will update you in evening",
-      image: "assets/images/logo.png",
-      time: "17 Mar",
-    ),
-    ChatUsers(
-      text: "Andrey Jones",
-      secondaryText: "Can you please share the file?",
-      image: "assets/images/logo.png",
-      time: "24 Feb",
-    ),
-    ChatUsers(
-      text: "John Wick",
-      secondaryText: "How are you?",
-      image: "assets/images/logo.png",
-      time: "18 Feb",
-    ),
-  ];
-}
-
-class ChatUsers {
-  String text;
-  String secondaryText;
-  String image;
-  String time;
-  ChatUsers({
-    required this.text,
-    required this.secondaryText,
-    required this.image,
-    required this.time,
-  });
 }

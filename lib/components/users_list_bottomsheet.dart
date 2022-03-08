@@ -2,25 +2,32 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/profileServices/profile_model.dart';
 import 'package:geek_findr/views/users_profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
-class UsersListView extends StatelessWidget {
-  UsersListView({
+class UsersListView extends StatefulWidget {
+  const UsersListView({
     Key? key,
     required this.userList,
   }) : super(key: key);
   final List<UserDetials> userList;
+
+  @override
+  State<UsersListView> createState() => _UsersListViewState();
+}
+
+class _UsersListViewState extends State<UsersListView> {
   final searchController = TextEditingController();
 
   List<UserDetials> searchUser() {
     if (searchController.text.isEmpty) {
-      return userList.toList();
+      return widget.userList.toList();
     }
-    final results = userList.where(
+    final results = widget.userList.where(
       (element) {
         final userNameMatch = element.username!.toLowerCase().contains(
               searchController.text.toLowerCase(),
@@ -38,9 +45,18 @@ class UsersListView extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return Container(
       decoration: const BoxDecoration(
         color: white,
@@ -62,7 +78,7 @@ class UsersListView extends StatelessWidget {
               ),
             ),
             SizedBox(height: height * 0.01),
-            _buildSearchInput(),
+            _buildSearchInput(textFactor, height),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -93,7 +109,7 @@ class UsersListView extends StatelessWidget {
                                 child: CachedNetworkImage(
                                   imageUrl: results[index].avatar!,
                                   fit: BoxFit.fitWidth,
-                                  width: width * 0.1,
+                                  width: width * 0.09,
                                   placeholder: (context, url) =>
                                       Shimmer.fromColors(
                                     baseColor: Colors.grey.withOpacity(0.3),
@@ -102,8 +118,8 @@ class UsersListView extends StatelessWidget {
                                       milliseconds: 1000,
                                     ),
                                     child: Container(
-                                      height: width * 0.1,
-                                      width: width * 0.1,
+                                      height: width * 0.09,
+                                      width: width * 0.09,
                                       decoration: BoxDecoration(
                                         color: Colors.grey,
                                         borderRadius:
@@ -121,7 +137,7 @@ class UsersListView extends StatelessWidget {
                                     results[index].username!,
                                     style: GoogleFonts.roboto(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 17,
+                                      fontSize: textFactor * 17,
                                     ),
                                   ),
                                   Visibility(
@@ -129,8 +145,9 @@ class UsersListView extends StatelessWidget {
                                     child: Text(
                                       results[index].role!,
                                       style: GoogleFonts.roboto(
+                                        color: grey,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 15,
+                                        fontSize: textFactor * 13,
                                       ),
                                     ),
                                   ),
@@ -153,8 +170,11 @@ class UsersListView extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchInput() => Container(
+  Widget _buildSearchInput(double textFactor, double height) => Container(
+        height: height * 0.055,
         decoration: BoxDecoration(
+          color: secondaryColor,
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
               offset: const Offset(12, 26),
@@ -166,28 +186,20 @@ class UsersListView extends StatelessWidget {
         child: TextField(
           onChanged: (value) => controller.update(["searching"]),
           controller: searchController,
-          decoration: const InputDecoration(
-            prefixIcon: Icon(
+          decoration: InputDecoration(
+            prefixIcon: const Icon(
               Icons.search,
               color: primaryColor,
             ),
-            filled: true,
-            fillColor: secondaryColor,
             hintText: "Search",
-            hintStyle: TextStyle(color: Colors.grey),
+            hintStyle: GoogleFonts.roboto(
+              color: grey,
+              fontWeight: FontWeight.w500,
+              fontSize: textFactor * 15,
+            ),
             contentPadding:
-                EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white, width: 1.1),
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white, width: 2.0),
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            border: InputBorder.none,
           ),
         ),
       );

@@ -5,7 +5,6 @@ import 'package:geek_findr/components/heart_animation_widget.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
-import 'package:geek_findr/models/user_model.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,7 +31,6 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   bool isLiked = false;
   bool isHeartAnimating = false;
   bool isCommenting = false;
-  UserModel? currentUser;
 
   @override
   void initState() {
@@ -50,7 +48,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
     );
     isLiked = likedUsers!
         .where(
-          (element) => element.owner!.id == currentUser!.id,
+          (element) => element.owner!.id == currentUser.id,
         )
         .isNotEmpty;
     controller.update(["postView"]);
@@ -62,21 +60,18 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
     final height = MediaQuery.of(context).size.height;
     final postedTime =
         findDatesDifferenceFromToday(widget.imageModel.createdAt!);
-    final isCurrentUser = currentUser!.id == widget.imageModel.owner!.id;
+    final isCurrentUser = currentUser.id == widget.imageModel.owner!.id;
     itemsSetUp();
     return GetBuilder<AppController>(
       id: "postView",
       builder: (controller) {
         return Column(
-          mainAxisAlignment: isCommenting
-              ? MainAxisAlignment.start
-              : MainAxisAlignment.center,
+          mainAxisAlignment:
+              isCommenting ? MainAxisAlignment.start : MainAxisAlignment.center,
           children: [
             Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               decoration: BoxDecoration(
                 color: secondaryColor,
                 borderRadius: BorderRadius.circular(30),
@@ -263,12 +258,11 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                 InkWell(
                                   onTap: () async {
                                     if (0 <
-                                        postController
-                                                .userPostCommentCountList[
+                                        postController.userPostCommentCountList[
                                             widget.index]) {
                                       Get.dialog(loadingIndicator());
-                                      final data = await postServices
-                                          .getCommentedUsers(
+                                      final data =
+                                          await postServices.getCommentedUsers(
                                         imageId: widget.imageModel.id!,
                                       );
                                       Get.back();
