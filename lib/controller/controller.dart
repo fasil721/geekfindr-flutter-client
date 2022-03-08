@@ -21,3 +21,5 @@ class PostsController extends GetxController {
     }
   }
 }
+
+class ChatController extends GetxController {}

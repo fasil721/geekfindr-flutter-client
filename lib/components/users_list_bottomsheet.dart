@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/services/profileServices/profile_model.dart';
-import 'package:geek_findr/views/other_users_profile.dart';
+import 'package:geek_findr/views/users_profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -62,7 +62,7 @@ class UsersListView extends StatelessWidget {
               ),
             ),
             SizedBox(height: height * 0.01),
-            buildSearchInput(),
+            _buildSearchInput(),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -153,7 +153,7 @@ class UsersListView extends StatelessWidget {
     );
   }
 
-  Widget buildSearchInput() => Container(
+  Widget _buildSearchInput() => Container(
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(

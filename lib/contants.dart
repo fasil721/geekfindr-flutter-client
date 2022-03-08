@@ -21,6 +21,7 @@ const joinRequest = "joinRequest";
 final currentUser = Boxes.getCurrentUser();
 final controller = Get.find<AppController>();
 final postController = Get.find<PostsController>();
+final chatController = Get.find<ChatController>();
 final postServices = PostServices();
 final profileServices = ProfileServices();
 final chatServices = ChatServices();
