@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/views/login_page.dart';
+import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/views/screens/login_page.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

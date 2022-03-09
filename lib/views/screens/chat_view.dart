@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/models/chat_models.dart';
 import 'package:shimmer/shimmer.dart';
 

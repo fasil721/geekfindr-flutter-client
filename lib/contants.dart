@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/controller/auth_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/services/auth_services.dart';
 import 'package:geek_findr/services/chat_services.dart';
 import 'package:geek_findr/services/post_services.dart';
-import 'package:geek_findr/services/profileServices/profile.dart';
-import 'package:geek_findr/services/projectServices/projects.dart';
+import 'package:geek_findr/services/profile_services.dart';
+import 'package:geek_findr/services/project_services.dart';
 import 'package:get/get.dart';
 
 const prodUrl = "http://www.geekfindr-dev-app.xyz";

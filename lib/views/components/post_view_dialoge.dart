@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:geek_findr/components/comments_bottomsheet.dart';
-import 'package:geek_findr/components/heart_animation_widget.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
-import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/models/post_models.dart';
+import 'package:geek_findr/views/components/comments_bottomsheet.dart';
+import 'package:geek_findr/views/components/heart_animation_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
@@ -68,6 +68,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
     final postedTime =
         findDatesDifferenceFromToday(widget.imageModel.createdAt!);
     final isCurrentUser = findIsCurrentUser();
+    itemsSetUp();
     return GetBuilder<AppController>(
       id: "postView",
       builder: (controller) {

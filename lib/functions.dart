@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/components/users_list_bottomsheet.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/models/post_models.dart';
+import 'package:geek_findr/views/components/users_list_bottomsheet.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 

@@ -3,38 +3,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/functions.dart';
-import 'package:geek_findr/views/login_page.dart';
+import 'package:geek_findr/views/screens/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final userNameController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
-  final userNameFocusNode = FocusNode();
   bool isVisible = true;
 
   @override
+  void initState() {
+    super.initState();
+    passwordFocusNode.unfocus();
+    emailFocusNode.unfocus();
+  }
+
+  @override
   void dispose() {
+    super.dispose();
     passwordFocusNode.dispose();
     emailFocusNode.dispose();
-    userNameFocusNode.dispose();
-    super.dispose();
   }
 
   void validator() {
     String? emailError;
     String? passwordError;
-    String? usernameError;
     final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
     final regexpass = RegExp(r'^.{4,}$');
 
@@ -50,26 +53,12 @@ class _SignUpPageState extends State<SignUpPage> {
     if (passwordController.text.isEmpty) {
       passwordError = "Enter Your Password";
     }
-    if (!regexpass.hasMatch(userNameController.text)) {
-      usernameError = "Enter username(Min. 4 Character)";
-    }
-    if (userNameController.text.isEmpty) {
-      usernameError = "Enter Your username";
-    }
 
-    if (emailError != null || passwordError != null || usernameError != null) {
+    if (emailError != null || passwordError != null) {
       Get.defaultDialog(
         title: "Validation",
         content: Column(
           children: [
-            if (usernameError != null)
-              Text(
-                usernameError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-            const SizedBox(height: 5),
             if (emailError != null)
               Text(
                 emailError,
@@ -97,11 +86,10 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       );
     }
-    if (emailError == null && passwordError == null && usernameError == null) {
-      authServices.userSignUp(
+    if (emailError == null && passwordError == null) {
+      authServices.userSignIn(
         email: emailController.text,
         password: passwordController.text,
-        username: userNameController.text,
       );
     }
   }
@@ -112,36 +100,12 @@ class _SignUpPageState extends State<SignUpPage> {
     final height = MediaQuery.of(context).size.height;
     final textFactor =
         textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-    if (MediaQuery.of(context).viewInsets.bottom > 200) {
+
+    if (MediaQuery.of(context).viewInsets.bottom > 20) {
       isVisible = false;
     } else {
       isVisible = true;
     }
-
-    final userNameField = TextField(
-      focusNode: userNameFocusNode,
-      controller: userNameController,
-      keyboardType: TextInputType.name,
-      textInputAction: TextInputAction.next,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        filled: true,
-        fillColor: const Color(0xffE7EAF0),
-        prefixIcon: Icon(
-          Icons.account_circle,
-          color: Theme.of(context).backgroundColor,
-        ),
-        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        hintText: "User Name",
-        hintStyle: TextStyle(
-          fontSize: textFactor * 14,
-        ),
-      ),
-    );
-
     final emailField = TextField(
       controller: emailController,
       focusNode: emailFocusNode,
@@ -200,7 +164,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
       ),
-      onPressed: () {
+      onPressed: () async {
         SystemChannels.textInput.invokeMethod("TextInput.hide");
         validator();
       },
@@ -209,7 +173,7 @@ class _SignUpPageState extends State<SignUpPage> {
         width: width * 0.25,
         child: Center(
           child: Text(
-            "Sign Up",
+            "Login",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: textFactor * 15,
@@ -226,10 +190,12 @@ class _SignUpPageState extends State<SignUpPage> {
         clipBehavior: Clip.antiAlias,
         children: [
           Positioned(
-            bottom: height * .32,
+            bottom: height * .25,
             child: RotationTransition(
               turns: const AlwaysStoppedAnimation(-45 / 360),
               child: FadeInDownBig(
+                // duration: Duration(milliseconds: ),
+                // delay: const Duration(milliseconds: 1000),
                 child: Container(
                   decoration: BoxDecoration(
                     color: primaryColor,
@@ -243,7 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         color: Colors.grey.withOpacity(.7),
                         blurRadius: 5,
                         offset: const Offset(10, 0),
-                      )
+                      ),
                     ],
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(1000),
@@ -255,18 +221,15 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
           ),
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.only(left: width * 0.1),
-              child: AnimatedOpacity(
-                opacity: isVisible ? 1 : 0,
-                duration: const Duration(milliseconds: 200),
-                child: FadeInDownBig(
-                  child: Image.asset(
-                    'assets/images/Pull.png',
-                    height: height * 0.28,
-                  ),
-                ),
+          AnimatedOpacity(
+            opacity: isVisible ? 1 : 0,
+            duration: const Duration(milliseconds: 200),
+            child: FadeInDownBig(
+              // duration: Duration(milliseconds: duration),
+              // delay: const Duration(milliseconds: 1000),
+              child: Image.asset(
+                'assets/images/pair.png',
+                height: height * 0.4,
               ),
             ),
           ),
@@ -277,54 +240,54 @@ class _SignUpPageState extends State<SignUpPage> {
               bottom: height * 0.05,
             ),
             child: FadeInUpBig(
+              // duration: Duration(milliseconds: duration),
+              // delay: const Duration(milliseconds: 1500),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * .01),
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.01),
                     child: Text(
-                      "Sign Up",
+                      "Sign In",
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.bold,
                         fontSize: textFactor * 28,
                       ),
                     ),
                   ),
-                  SizedBox(height: height * 0.0175),
-                  userNameField,
-                  SizedBox(height: height * 0.0175),
-                  emailField,
-                  SizedBox(height: height * 0.0175),
-                  passwordField,
-                  SizedBox(height: height * 0.0175),
-                  loginButton,
-                  SizedBox(height: height * 0.0175),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.01),
-                    child: Text(
-                      "Or Sign up with social platform",
-                      style: GoogleFonts.roboto(
-                        fontSize: textFactor * 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
                   SizedBox(height: height * 0.02),
-                  GestureDetector(
-                    onTap: () {
-                      Get.off(() => const LoginPage());
-                    },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: width * 0.01,
-                      ),
-                      child: Image.asset(
-                        'assets/images/github.png',
-                        height: height * 0.04,
-                      ),
-                    ),
-                  )
+                  emailField,
+                  SizedBox(height: height * 0.02),
+                  passwordField,
+                  SizedBox(height: height * 0.02),
+                  loginButton,
+                  SizedBox(height: height * 0.02),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: width * 0.01),
+                  //   child: Text(
+                  //     "Or Sign In with social platform",
+                  //     style: GoogleFonts.roboto(
+                  //       fontSize: textFactor * 14,
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: height * 0.02),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Get.to(() => const SignUpPage());
+                  //   },
+                  //   child: Container(
+                  //     margin: EdgeInsets.symmetric(
+                  //       horizontal: width * 0.01,
+                  //     ),
+                  //     child: Image.asset(
+                  //       'assets/images/github.png',
+                  //       height: height * 0.04,
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
             ),

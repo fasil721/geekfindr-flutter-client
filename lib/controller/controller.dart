@@ -1,5 +1,5 @@
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/services/postServices/post_models.dart';
+import 'package:geek_findr/models/post_models.dart';
 import 'package:get/get.dart';
 
 class AppController extends GetxController {}

@@ -1,4 +1,4 @@
-import 'package:geek_findr/services/profileServices/profile_model.dart';
+import 'package:geek_findr/models/profile_model.dart';
 
 class Owner {
   Owner({

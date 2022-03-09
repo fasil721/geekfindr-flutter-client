@@ -4,11 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
-import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/services/postServices/post_models.dart';
-import 'package:geek_findr/services/profileServices/profile_model.dart';
-import 'package:geek_findr/services/projectServices/project_model_classes.dart';
-import 'package:geek_findr/views/users_profile_page.dart';
+import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/models/post_models.dart';
+import 'package:geek_findr/models/profile_model.dart';
+import 'package:geek_findr/models/project_model_classes.dart';
+import 'package:geek_findr/views/screens/users_profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 

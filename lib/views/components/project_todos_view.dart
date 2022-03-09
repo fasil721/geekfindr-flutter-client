@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
-import 'package:geek_findr/services/projectServices/project_model_classes.dart';
+import 'package:geek_findr/models/project_model_classes.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
