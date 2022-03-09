@@ -101,11 +101,11 @@ void initsocket(String id) {
   // print("disconnected : ${socket.disconnected}");
   socket.emit("join_conversation", {"conversationId": id});
   print(id);
-  socket.emit("message", {"message": "hello"});
+  socket.emit("message", {"message": "hai"});
   socket.on("message", (data) => print(data));
 }
 
-void connectSocket() {
+void connectSocketio() {
   const uri = '/api/v1/chats/socket.io';
   final socket = io.io(
     prodUrl,

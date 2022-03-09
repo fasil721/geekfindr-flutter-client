@@ -52,3 +52,39 @@ class Participant {
         "id": id,
       };
 }
+
+class ChatMessage {
+  ChatMessage({
+    this.senderId,
+    this.message,
+    this.conversationId,
+    this.createdAt,
+    this.updatedAt,
+    this.id,
+  });
+
+  String? senderId;
+  String? message;
+  String? conversationId;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? id;
+
+  factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
+        senderId: json["senderId"] as String,
+        message: json["message"] as String,
+        conversationId: json["conversationId"] as String,
+        createdAt: DateTime.parse(json["createdAt"] as String),
+        updatedAt: DateTime.parse(json["updatedAt"] as String),
+        id: json["id"] as String,
+      );
+      
+  Map<String, dynamic> toJson() => {
+        "senderId": senderId,
+        "message": message,
+        "conversationId": conversationId,
+        "createdAt": createdAt!.toIso8601String(),
+        "updatedAt": updatedAt!.toIso8601String(),
+        "id": id,
+      };
+}

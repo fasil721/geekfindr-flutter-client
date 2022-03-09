@@ -179,13 +179,17 @@ class _ChatPageState extends State<ChatPage> {
             SizedBox(height: height * 0.015),
       );
 
-  Widget buildUsersTile(List<Participant> items, int index, String id) =>
+  Widget buildUsersTile(
+    List<Participant> items,
+    int index,
+    String conversationId,
+  ) =>
       GestureDetector(
         onTap: () {
           Get.to(
             () => ChatDetailPage(
               user: items[index],
-              id: id,
+              conversationId: conversationId,
             ),
           );
         },

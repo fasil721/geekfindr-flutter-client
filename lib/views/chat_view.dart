@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/chatServices/chat_class_models.dart';
 import 'package:geek_findr/test.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:socket_io_client/socket_io_client.dart';
 // enum MessageType {
 //   sender,
 //   receiver,
@@ -17,116 +19,55 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 // }
 
 class ChatDetailPage extends StatefulWidget {
-  const ChatDetailPage({required this.user, required this.id});
+  const ChatDetailPage({required this.user, required this.conversationId});
   final Participant user;
-  final String id;
+  final String conversationId;
   @override
   _ChatDetailPageState createState() => _ChatDetailPageState();
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
-  // List<ChatMessage> chatMessage = [
-  //   ChatMessage(message: "Hi John", type: MessageType.receiver),
-  //   ChatMessage(message: "Hope you are doin good", type: MessageType.receiver),
-  //   ChatMessage(
-  //     message: "Hello Jane, I'm good what about you",
-  //     type: MessageType.sender,
-  //   ),
-  //   ChatMessage(
-  //     message: "I'm fine, Working from home",
-  //     type: MessageType.receiver,
-  //   ),
-  //   ChatMessage(message: "Oh! Nice. Same here man", type: MessageType.sender),
-  // ];
+  final _currentUser = Boxes.getCurrentUser();
+  final textController = TextEditingController();
+  late Socket socket;
+  @override
+  void initState() {
+    connectSocket();
+    super.initState();
+  }
 
-  // List<SendMenuItems> menuItems = [
-  //   SendMenuItems(
-  //     text: "Photos & Videos",
-  //     icons: Icons.image,
-  //     color: Colors.amber,
-  //   ),
-  //   SendMenuItems(
-  //     text: "Document",
-  //     icons: Icons.insert_drive_file,
-  //     color: Colors.blue,
-  //   ),
-  //   SendMenuItems(text: "Audio", icons: Icons.music_note, color: Colors.orange),
-  //   SendMenuItems(
-  //     text: "Location",
-  //     icons: Icons.location_on,
-  //     color: Colors.green,
-  //   ),
-  //   SendMenuItems(text: "Contact", icons: Icons.person, color: Colors.purple),
-  // ];
+  @override
+  void dispose() {
+    socket.disconnect();
+    super.dispose();
+  }
 
-  // void showModal() {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) {
-  //       return Container(
-  //         height: MediaQuery.of(context).size.height / 2,
-  //         color: const Color(0xff737373),
-  //         child: Container(
-  //           decoration: const BoxDecoration(
-  //             color: Colors.white,
-  //             borderRadius: BorderRadius.only(
-  //               topRight: Radius.circular(20),
-  //               topLeft: Radius.circular(20),
-  //             ),
-  //           ),
-  //           child: Column(
-  //             children: <Widget>[
-  //               const SizedBox(
-  //                 height: 16,
-  //               ),
-  //               Center(
-  //                 child: Container(
-  //                   height: 4,
-  //                   width: 50,
-  //                   color: Colors.grey.shade200,
-  //                 ),
-  //               ),
-  //               const SizedBox(
-  //                 height: 10,
-  //               ),
-  //               ListView.builder(
-  //                 itemCount: menuItems.length,
-  //                 shrinkWrap: true,
-  //                 physics: const NeverScrollableScrollPhysics(),
-  //                 itemBuilder: (context, index) {
-  //                   return Container(
-  //                     padding: const EdgeInsets.only(top: 10, bottom: 10),
-  //                     child: ListTile(
-  //                       leading: Container(
-  //                         decoration: BoxDecoration(
-  //                           borderRadius: BorderRadius.circular(30),
-  //                           color: menuItems[index].color.shade50,
-  //                         ),
-  //                         height: 50,
-  //                         width: 50,
-  //                         child: Icon(
-  //                           menuItems[index].icons,
-  //                           size: 20,
-  //                           color: menuItems[index].color.shade400,
-  //                         ),
-  //                       ),
-  //                       title: Text(menuItems[index].text),
-  //                     ),
-  //                   );
-  //                 },
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  void connectSocket() {
+    const path = '/api/v1/chats/socket.io';
+    socket = io(prodUrl, <String, dynamic>{
+      "path": path,
+      'transports': ['websocket'],
+      "auth": {"token": _currentUser.token}
+    });
+    socket.connect();
+    socket.onConnect((_) => print('connected ${socket.id}'));
+    socket.onDisconnect((_) => print('disconnected ${socket.id}'));
+    socket.onError((_) => print('error : $_'));
+    socket.emit("join_conversation", {"conversationId": widget.conversationId});
+    socket.on("message", (data) => print(data));
+    print(widget.conversationId);
+  }
+
+  void sendMessage() {
+    socket.emit("message", {"message": textController.text});
+    textController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ChatDetailPageAppBar(user: widget.user),
+      appBar: ChatDetailPageAppBar(
+          user: widget.user, conversationId: widget.conversationId),
       body: Stack(
         children: <Widget>[
           // ListView.builder(
@@ -150,9 +91,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               child: Row(
                 children: <Widget>[
                   GestureDetector(
-                    onTap: () {
-                      // showModal();
-                    },
+                    onTap: () {},
                     child: Container(
                       height: 40,
                       width: 40,
@@ -172,6 +111,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   ),
                   Expanded(
                     child: TextField(
+                      controller: textController,
                       decoration: InputDecoration(
                         hintText: "Type message...",
                         hintStyle: TextStyle(color: Colors.grey.shade500),
@@ -190,7 +130,11 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               margin: const EdgeInsets.only(right: 15, bottom: 15),
               child: FloatingActionButton(
                 onPressed: () {
-                  initsocket(widget.id);
+                  if (textController.text.isNotEmpty) {
+                    sendMessage();
+                  }
+
+                  // initsocket(widget.conversationId);
                 },
                 backgroundColor: Colors.pink,
                 elevation: 0,
@@ -207,48 +151,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     );
   }
 }
-// class SendMenuItems {
-//   String text;
-//   IconData icons;
-//   MaterialColor color;
-//   SendMenuItems({required this.text, required this.icons, required this.color});
-// }
-
-// class ChatBubble extends StatefulWidget {
-//   const ChatBubble({required this.chatMessage});
-//   final ChatMessage chatMessage;
-//   @override
-//   _ChatBubbleState createState() => _ChatBubbleState();
-// }
-
-// class _ChatBubbleState extends State<ChatBubble> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
-//       child: Align(
-//         alignment: widget.chatMessage.type == MessageType.receiver
-//             ? Alignment.topLeft
-//             : Alignment.topRight,
-//         child: Container(
-//           decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(30),
-//             color: widget.chatMessage.type == MessageType.receiver
-//                 ? Colors.white
-//                 : Colors.grey.shade200,
-//           ),
-//           padding: const EdgeInsets.all(16),
-//           child: Text(widget.chatMessage.message),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class ChatDetailPageAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  const ChatDetailPageAppBar({required this.user});
+  const ChatDetailPageAppBar(
+      {required this.user, required this.conversationId});
   final Participant user;
+  final String conversationId;
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -311,9 +220,17 @@ class ChatDetailPageAppBar extends StatelessWidget
                   ],
                 ),
               ),
-              Icon(
-                Icons.more_vert,
-                color: Colors.grey.shade700,
+              IconButton(
+                onPressed: () async {
+                  final a = await chatServices.getMyChatMessages(
+                    conversationId: conversationId,
+                  );
+                  print(a!.map((e) => e.message));
+                },
+                icon: Icon(
+                  Icons.more_vert,
+                  color: Colors.grey.shade700,
+                ),
               ),
             ],
           ),
