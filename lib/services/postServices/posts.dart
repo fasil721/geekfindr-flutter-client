@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
-import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class PostServices {
-  final controller = Get.find<AppController>();
+   final _currentUser = Boxes.getCurrentUser();
 
   Future<void> uploadImage({
     required String description,
@@ -24,7 +24,7 @@ class PostServices {
     try {
       final response1 = await http.get(
         Uri.parse(getUrl),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
       final jsonData = json.decode(response1.body) as Map;
       final data = Signedurl.fromJson(jsonData.cast());
@@ -46,7 +46,7 @@ class PostServices {
           Uri.parse(postUrl),
           body: json.encode(imageModel.toJson()),
           headers: {
-            "Authorization": "Bearer ${currentUser.token}",
+            "Authorization": "Bearer ${_currentUser.token}",
             "Content-Type": "application/json"
           },
         );
@@ -91,7 +91,7 @@ class PostServices {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
@@ -131,7 +131,7 @@ class PostServices {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
@@ -166,7 +166,7 @@ class PostServices {
     try {
       final response = await http.delete(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "Image deleted successfully");
@@ -191,7 +191,7 @@ class PostServices {
         Uri.parse(url),
         body: json.encode(body),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json"
         },
       );
@@ -217,7 +217,7 @@ class PostServices {
     try {
       final response = await http.post(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
       if (response.statusCode == 200) {
         controller.update(["likes"]);
@@ -245,7 +245,7 @@ class PostServices {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
@@ -284,7 +284,7 @@ class PostServices {
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json"
         },
         body: json.encode(body),
@@ -320,7 +320,7 @@ class PostServices {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
@@ -359,7 +359,7 @@ class PostServices {
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
         },
       );
       print(response.statusCode);

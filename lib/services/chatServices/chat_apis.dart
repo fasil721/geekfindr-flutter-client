@@ -3,18 +3,19 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/services/chatServices/chat_class_models.dart';
 import 'package:http/http.dart' as http;
 
-class ChatServices {
+class ChatServices { final _currentUser = Boxes.getCurrentUser();
   Future<List<MyChatList>?> getMyChats() async {
     const url = "$prodUrl/api/v1/chats/my-conversations";
     try {
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
         },
       );
       print(response.statusCode);
@@ -61,7 +62,7 @@ class ChatServices {
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json",
         },
         body: json.encode(body),

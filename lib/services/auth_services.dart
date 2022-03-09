@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices {
   final box = Boxes.getInstance();
-  
+
   Future<void> userSignIn({
     required String email,
     required String password,

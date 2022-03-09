@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/controller/auth_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/services/authServices/auth.dart';
+import 'package:geek_findr/services/auth_services.dart';
 import 'package:geek_findr/services/chatServices/chat_apis.dart';
 import 'package:geek_findr/services/postServices/posts.dart';
 import 'package:geek_findr/services/profileServices/profile.dart';
 import 'package:geek_findr/services/projectServices/projects.dart';
 import 'package:get/get.dart';
+
 
 const prodUrl = "http://www.geekfindr-dev-app.xyz";
 const primaryColor = Color(0xffB954FE);
@@ -19,10 +21,11 @@ const admin = "admin";
 const owner = "owner";
 const collaborator = "collaborator";
 const joinRequest = "joinRequest";
-final currentUser = Boxes.getCurrentUser();
+
 final controller = Get.find<AppController>();
 final postController = Get.find<PostsController>();
 final chatController = Get.find<ChatController>();
+// final authController = Get.find<AuthController>();
 final postServices = PostServices();
 final profileServices = ProfileServices();
 final chatServices = ChatServices();

@@ -98,7 +98,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
 
     if (MediaQuery.of(context).viewInsets.bottom > 20) {
       isVisible = false;
@@ -262,31 +263,31 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   SizedBox(height: height * 0.02),
                   loginButton,
                   SizedBox(height: height * 0.02),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.01),
-                    child: Text(
-                      "Or Sign In with social platform",
-                      style: GoogleFonts.roboto(
-                        fontSize: textFactor * 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: height * 0.02),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => const SignUpPage());
-                    },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: width * 0.01,
-                      ),
-                      child: Image.asset(
-                        'assets/images/github.png',
-                        height: height * 0.04,
-                      ),
-                    ),
-                  )
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: width * 0.01),
+                  //   child: Text(
+                  //     "Or Sign In with social platform",
+                  //     style: GoogleFonts.roboto(
+                  //       fontSize: textFactor * 14,
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: height * 0.02),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Get.to(() => const SignUpPage());
+                  //   },
+                  //   child: Container(
+                  //     margin: EdgeInsets.symmetric(
+                  //       horizontal: width * 0.01,
+                  //     ),
+                  //     child: Image.asset(
+                  //       'assets/images/github.png',
+                  //       height: height * 0.04,
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
             ),

@@ -6,6 +6,7 @@ import 'package:geek_findr/components/users_list_bottomsheet.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/services/profileServices/profile_model.dart';
 import 'package:geek_findr/views/profile_page.dart';
@@ -25,7 +26,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   TabController? tabController;
   int currentIndex = 0;
   int followersCount = 0;
-  bool isLoading = false;
+  bool isLoading = false; final _currentUser = Boxes.getCurrentUser();
 
   @override
   void initState() {
@@ -367,7 +368,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                       final isFollowing = followersList
                                           .where(
                                             (element) =>
-                                                element.id == currentUser.id,
+                                                element.id == _currentUser.id,
                                           )
                                           .isNotEmpty;
                                       return ElevatedButton(

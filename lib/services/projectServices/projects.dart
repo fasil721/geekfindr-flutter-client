@@ -3,19 +3,21 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/services/projectServices/project_model_classes.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class ProjectServices {
+  final _currentUser = Boxes.getCurrentUser();
   Future<List<ProjectShortModel>?> getMyProjects() async {
     const url = "$prodUrl/api/v1/projects/my-projects";
     try {
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
         },
       );
       print(response.statusCode);
@@ -59,7 +61,7 @@ class ProjectServices {
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
         },
       );
       print(response.statusCode);
@@ -98,7 +100,7 @@ class ProjectServices {
       final response = await http.put(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json"
         },
         body: json.encode(body),
@@ -138,7 +140,7 @@ class ProjectServices {
       final response = await http.delete(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
         },
       );
 
@@ -180,7 +182,7 @@ class ProjectServices {
       final response = await http.put(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json"
         },
         body: json.encode(body),
@@ -227,7 +229,7 @@ class ProjectServices {
       final response = await http.delete(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
         },
       );
 
@@ -264,7 +266,7 @@ class ProjectServices {
       final response = await http.put(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json"
         },
         body: json.encode(body),
@@ -302,7 +304,7 @@ class ProjectServices {
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json"
         },
         body: json.encode(body),
@@ -340,7 +342,7 @@ class ProjectServices {
       final response = await http.delete(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
         },
       );
       print(response.statusCode);
@@ -377,7 +379,7 @@ class ProjectServices {
       final response = await http.put(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json"
         },
         body: json.encode(body),

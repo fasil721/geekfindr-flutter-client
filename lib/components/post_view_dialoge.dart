@@ -5,6 +5,7 @@ import 'package:geek_findr/components/heart_animation_widget.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   final commmentEditController = TextEditingController();
   bool isRequested = false;
   bool isLiked = false;
-  bool isHeartAnimating = false;
+  bool isHeartAnimating = false; final _currentUser = Boxes.getCurrentUser();
   bool isCommenting = false;
 
   @override
@@ -48,7 +49,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
     );
     isLiked = likedUsers!
         .where(
-          (element) => element.owner!.id == currentUser.id,
+          (element) => element.owner!.id == _currentUser.id,
         )
         .isNotEmpty;
     controller.update(["postView"]);
@@ -60,7 +61,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
     final height = MediaQuery.of(context).size.height;
     final postedTime =
         findDatesDifferenceFromToday(widget.imageModel.createdAt!);
-    final isCurrentUser = currentUser.id == widget.imageModel.owner!.id;
+    final isCurrentUser = _currentUser.id == widget.imageModel.owner!.id;
     itemsSetUp();
     return GetBuilder<AppController>(
       id: "postView",

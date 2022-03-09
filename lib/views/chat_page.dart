@@ -2,11 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:geek_findr/components/chat_list.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/chatServices/chat_class_models.dart';
 import 'package:geek_findr/services/profileServices/profile_model.dart';
+import 'package:geek_findr/test.dart';
+import 'package:geek_findr/views/chat_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -20,10 +24,11 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final searchController = TextEditingController();
   late double textFactor;
+  final _currentUser = Boxes.getCurrentUser();
   bool istexting = false;
   late double height;
   late double width;
-
+  List<MyChatList> myList = [];
   // late ChatController _chatController;
 
   @override
@@ -35,11 +40,12 @@ class _ChatPageState extends State<ChatPage> {
 
   List<Participant> findMy1to1chatUsers(List<MyChatList> datas) {
     final List<Participant> chatUsers = [];
-    final myList = datas.where((element) => element.isRoom == false).toList();
+    myList = datas.where((element) => element.isRoom == false).toList();
+
     for (final e in myList) {
       final user =
-          e.participants!.firstWhere((element) => element.id != currentUser.id);
-      chatUsers.add(user);
+          e.participants!.where((element) => element.id != _currentUser.id);
+      chatUsers.addAll(user);
     }
     return chatUsers;
   }
@@ -52,14 +58,14 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // connectSocket();
+          //    connectSocket();
           // connectToServer();
           //  callChat();
           // initsocket();
-          final data = await chatServices.getMyChats();
-          final a = data!.first.participants!
-              .firstWhere((element) => element.id != currentUser.id);
-          print(a.toJson());
+          // final data = await chatServices.getMyChats();
+          // final a = data!.first.participants!
+          //     .firstWhere((element) => element.id != currentUser.id);
+          // print(a.toJson());
         },
       ),
       body: SafeArea(
@@ -125,16 +131,19 @@ class _ChatPageState extends State<ChatPage> {
                     }
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.data != null) {
-                        final datas = snapshot.data!;
-                        final chatUsers = findMy1to1chatUsers(datas);
+                        final chatUsers = findMy1to1chatUsers(snapshot.data!);
                         return ListView.separated(
                           itemCount: chatUsers.length,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (BuildContext context, int index) =>
-                              buildUsersTile(chatUsers, index),
+                              buildUsersTile(
+                            chatUsers,
+                            index,
+                            myList[index].id!,
+                          ),
                           separatorBuilder: (BuildContext context, int index) =>
-                              SizedBox(height: height * 0.015),
+                              SizedBox(height: height * 0.02),
                         );
                       }
                     }
@@ -170,8 +179,16 @@ class _ChatPageState extends State<ChatPage> {
             SizedBox(height: height * 0.015),
       );
 
-  Widget buildUsersTile(List<Participant> items, int index) => GestureDetector(
-        onTap: () {},
+  Widget buildUsersTile(List<Participant> items, int index, String id) =>
+      GestureDetector(
+        onTap: () {
+          Get.to(
+            () => ChatDetailPage(
+              user: items[index],
+              id: id,
+            ),
+          );
+        },
         child: Row(
           children: <Widget>[
             Expanded(
@@ -325,7 +342,11 @@ class _ChatPageState extends State<ChatPage> {
                 );
               },
               noItemsFoundBuilder: (context) => const SizedBox(),
-              onSuggestionSelected: (UserDetials? user) {},
+              onSuggestionSelected: (UserDetials? user) {
+                istexting = false;
+                searchController.clear();
+                controller.update(["search"]);
+              },
             ),
           );
         },

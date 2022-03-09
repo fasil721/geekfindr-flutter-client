@@ -1,6 +1,7 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_element
 
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 late io.Socket socket;
@@ -17,21 +18,6 @@ void callChat() {
   print(socket.connected);
   socket.onConnect((_) => print('connected'));
   socket.onDisconnect((_) => print('disconnected'));
-}
-
-void connectSocket() {
-  const uri = '$prodUrl/api/v1/chats';
-  socket = io.io(
-    uri,
-    io.OptionBuilder()
-        .setTransports(['websocket'])
-        .disableAutoConnect()
-        .build(),
-  );
-  socket.connect();
-  socket.onConnect((_) => print('connected'));
-  socket.onDisconnect((_) => print('disconnected'));
-  print(socket.connected);
 }
 
 void connectToServer() {
@@ -98,13 +84,44 @@ void handleMessage(dynamic data) {
   print(data);
 }
 
-void initsocket() {
-  io.Socket socket;
-  print('Connecting to chat service');
-  socket = io.io('https://ff847a462e9a.ngrok.io', <String, dynamic>{
-    '"transports': ['websocket'],
-    'autoConnect': false,
+final _currentUser = Boxes.getCurrentUser();
+
+void initsocket(String id) {
+  const path = '/api/v1/chats/socket.io';
+  final socket = io.io(prodUrl, <String, dynamic>{
+    "path": path,
+    'transports': ['websocket'],
+    "auth": {"token": _currentUser.token}
   });
   socket.connect();
-  print(socket.connected);
+  socket.onConnect((_) => print('connected ${socket.id}'));
+  socket.onDisconnect((_) => print('disconnected'));
+  socket.onError((_) => print('error : $_'));
+  // print("connected : ${socket.connected}");
+  // print("disconnected : ${socket.disconnected}");
+  socket.emit("join_conversation", {"conversationId": id});
+  print(id);
+  socket.emit("message", {"message": "hello"});
+  socket.on("message", (data) => print(data));
+}
+
+void connectSocket() {
+  const uri = '/api/v1/chats/socket.io';
+  final socket = io.io(
+    prodUrl,
+    io.OptionBuilder()
+        .setPath(uri)
+        .setTransports(['websocket'])
+        .disableAutoConnect()
+        .setExtraHeaders({
+          "auth": {"token": _currentUser.token}
+        })
+        .build(),
+  );
+  socket.connect();
+  socket.onConnect((_) => print('connected'));
+  socket.onDisconnect((_) => print('disconnected'));
+  socket.onError((_) => print('error : $_'));
+  print("connected : ${socket.connected}");
+  print("disconnected : ${socket.disconnected}");
 }

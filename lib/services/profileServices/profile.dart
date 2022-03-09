@@ -3,18 +3,20 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/services/profileServices/profile_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileServices {
+  final _currentUser = Boxes.getCurrentUser();
   Future<UserProfileModel?> getUserProfileData() async {
     const url = "$prodUrl/api/v1/profiles/my-profile/";
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData =
@@ -46,7 +48,7 @@ class ProfileServices {
       final response = await http.patch(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json"
         },
         body: json.encode(body),
@@ -84,7 +86,7 @@ class ProfileServices {
     try {
       final response = await client.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
 
       if (response.statusCode == 200) {
@@ -126,7 +128,7 @@ class ProfileServices {
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${currentUser.token}",
+          "Authorization": "Bearer ${_currentUser.token}",
           "Content-Type": "application/json",
         },
         body: json.encode(body),
@@ -170,7 +172,7 @@ class ProfileServices {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
 
       if (response.statusCode == 200) {
@@ -212,7 +214,7 @@ class ProfileServices {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${currentUser.token}"},
+        headers: {"Authorization": "Bearer ${_currentUser.token}"},
       );
 
       if (response.statusCode == 200) {

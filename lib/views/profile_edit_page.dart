@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/profileServices/profile_model.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +15,7 @@ class ProfileUpatePage extends StatefulWidget {
 }
 
 class _ProfileUpatePageState extends State<ProfileUpatePage> {
+  final _currentUser = Boxes.getCurrentUser();
   final orgItems = <String>[];
   final orgController = TextEditingController();
   final sklController = TextEditingController();
@@ -198,7 +200,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: Image.network(
-                    "${currentUser.avatar!}&s=120",
+                    "${_currentUser.avatar!}&s=120",
                     // loadingBuilder: (context, child, loadingProgress) =>
                     //     const SizedBox(
                     //   height: 120,
@@ -216,7 +218,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   height: height * 0.02,
                 ),
                 Text(
-                  currentUser.username!,
+                  _currentUser.username!,
                   style: GoogleFonts.roboto(
                     fontSize: textFactor * 22,
                     color: Colors.black.withOpacity(0.9),

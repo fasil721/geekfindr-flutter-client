@@ -21,18 +21,10 @@ class UserModel {
   @HiveField(5)
   String? username;
 
-  @HiveField(6)
-  String? createdAt;
-
-  @HiveField(7)
-  String? updatedAt;
-
   UserModel({
     this.email,
     this.username,
     this.avatar,
-    this.createdAt,
-    this.updatedAt,
     this.id,
     this.token,
   });
@@ -41,8 +33,6 @@ class UserModel {
         email: json["email"],
         username: json["username"],
         avatar: json["avatar"],
-        createdAt: json["createdAt"],
-        updatedAt: json["updatedAt"],
         id: json["id"],
         token: json["token"],
       );

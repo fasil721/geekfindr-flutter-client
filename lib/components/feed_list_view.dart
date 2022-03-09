@@ -5,6 +5,7 @@ import 'package:geek_findr/components/heart_animation_widget.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/models/box_instance.dart';
 import 'package:geek_findr/services/postServices/post_models.dart';
 import 'package:geek_findr/views/users_profile_page.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,7 @@ class FeedList extends StatefulWidget {
 
 class _FeedListState extends State<FeedList> {
   final commmentEditController = TextEditingController();
+  final _currentUser = Boxes.getCurrentUser();
   List<bool> isCommenting = [];
   List<bool> isLikedList = [];
   List<bool> isHeartAnimatingList = [];
@@ -55,7 +57,7 @@ class _FeedListState extends State<FeedList> {
       );
       final isLiked = likedUsers!
           .where(
-            (element) => element.owner!.id == currentUser.id,
+            (element) => element.owner!.id == _currentUser.id,
           )
           .isNotEmpty;
       values.add(isLiked);

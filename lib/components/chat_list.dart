@@ -26,12 +26,12 @@ class _ChatUsersListState extends State<ChatUsersList> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChatDetailPage(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => ChatDetailPage(),
+        //   ),
+        // );
       },
       child: Container(
         padding:

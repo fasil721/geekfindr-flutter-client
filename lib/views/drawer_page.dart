@@ -17,11 +17,11 @@ class DrawerPage extends StatelessWidget {
           const Spacer(),
           ListTile(
             onTap: () async {
-              Get.offAll(() => const LoginPage());
               final pref = await SharedPreferences.getInstance();
               pref.setBool("user", false);
               final box = Boxes.getInstance();
-              box.delete("user");
+              await box.delete("user");
+              Get.offAll(() => const LoginPage());
             },
             leading: const Icon(Icons.settings),
             title: const Text('Logout '),

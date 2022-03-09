@@ -4,7 +4,6 @@ import 'package:geek_findr/models/user_model.dart';
 import 'package:hive/hive.dart';
 
 class Boxes {
-
   static Box<UserModel> getInstance() {
     final box = Hive.box<UserModel>('usermodel');
     return box;
