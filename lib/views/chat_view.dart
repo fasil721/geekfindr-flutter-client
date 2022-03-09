@@ -1,10 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/services/chatServices/chat_class_models.dart';
-import 'package:geek_findr/test.dart';
+import 'package:geek_findr/models/chat_models.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:socket_io_client/socket_io_client.dart';
@@ -27,7 +25,6 @@ class ChatDetailPage extends StatefulWidget {
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
-  final _currentUser = Boxes.getCurrentUser();
   final textController = TextEditingController();
   late Socket socket;
   @override
@@ -43,16 +40,17 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   void connectSocket() {
+    final currentUser = Boxes.getCurrentUser();
     const path = '/api/v1/chats/socket.io';
     socket = io(prodUrl, <String, dynamic>{
       "path": path,
       'transports': ['websocket'],
-      "auth": {"token": _currentUser.token}
+      "auth": {"token": currentUser.token}
     });
     socket.connect();
-    socket.onConnect((_) => print('connected ${socket.id}'));
-    socket.onDisconnect((_) => print('disconnected ${socket.id}'));
-    socket.onError((_) => print('error : $_'));
+    socket.onConnect((data) => print('connected ${socket.id}'));
+    socket.onDisconnect((data) => print('disconnected'));
+    socket.onError((data) => print('error : $data'));
     socket.emit("join_conversation", {"conversationId": widget.conversationId});
     socket.on("message", (data) => print(data));
     print(widget.conversationId);
@@ -67,7 +65,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ChatDetailPageAppBar(
-          user: widget.user, conversationId: widget.conversationId),
+        user: widget.user,
+        conversationId: widget.conversationId,
+      ),
       body: Stack(
         children: <Widget>[
           // ListView.builder(
@@ -133,7 +133,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   if (textController.text.isNotEmpty) {
                     sendMessage();
                   }
-
                   // initsocket(widget.conversationId);
                 },
                 backgroundColor: Colors.pink,
@@ -154,8 +153,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
 class ChatDetailPageAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  const ChatDetailPageAppBar(
-      {required this.user, required this.conversationId});
+  const ChatDetailPageAppBar({
+    required this.user,
+    required this.conversationId,
+  });
   final Participant user;
   final String conversationId;
   @override
@@ -241,4 +242,53 @@ class ChatDetailPageAppBar extends StatelessWidget
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class ChatBubble extends StatefulWidget {
+  const ChatBubble({required this.chatMessage});
+  final ChatMessage chatMessage;
+  @override
+  _ChatBubbleState createState() => _ChatBubbleState();
+}
+
+class _ChatBubbleState extends State<ChatBubble> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+      child: Align(
+        alignment: widget.chatMessage.type == MessageType.receiver
+            ? Alignment.topLeft
+            : Alignment.topRight,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: widget.chatMessage.type == MessageType.receiver
+                ? Colors.white
+                : Colors.grey.shade200,
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Text(widget.chatMessage.message),
+        ),
+      ),
+    );
+  }
+}
+
+class ChatMessage {
+  String message;
+  MessageType type;
+  ChatMessage({required this.message, required this.type});
+}
+
+class SendMenuItems {
+  String text;
+  IconData icons;
+  MaterialColor color;
+  SendMenuItems({required this.text, required this.icons, required this.color});
+}
+
+enum MessageType {
+  sender,
+  receiver,
 }

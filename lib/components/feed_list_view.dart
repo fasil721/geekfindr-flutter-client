@@ -22,7 +22,6 @@ class FeedList extends StatefulWidget {
 
 class _FeedListState extends State<FeedList> {
   final commmentEditController = TextEditingController();
-  final _currentUser = Boxes.getCurrentUser();
   List<bool> isCommenting = [];
   List<bool> isLikedList = [];
   List<bool> isHeartAnimatingList = [];
@@ -50,6 +49,7 @@ class _FeedListState extends State<FeedList> {
   }
 
   Future<void> likesSetUp() async {
+    final currentUser = Boxes.getCurrentUser();
     final values = <bool>[];
     for (int i = 0; i < datas.length; i++) {
       final likedUsers = await postServices.getLikedUsers(
@@ -57,7 +57,7 @@ class _FeedListState extends State<FeedList> {
       );
       final isLiked = likedUsers!
           .where(
-            (element) => element.owner!.id == _currentUser.id,
+            (element) => element.owner!.id == currentUser.id,
           )
           .isNotEmpty;
       values.add(isLiked);

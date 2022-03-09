@@ -4,19 +4,19 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/models/box_instance.dart';
+import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/error_model.dart';
-import 'package:geek_findr/services/chatServices/chat_class_models.dart';
 import 'package:http/http.dart' as http;
 
 class ChatServices {
-  final _currentUser = Boxes.getCurrentUser();
   Future<List<MyChatList>?> getMyChats() async {
+    final currentUser = Boxes.getCurrentUser();
     const url = "$prodUrl/api/v1/chats/my-conversations";
     try {
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${_currentUser.token}",
+          "Authorization": "Bearer ${currentUser.token}",
         },
       );
       print(response.statusCode);
@@ -54,6 +54,7 @@ class ChatServices {
   Future<List<MyChatList>?> create1to1Conversation({
     required String userId,
   }) async {
+    final currentUser = Boxes.getCurrentUser();
     const url = "$prodUrl/api/v1/chats/conversations";
     final body = {
       "isRoom": false,
@@ -63,7 +64,7 @@ class ChatServices {
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${_currentUser.token}",
+          "Authorization": "Bearer ${currentUser.token}",
           "Content-Type": "application/json",
         },
         body: json.encode(body),
@@ -103,12 +104,13 @@ class ChatServices {
   Future<List<ChatMessage>?> getMyChatMessages({
     required String conversationId,
   }) async {
+    final currentUser = Boxes.getCurrentUser();
     final url = "$prodUrl/api/v1/chats/conversations/$conversationId/messages";
     try {
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${_currentUser.token}",
+          "Authorization": "Bearer ${currentUser.token}",
         },
       );
       print(response.statusCode);

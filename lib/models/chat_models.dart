@@ -78,7 +78,7 @@ class ChatMessage {
         updatedAt: DateTime.parse(json["updatedAt"] as String),
         id: json["id"] as String,
       );
-      
+
   Map<String, dynamic> toJson() => {
         "senderId": senderId,
         "message": message,

@@ -84,14 +84,13 @@ void handleMessage(dynamic data) {
   print(data);
 }
 
-final _currentUser = Boxes.getCurrentUser();
-
 void initsocket(String id) {
+  final currentUser = Boxes.getCurrentUser();
   const path = '/api/v1/chats/socket.io';
   final socket = io.io(prodUrl, <String, dynamic>{
     "path": path,
     'transports': ['websocket'],
-    "auth": {"token": _currentUser.token}
+    "auth": {"token": currentUser.token}
   });
   socket.connect();
   socket.onConnect((_) => print('connected ${socket.id}'));
@@ -106,6 +105,7 @@ void initsocket(String id) {
 }
 
 void connectSocketio() {
+  final currentUser = Boxes.getCurrentUser();
   const uri = '/api/v1/chats/socket.io';
   final socket = io.io(
     prodUrl,
@@ -114,7 +114,7 @@ void connectSocketio() {
         .setTransports(['websocket'])
         .disableAutoConnect()
         .setExtraHeaders({
-          "auth": {"token": _currentUser.token}
+          "auth": {"token": currentUser.token}
         })
         .build(),
   );

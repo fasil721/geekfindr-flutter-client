@@ -36,7 +36,8 @@ class ProfileAboutView extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return Container(
       width: width,
       margin: const EdgeInsets.symmetric(
@@ -147,6 +148,7 @@ class ProfileAboutView extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(height: height * 0.01),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),

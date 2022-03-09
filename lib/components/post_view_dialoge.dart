@@ -30,7 +30,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   final commmentEditController = TextEditingController();
   bool isRequested = false;
   bool isLiked = false;
-  bool isHeartAnimating = false; final _currentUser = Boxes.getCurrentUser();
+  bool isHeartAnimating = false;
   bool isCommenting = false;
 
   @override
@@ -41,6 +41,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
   }
 
   Future<void> itemsSetUp() async {
+    final currentUser = Boxes.getCurrentUser();
     if (widget.imageModel.isProject!) {
       isRequested = checkRequest(widget.imageModel.teamJoinRequests!);
     }
@@ -49,10 +50,15 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
     );
     isLiked = likedUsers!
         .where(
-          (element) => element.owner!.id == _currentUser.id,
+          (element) => element.owner!.id == currentUser.id,
         )
         .isNotEmpty;
     controller.update(["postView"]);
+  }
+
+  bool findIsCurrentUser() {
+    final currentUser = Boxes.getCurrentUser();
+    return currentUser.id == widget.imageModel.owner!.id;
   }
 
   @override
@@ -61,8 +67,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
     final height = MediaQuery.of(context).size.height;
     final postedTime =
         findDatesDifferenceFromToday(widget.imageModel.createdAt!);
-    final isCurrentUser = _currentUser.id == widget.imageModel.owner!.id;
-    itemsSetUp();
+    final isCurrentUser = findIsCurrentUser();
     return GetBuilder<AppController>(
       id: "postView",
       builder: (controller) {

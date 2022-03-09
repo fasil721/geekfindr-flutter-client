@@ -10,13 +10,13 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileServices {
-  final _currentUser = Boxes.getCurrentUser();
   Future<UserProfileModel?> getUserProfileData() async {
+    final currentUser = Boxes.getCurrentUser();
     const url = "$prodUrl/api/v1/profiles/my-profile/";
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${_currentUser.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
       if (response.statusCode == 200) {
         final jsonData =
@@ -43,12 +43,13 @@ class ProfileServices {
   }
 
   Future<void> updateUserProfileData(Map<String, dynamic> body) async {
+    final currentUser = Boxes.getCurrentUser();
     const url = "$prodUrl/api/v1/profiles/my-profile";
     try {
       final response = await http.patch(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${_currentUser.token}",
+          "Authorization": "Bearer ${currentUser.token}",
           "Content-Type": "application/json"
         },
         body: json.encode(body),
@@ -80,15 +81,15 @@ class ProfileServices {
     required String text,
     String role = "",
   }) async {
+    final currentUser = Boxes.getCurrentUser();
     final url =
         "$prodUrl/api/v1/profiles?searchUserName=$text&searchRole=$role";
     final client = http.Client();
     try {
       final response = await client.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${_currentUser.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
-
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
         final userData = jsonData
@@ -123,12 +124,13 @@ class ProfileServices {
   Future<void> followUsers({
     required Map<String, String> body,
   }) async {
+    final currentUser = Boxes.getCurrentUser();
     const url = "$prodUrl/api/v1/profiles/following";
     try {
       final response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization": "Bearer ${_currentUser.token}",
+          "Authorization": "Bearer ${currentUser.token}",
           "Content-Type": "application/json",
         },
         body: json.encode(body),
@@ -163,7 +165,7 @@ class ProfileServices {
   }) async {
     await Future.delayed(const Duration(milliseconds: 1000));
     String url = "$prodUrl/api/v1/profiles/$id/";
-
+    final currentUser = Boxes.getCurrentUser();
     if (type == "followers") {
       url = url + type;
     } else if (type == "following") {
@@ -172,9 +174,8 @@ class ProfileServices {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${_currentUser.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
-
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
         final userData = jsonData
@@ -209,14 +210,14 @@ class ProfileServices {
   Future<UserProfileModel?> getUserProfilebyId({
     required String id,
   }) async {
+    final currentUser = Boxes.getCurrentUser();
     await Future.delayed(const Duration(milliseconds: 500));
     final url = "$prodUrl/api/v1/profiles/$id";
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {"Authorization": "Bearer ${_currentUser.token}"},
+        headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
-
       if (response.statusCode == 200) {
         final jsonData =
             Map<String, dynamic>.from(json.decode(response.body) as Map);

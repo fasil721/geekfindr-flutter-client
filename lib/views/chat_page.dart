@@ -2,14 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:geek_findr/components/chat_list.dart';
 import 'package:geek_findr/contants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/box_instance.dart';
-import 'package:geek_findr/services/chatServices/chat_class_models.dart';
+import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/services/profileServices/profile_model.dart';
-import 'package:geek_findr/test.dart';
 import 'package:geek_findr/views/chat_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +22,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final searchController = TextEditingController();
   late double textFactor;
-  final _currentUser = Boxes.getCurrentUser();
   bool istexting = false;
   late double height;
   late double width;
@@ -39,12 +36,13 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   List<Participant> findMy1to1chatUsers(List<MyChatList> datas) {
+    final currentUser = Boxes.getCurrentUser();
     final List<Participant> chatUsers = [];
     myList = datas.where((element) => element.isRoom == false).toList();
 
     for (final e in myList) {
       final user =
-          e.participants!.where((element) => element.id != _currentUser.id);
+          e.participants!.where((element) => element.id != currentUser.id);
       chatUsers.addAll(user);
     }
     return chatUsers;

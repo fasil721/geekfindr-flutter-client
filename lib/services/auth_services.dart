@@ -32,8 +32,9 @@ class AuthServices {
             Map<String, String>.from(json.decode(response.body) as Map);
         final user = UserModel.fromJson(jsonData);
         await box.put("user", user);
+        
         final pref = await SharedPreferences.getInstance();
-        pref.setBool("user", true);
+        await pref.setBool("user", true);
         Get.offAll(() => const MyApp());
       } else if (response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
@@ -74,6 +75,7 @@ class AuthServices {
         final pref = await SharedPreferences.getInstance();
         await pref.setBool("user", true);
         Get.offAll(() => const MyApp());
+        controller.update(["home"]);
       } else if (response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final error = ErrorModel.fromJson(errorJson.cast());

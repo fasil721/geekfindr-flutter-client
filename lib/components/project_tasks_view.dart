@@ -28,7 +28,7 @@ class ProjectTaskView extends StatefulWidget {
 class _ProjectTaskViewState extends State<ProjectTaskView> {
   final descTextController = TextEditingController();
   final titleTextController = TextEditingController();
-  final serchController = TextEditingController(); final _currentUser = Boxes.getCurrentUser();
+  final serchController = TextEditingController();
   List<Task> tasks = [];
   List<Team> selectedMembers = [];
   double height = 0;
@@ -42,11 +42,12 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
   }
 
   Future<void> addNewTask() async {
+    final currentUser = Boxes.getCurrentUser();
     if (descTextController.text.isNotEmpty &&
         titleTextController.text.isNotEmpty) {
       if (selectedMembers.isNotEmpty) {
         final _task = Task();
-        final _owner = Owner(id: _currentUser.id);
+        final _owner = Owner(id: currentUser.id);
         _task.title = titleTextController.text;
         _task.description = descTextController.text;
         _task.isComplete = false;
@@ -391,9 +392,10 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
   }
 
   Widget _buildTaskTiles(BuildContext context, int index) {
+    final currentUser = Boxes.getCurrentUser();
     final assignies = tasks[index].users!.map((e) => e).toList();
     final isAssignie =
-        assignies.where((element) => element == _currentUser.id!).isNotEmpty;
+        assignies.where((element) => element == currentUser.id!).isNotEmpty;
     return Container(
       decoration: BoxDecoration(
         color: tasks[index].isComplete!
@@ -419,7 +421,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
               children: [
                 Visibility(
                   visible: widget.myRole == owner ||
-                      tasks[index].assignor!.id == _currentUser.id,
+                      tasks[index].assignor!.id == currentUser.id,
                   child: PopupMenuButton(
                     itemBuilder: (BuildContext bc) => [
                       PopupMenuItem(

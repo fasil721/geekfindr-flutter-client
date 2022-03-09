@@ -26,7 +26,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   TabController? tabController;
   int currentIndex = 0;
   int followersCount = 0;
-  bool isLoading = false; final _currentUser = Boxes.getCurrentUser();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -44,6 +44,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
     final height = MediaQuery.of(context).size.height;
     final textFactor =
         textfactorCustomize(MediaQuery.textScaleFactorOf(context));
+    final currentUser = Boxes.getCurrentUser();
     return FutureBuilder<UserProfileModel?>(
       future: profileServices.getUserProfilebyId(id: widget.userId),
       builder: (context, snapshot) {
@@ -368,7 +369,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                       final isFollowing = followersList
                                           .where(
                                             (element) =>
-                                                element.id == _currentUser.id,
+                                                element.id == currentUser.id,
                                           )
                                           .isNotEmpty;
                                       return ElevatedButton(

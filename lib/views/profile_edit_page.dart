@@ -15,7 +15,6 @@ class ProfileUpatePage extends StatefulWidget {
 }
 
 class _ProfileUpatePageState extends State<ProfileUpatePage> {
-  final _currentUser = Boxes.getCurrentUser();
   final orgItems = <String>[];
   final orgController = TextEditingController();
   final sklController = TextEditingController();
@@ -132,22 +131,9 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-
-    final bioField = TextField(
-      controller: bioController,
-      textInputAction: TextInputAction.newline,
-      keyboardType: TextInputType.multiline,
-      maxLines: null,
-      minLines: 1,
-      decoration: const InputDecoration(
-        border: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-      ),
-    );
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
+    final currentUser = Boxes.getCurrentUser();
 
     return Scaffold(
       backgroundColor: secondaryColor,
@@ -200,7 +186,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: Image.network(
-                    "${_currentUser.avatar!}&s=120",
+                    "${currentUser.avatar!}&s=120",
                     // loadingBuilder: (context, child, loadingProgress) =>
                     //     const SizedBox(
                     //   height: 120,
@@ -218,7 +204,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   height: height * 0.02,
                 ),
                 Text(
-                  _currentUser.username!,
+                  currentUser.username!,
                   style: GoogleFonts.roboto(
                     fontSize: textFactor * 22,
                     color: Colors.black.withOpacity(0.9),
@@ -297,7 +283,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     border: Border.all(width: 0.9, color: Colors.grey),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: bioField,
+                  child: buildBioField(),
                 ),
                 SizedBox(
                   height: height * 0.02,
@@ -808,4 +794,19 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
       ),
     );
   }
+
+  Widget buildBioField() => TextField(
+        controller: bioController,
+        textInputAction: TextInputAction.newline,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+        minLines: 1,
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+        ),
+      );
 }

@@ -23,13 +23,13 @@ class _HomePageState extends State<HomePage> {
   // final scrollcontroller = ScrollController();
   // bool isReversing = false;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   scrollcontroller.addListener(() {
-  //     listenScrolling();
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    // scrollcontroller.addListener(() {
+    //   listenScrolling();
+    // });
+  }
 
   // void listenScrolling() {
   //   // if (scrollcontroller.position.atEdge) {
