@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/database/user_model.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/screens/chat_page.dart';

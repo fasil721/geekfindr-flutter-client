@@ -59,7 +59,7 @@ class PostServices {
           } else {
             Fluttertoast.showToast(msg: "Post uploaded");
           }
-          controller.update(["postCount"]);
+          postController.update(["postCount"]);
           Get.back();
         } else if (response3.statusCode == 400 || response3.statusCode == 422) {
           final errorJson = json.decode(response3.body) as Map;
@@ -170,7 +170,7 @@ class PostServices {
       );
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "Image deleted successfully");
-        controller.update(["mypost", "postCount"]);
+        postController.update(["mypost", "postCount"]);
       } else {
         Fluttertoast.showToast(msg: "Image not deleted successfully");
       }
@@ -197,7 +197,7 @@ class PostServices {
       );
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "Image edited successfully");
-        controller.update(["mypost"]);
+        postController.update(["mypost"]);
         Get.back();
       } else {
         Fluttertoast.showToast(msg: "Image not edited successfully");

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/views/screens/users_profile_page.dart';
@@ -84,7 +85,7 @@ class _UsersListViewState extends State<UsersListView> {
                 padding: const EdgeInsets.symmetric(
                   vertical: 20,
                 ),
-                child: GetBuilder<AppController>(
+                child: GetBuilder<ProfileController>(
                   id: "searching",
                   builder: (controller) {
                     final results = searchUser();
@@ -184,7 +185,7 @@ class _UsersListViewState extends State<UsersListView> {
           ],
         ),
         child: TextField(
-          onChanged: (value) => controller.update(["searching"]),
+          onChanged: (value) => profileController.update(["searching"]),
           controller: searchController,
           decoration: InputDecoration(
             prefixIcon: const Icon(

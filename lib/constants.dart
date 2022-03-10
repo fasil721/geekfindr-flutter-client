@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/services/auth_services.dart';

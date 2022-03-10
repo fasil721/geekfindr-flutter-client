@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/post_models.dart';
@@ -431,7 +432,7 @@ class _ProfilePageState extends State<ProfilePage>
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      GetBuilder<AppController>(
+                      GetBuilder<PostsController>(
                         id: "postCount",
                         builder: (controller) =>
                             FutureBuilder<List<ImageModel?>>(

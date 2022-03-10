@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/views/components/post_view_dialoge.dart';
 import 'package:get/get.dart';
@@ -19,7 +20,7 @@ class UserPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     // final height = MediaQuery.of(context).size.height;
-    return GetBuilder<AppController>(
+    return GetBuilder<PostsController>(
       id: "mypost",
       builder: (controller) {
         return FutureBuilder<List<ImageModel>>(

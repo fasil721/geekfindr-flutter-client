@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/functions.dart';
@@ -156,9 +157,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               Expanded(
                                 child: InkWell(
                                   onTap: () {
-                                    currentIndex = 1;
-                                    tabController!.animateTo(1);
-                                    controller.update(["tabs2"]);
+                                    profileController.updateTab2Index(1);
                                   },
                                   child: Ink(
                                     padding: const EdgeInsets.all(10),
@@ -483,9 +482,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               ),
                               isScrollable: true,
                               onTap: (index) {
-                                currentIndex = index;
-                                tabController!.animateTo(index);
-                                controller.update(["tabs2"]);
+                                profileController.updateTab2Index(index);
                               },
                               tabs: const [
                                 Tab(
@@ -498,7 +495,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                             ),
                           ),
                         ),
-                        GetBuilder<AppController>(
+                        GetBuilder<PostsController>(
                           id: "tabs2",
                           builder: (controller) {
                             return IndexedStack(

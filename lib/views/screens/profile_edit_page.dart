@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/controller/post_controller.dart';
+import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
@@ -326,7 +328,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   ),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: GetBuilder<AppController>(
+                  child: GetBuilder<ProfileController>(
                     id: "org",
                     builder: (controller) {
                       return Column(
@@ -399,7 +401,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   ),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: GetBuilder<AppController>(
+                  child: GetBuilder<ProfileController>(
                     id: "skl",
                     builder: (controller) {
                       return Column(
@@ -744,93 +746,6 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                 SizedBox(
                   height: height * 0.02,
                 ),
-                // Align(
-                //   alignment: Alignment.centerLeft,
-                //   child: Padding(
-                //     padding: const EdgeInsets.symmetric(horizontal: 3),
-                //     child: Text(
-                //       "Skills",
-                //       style: GoogleFonts.roboto(
-                //         fontSize: textFactor * 15,
-                //         color: Colors.black.withOpacity(0.99),
-                //         fontWeight: FontWeight.w500,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: height * 0.01,
-                // ),
-                // Container(
-                //   alignment: Alignment.topCenter,
-                //   decoration: BoxDecoration(
-                //     borderRadius: BorderRadius.circular(10),
-                //     border: Border.all(width: 0.9, color: Colors.grey),
-                //   ),
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                //   child: GetBuilder<AppController>(
-                //     id: "skl",
-                //     builder: (controller) {
-                //       return Column(
-                //         children: [
-                //           if (skillsItems.isNotEmpty)
-                //             ...skillsItems.map(
-                //               (e) => Row(
-                //                 children: [
-                //                   IconButton(
-                //                     onPressed: () {
-                //                       skillsItems.remove(e);
-                //                       controller.update(["skl"]);
-                //                     },
-                //                     icon: const Icon(
-                //                       Icons.close,
-                //                       size: 22,
-                //                       color: Colors.red,
-                //                     ),
-                //                   ),
-                //                   SizedBox(width: width * 0.04),
-                //                   Text(
-                //                     e,
-                //                     style: GoogleFonts.roboto(
-                //                       fontSize: textFactor * 16,
-                //                       color: Colors.black.withOpacity(0.99),
-                //                       fontWeight: FontWeight.w500,
-                //                     ),
-                //                   )
-                //                 ],
-                //               ),
-                //             ),
-                //           TextField(
-                //             controller: sklController,
-                //             decoration: InputDecoration(
-                //               iconColor: primaryColor,
-                //               hintText: "Type here",
-                //               hintStyle: TextStyle(
-                //                 fontSize: textFactor * 15,
-                //               ),
-                //               icon: IconButton(
-                //                 onPressed: () {
-                //                   if (sklController.text.isNotEmpty) {
-                //                     skillsItems.add(sklController.text);
-                //                     sklController.clear();
-                //                     controller.update(["skl"]);
-                //                   }
-                //                 },
-                //                 icon: const Icon(Icons.add),
-                //               ),
-                //               border: InputBorder.none,
-                //               focusedBorder: InputBorder.none,
-                //               enabledBorder: InputBorder.none,
-                //               errorBorder: InputBorder.none,
-                //               disabledBorder: InputBorder.none,
-                //             ),
-                //           ),
-                //         ],
-                //       );
-                //     },
-                //   ),
-                // ),
               ],
             ),
           ),
