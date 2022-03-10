@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/models/project_model_classes.dart';

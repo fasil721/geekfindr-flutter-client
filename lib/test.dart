@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print, unused_element
 
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 

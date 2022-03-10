@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/views/components/post_view_dialoge.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/controller/auth_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/services/auth_services.dart';
 import 'package:geek_findr/services/chat_services.dart';
@@ -23,7 +23,7 @@ const joinRequest = "joinRequest";
 final controller = Get.find<AppController>();
 final postController = Get.find<PostsController>();
 final chatController = Get.find<ChatController>();
-final authController = Get.find<AuthController>();
+final profileController = Get.find<ProfileController>();
 final box = Boxes.getInstance();
 final postServices = PostServices();
 final profileServices = ProfileServices();

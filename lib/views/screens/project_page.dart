@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/project_model_classes.dart';

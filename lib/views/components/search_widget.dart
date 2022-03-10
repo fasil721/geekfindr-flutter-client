@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/views/screens/users_profile_page.dart';
 import 'package:get/get.dart';

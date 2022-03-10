@@ -1,4 +1,4 @@
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/models/post_models.dart';
 
 class ProjectShortModel {

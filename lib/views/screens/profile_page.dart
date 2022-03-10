@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
+import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
@@ -21,18 +22,17 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with TickerProviderStateMixin {
-  TabController? tabController;
-  int currentIndex = 0;
   double textFactor = 0;
 
   @override
   void initState() {
-    super.initState();
-    tabController = TabController(
-      initialIndex: currentIndex,
+    Get.put(ProfileController());
+    profileController.tabController = TabController(
+      initialIndex: profileController.currentIndex,
       length: 2,
       vsync: this,
     );
+    super.initState();
   }
 
   @override
@@ -40,8 +40,8 @@ class _ProfilePageState extends State<ProfilePage>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-    return GetBuilder<AppController>(
-      id: "prof",
+    return GetBuilder<ProfileController>(
+      id: "profileView",
       builder: (controller) {
         return FutureBuilder<UserProfileModel?>(
           future: profileServices.getUserProfileData(),
@@ -194,7 +194,8 @@ class _ProfilePageState extends State<ProfilePage>
                                         horizontal: 10,
                                       ),
                                       unselectedLabelColor: Colors.grey,
-                                      controller: tabController,
+                                      controller:
+                                          profileController.tabController,
                                       labelStyle: GoogleFonts.roboto(
                                         fontSize: textFactor * 14,
                                         color: Colors.black.withOpacity(0.8),
@@ -206,9 +207,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       ),
                                       isScrollable: true,
                                       onTap: (index) {
-                                        currentIndex = index;
-                                        tabController!.animateTo(index);
-                                        controller.update(["tabs"]);
+                                        profileController.updateTabIndex(index);
                                       },
                                       tabs: const [
                                         Tab(
@@ -221,20 +220,24 @@ class _ProfilePageState extends State<ProfilePage>
                                     ),
                                   ),
                                 ),
-                                GetBuilder<AppController>(
+                                GetBuilder<ProfileController>(
                                   id: "tabs",
                                   builder: (controller) {
                                     return IndexedStack(
-                                      index: currentIndex,
+                                      index: profileController.currentIndex,
                                       children: <Widget>[
                                         Visibility(
-                                          visible: currentIndex == 0,
+                                          visible:
+                                              profileController.currentIndex ==
+                                                  0,
                                           child: ProfileAboutView(
                                             userData: userData,
                                           ),
                                         ),
                                         Visibility(
-                                          visible: currentIndex == 1,
+                                          visible:
+                                              profileController.currentIndex ==
+                                                  1,
                                           child: UserPosts(
                                             userId: userData.id!,
                                           ),
@@ -422,9 +425,7 @@ class _ProfilePageState extends State<ProfilePage>
             Expanded(
               child: InkWell(
                 onTap: () {
-                  currentIndex = 1;
-                  tabController!.animateTo(1);
-                  controller.update(["tabs"]);
+                  profileController.updateTabIndex(1);
                 },
                 child: Ink(
                   padding: const EdgeInsets.all(10),
@@ -432,37 +433,36 @@ class _ProfilePageState extends State<ProfilePage>
                     children: [
                       GetBuilder<AppController>(
                         id: "postCount",
-                        builder: (context) {
-                          return FutureBuilder<List<ImageModel?>>(
-                            future: postServices.getMyImages(
-                              userData.id!,
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                final postCount = (snapshot.data)!.length;
-                                return Text(
-                                  postCount.toString(),
-                                  style: GoogleFonts.poppins(
-                                    fontSize: textFactor * 17,
-                                    color: Colors.black.withOpacity(
-                                      0.8,
-                                    ),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              }
+                        builder: (controller) =>
+                            FutureBuilder<List<ImageModel?>>(
+                          future: postServices.getMyImages(
+                            userData.id!,
+                          ),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              final postCount = (snapshot.data)!.length;
                               return Text(
-                                "",
+                                postCount.toString(),
                                 style: GoogleFonts.poppins(
                                   fontSize: textFactor * 17,
-                                  color: Colors.black.withOpacity(0.8),
+                                  color: Colors.black.withOpacity(
+                                    0.8,
+                                  ),
                                   fontWeight: FontWeight.w600,
                                 ),
                               );
-                            },
-                          );
-                        },
+                            }
+                            return Text(
+                              "",
+                              style: GoogleFonts.poppins(
+                                fontSize: textFactor * 17,
+                                color: Colors.black.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       Text(
                         "Posts",

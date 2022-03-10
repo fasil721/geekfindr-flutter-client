@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/views/components/users_list_bottomsheet.dart';

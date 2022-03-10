@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/models/profile_model.dart';
@@ -55,7 +55,7 @@ class ProfileServices {
         body: json.encode(body),
       );
       if (response.statusCode == 200) {
-        controller.update(["prof"]);
+        profileController.update(["profileView"]);
         Get.back();
       } else if (response.statusCode == 422) {
         final errorJson = json.decode(response.body) as Map;
@@ -137,8 +137,7 @@ class ProfileServices {
       );
 
       if (response.statusCode == 200) {
-        controller.update(["followers"]);
-        controller.update(["prof"]);
+        profileController.update(["profileView", "followers"]);
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());

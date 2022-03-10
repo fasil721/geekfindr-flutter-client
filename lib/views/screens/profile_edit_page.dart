@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -91,7 +91,6 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
     userprofilemodel.role = roleController!.text;
     userprofilemodel.experience =
         num != null && long != null ? "${num!} ${long!}" : "";
-
     userprofilemodel.socials = [
       {"github": gitController!.text},
       {"linkedin": linkController!.text}
@@ -103,7 +102,6 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
     } else {
       userprofilemodel.education = [];
     }
-
     profileServices.updateUserProfileData(userprofilemodel.toJson());
   }
 
@@ -129,11 +127,26 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
   String? long;
   @override
   Widget build(BuildContext context) {
+    final currentUser = Boxes.getCurrentUser();
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final textFactor =
         textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-    final currentUser = Boxes.getCurrentUser();
+
+    final bioField = TextField(
+      controller: bioController,
+      textInputAction: TextInputAction.newline,
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+      minLines: 1,
+      decoration: const InputDecoration(
+        border: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+      ),
+    );
 
     return Scaffold(
       backgroundColor: secondaryColor,
@@ -283,7 +296,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     border: Border.all(width: 0.9, color: Colors.grey),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: buildBioField(),
+                  child: bioField,
                 ),
                 SizedBox(
                   height: height * 0.02,
@@ -373,23 +386,6 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                         ],
                       );
                     },
-                  ),
-                ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: Text(
-                      "Skills",
-                      style: GoogleFonts.roboto(
-                        fontSize: textFactor * 15,
-                        color: Colors.black.withOpacity(0.99),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
                   ),
                 ),
                 SizedBox(
@@ -502,8 +498,14 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                       ),
                       icon: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          isDense: true,
-                          value: studyType,
+                          hint: Text(
+                            studyType ?? "select",
+                            style: TextStyle(
+                              fontSize: textFactor * 15,
+                              fontWeight: FontWeight.w500,
+                              color: black,
+                            ),
+                          ),
                           items: studyList
                               .map(
                                 (e) => DropdownMenuItem(
@@ -525,6 +527,32 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                           onChanged: (value) {},
                         ),
                       ),
+                      // icon: DropdownButtonHideUnderline(
+                      //   child: DropdownButton<String>(
+                      // isDense: true,
+                      // hint: const Text("Choose Town"),
+                      // value: studyType,
+                      // items: studyList
+                      //     .map(
+                      //       (e) => DropdownMenuItem(
+                      //         value: e,
+                      //         child: Text(
+                      //           e,
+                      //           style: TextStyle(
+                      //             fontSize: textFactor * 15,
+                      //             fontWeight: FontWeight.w500,
+                      //           ),
+                      //         ),
+                      //         onTap: () {
+                      //           studyType = e;
+                      //           setState(() {});
+                      //         },
+                      //       ),
+                      //     )
+                      //     .toList(),
+                      //     onChanged: (value) {},
+                      //   ),
+                      // ),
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       enabledBorder: InputBorder.none,
@@ -564,7 +592,15 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     children: [
                       DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: num,
+                          hint: Text(
+                            num ?? "select",
+                            style: TextStyle(
+                              fontSize: textFactor * 15,
+                              fontWeight: FontWeight.w500,
+                              color: black,
+                            ),
+                          ),
+                          //value: num,
                           // isExpanded: true,
                           items: numList
                               .map(
@@ -592,7 +628,15 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                       ),
                       DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: long,
+                          hint: Text(
+                            long ?? "select",
+                            style: TextStyle(
+                              fontSize: textFactor * 15,
+                              fontWeight: FontWeight.w500,
+                              color: black,
+                            ),
+                          ),
+                          //value: long,
                           items: longList
                               .map(
                                 (e) => DropdownMenuItem(
@@ -794,19 +838,4 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
       ),
     );
   }
-
-  Widget buildBioField() => TextField(
-        controller: bioController,
-        textInputAction: TextInputAction.newline,
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        minLines: 1,
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-        ),
-      );
 }

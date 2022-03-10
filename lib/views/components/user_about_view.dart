@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -326,11 +326,12 @@ class ProfileAboutView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: height * 0.001),
+                  SizedBox(height: height * 0.01),
                   if (userData.socials!.isNotEmpty)
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             Map<String, String>.from(userData.socials!.first)
@@ -350,33 +351,37 @@ class ProfileAboutView extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              _launchURL(
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                _launchURL(
+                                  Map<String, String>.from(
+                                    userData.socials!.first,
+                                  ).values.first,
+                                );
+                              },
+                              child: Text(
                                 Map<String, String>.from(
                                   userData.socials!.first,
                                 ).values.first,
-                              );
-                            },
-                            child: Text(
-                              Map<String, String>.from(userData.socials!.first)
-                                  .values
-                                  .first,
-                              style: GoogleFonts.poppins(
-                                fontSize: textFactor * 15,
-                                color: Colors.blue.withOpacity(0.8),
-                                fontWeight: FontWeight.w500,
+                                maxLines: 2,
+                                style: GoogleFonts.poppins(
+                                  fontSize: textFactor * 15,
+                                  color: Colors.blue.withOpacity(0.8),
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  SizedBox(height: height * 0.001),
+                  SizedBox(height: height * 0.005),
                   if (userData.socials!.length > 1)
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             Map<String, String>.from(userData.socials!.last)
@@ -396,31 +401,36 @@ class ProfileAboutView extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              _launchURL(
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                _launchURL(
+                                  Map<String, String>.from(
+                                    userData.socials!.last,
+                                  ).values.first,
+                                );
+                              },
+                              child: Text(
                                 Map<String, String>.from(userData.socials!.last)
                                     .values
                                     .first,
-                              );
-                            },
-                            child: Text(
-                              Map<String, String>.from(userData.socials!.last)
-                                  .values
-                                  .first,
-                              style: GoogleFonts.poppins(
-                                fontSize: textFactor * 15,
-                                color: Colors.blue.withOpacity(0.8),
-                                fontWeight: FontWeight.w500,
+                                maxLines: 2,
+                                style: GoogleFonts.poppins(
+                                  fontSize: textFactor * 15,
+                                  color: Colors.blue.withOpacity(0.8),
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
+                  SizedBox(height: height * 0.005),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Gmail",
@@ -438,16 +448,19 @@ class ProfileAboutView extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            _launchEmail(userData.email!);
-                          },
-                          child: Text(
-                            userData.email!,
-                            style: GoogleFonts.poppins(
-                              fontSize: textFactor * 15,
-                              color: Colors.blue.withOpacity(0.8),
-                              fontWeight: FontWeight.w500,
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _launchEmail(userData.email!);
+                            },
+                            child: Text(
+                              userData.email!,
+                              maxLines: 2,
+                              style: GoogleFonts.poppins(
+                                fontSize: textFactor * 15,
+                                color: Colors.blue.withOpacity(0.8),
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),

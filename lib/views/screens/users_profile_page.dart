@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:geek_findr/contants.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/views/components/user_about_view.dart';
@@ -217,7 +218,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
-                                    if (0 < user.followersCount!) {
+                                    if (0 < followersCount) {
                                       Get.dialog(loadingIndicator());
                                       final data = await profileServices
                                           .getUserfollowersAndFollowings(
@@ -236,7 +237,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                     padding: const EdgeInsets.all(10),
                                     child: Column(
                                       children: [
-                                        GetBuilder<AppController>(
+                                        GetBuilder<ProfileController>(
                                           id: "followers",
                                           builder: (_) {
                                             return Text(
@@ -353,7 +354,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                 ),
                               ),
                             ),
-                            GetBuilder<AppController>(
+                            GetBuilder<ProfileController>(
                               id: "followers",
                               builder: (_) {
                                 return FutureBuilder<List<UserDetials>>(
