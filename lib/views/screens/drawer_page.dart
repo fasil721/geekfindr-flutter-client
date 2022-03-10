@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/views/screens/login_page.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class DrawerPage extends StatelessWidget {
   const DrawerPage({Key? key}) : super(key: key);
@@ -19,14 +20,15 @@ class DrawerPage extends StatelessWidget {
             onTap: () async {
               final pref = await SharedPreferences.getInstance();
               pref.setBool("user", false);
-              final box = Boxes.getInstance();
-              await box.delete("user");
+              await Future.delayed(const Duration(milliseconds: 500));
               Get.offAll(() => const LoginPage());
+              await box.delete("user");
             },
             leading: const Icon(Icons.settings),
             title: const Text('Logout '),
           ),
           const Spacer(),
+          
           DefaultTextStyle(
             style: const TextStyle(
               fontSize: 12,

@@ -39,11 +39,13 @@ dependencies:
   fluttertoast: ^8.0.8
   get: ^4.6.1
   google_fonts: ^2.2.0
+  grouped_list: ^4.2.0
   hive: ^2.0.5
   hive_flutter: ^1.1.0
   http: ^0.13.4
   image_cropper: ^1.4.1
   image_picker: ^0.8.4+6
+  intl: ^0.17.0
   lint: ^1.8.1
   loading_indicator: ^3.0.2
   readmore: ^2.1.0

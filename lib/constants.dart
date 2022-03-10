@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';

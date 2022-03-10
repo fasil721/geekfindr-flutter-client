@@ -101,7 +101,7 @@ class ChatServices {
     return null;
   }
 
-  Future<List<ChatMessage>?> getMyChatMessages({
+  Future<List<ChatMessage>> getMyChatMessages({
     required String conversationId,
   }) async {
     final currentUser = Boxes.getCurrentUser();
@@ -142,6 +142,6 @@ class ChatServices {
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
-    return null;
+    return [];
   }
 }

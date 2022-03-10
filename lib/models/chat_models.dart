@@ -88,3 +88,32 @@ class ChatMessage {
         "id": id,
       };
 }
+
+class Message {
+  final String text;
+  final DateTime date;
+  final bool isSentByMe;
+  const Message({
+    required this.text,
+    required this.date,
+    required this.isSentByMe,
+  });
+}
+
+class ListenMessage {
+  ListenMessage({
+    this.message,
+    this.userId,
+    this.time,
+  });
+
+  String? message;
+  String? userId;
+  DateTime? time;
+
+  factory ListenMessage.fromJson(Map<String, dynamic> json) => ListenMessage(
+        message: json["message"] as String,
+        userId: json["userId"] as String,
+        time: DateTime.parse(json["time"] as String),
+      );
+}
