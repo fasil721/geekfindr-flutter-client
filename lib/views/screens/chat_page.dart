@@ -26,7 +26,7 @@ class _ChatPageState extends State<ChatPage> {
   bool istexting = false;
   late double height;
   late double width;
-  List<MyChatList> myList = [];
+  // List<MyChatList> myList = [];
   // late ChatController _chatController;
 
   @override
@@ -34,19 +34,6 @@ class _ChatPageState extends State<ChatPage> {
     // _chatController =
     Get.put(ChatController());
     super.initState();
-  }
-
-  List<Participant> findMy1to1chatUsers(List<MyChatList> datas) {
-    final currentUser = Boxes.getCurrentUser();
-    final List<Participant> chatUsers = [];
-    myList = datas.where((element) => element.isRoom == false).toList();
-
-    for (final e in myList) {
-      final user =
-          e.participants!.where((element) => element.id != currentUser.id);
-      chatUsers.addAll(user);
-    }
-    return chatUsers;
   }
 
   @override
@@ -130,16 +117,15 @@ class _ChatPageState extends State<ChatPage> {
                     }
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.data != null) {
-                        final chatUsers = findMy1to1chatUsers(snapshot.data!);
+                        // final chatUsers = findMy1to1chatUsers(snapshot.data!);
+                        final datas = snapshot.data!;
                         return ListView.separated(
-                          itemCount: chatUsers.length,
+                          itemCount: datas.length,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (BuildContext context, int index) =>
                               buildUsersTile(
-                            chatUsers,
-                            index,
-                            myList[index].id!,
+                            datas[index],
                           ),
                           separatorBuilder: (BuildContext context, int index) =>
                               SizedBox(height: height * 0.02),
@@ -178,29 +164,36 @@ class _ChatPageState extends State<ChatPage> {
             SizedBox(height: height * 0.015),
       );
 
-  Widget buildUsersTile(
-    List<Participant> items,
-    int index,
-    String conversationId,
-  ) =>
-      GestureDetector(
-        onTap: () {
-          Get.to(
-            () => ChatDetailPage(
-              user: items[index],
-              conversationId: conversationId,
-            ),
-          );
-        },
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Row(
-                children: <Widget>[
+  Widget buildUsersTile(MyChatList item) {
+    final isRoom = item.isRoom!;
+    final user = findMy1to1chatUser(item);
+    return GestureDetector(
+      onTap: () {
+        Get.to(
+          () => ChatDetailPage(
+            item: item,
+          ),
+        );
+      },
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Row(
+              children: <Widget>[
+                if (isRoom)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.asset(
+                      "assets/images/grp icon.png",
+                      fit: BoxFit.fitWidth,
+                      width: width * 0.1,
+                    ),
+                  )
+                else
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100),
                     child: CachedNetworkImage(
-                      imageUrl: items[index].avatar!,
+                      imageUrl: user.avatar!,
                       fit: BoxFit.fitWidth,
                       width: width * 0.1,
                       placeholder: (context, url) => Shimmer.fromColors(
@@ -220,48 +213,49 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: width * 0.03,
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            items[index].username!,
-                            style: GoogleFonts.recursive(
-                              fontSize: 16,
-                              color: black,
-                              fontWeight: FontWeight.w400,
-                            ),
+                SizedBox(
+                  width: width * 0.03,
+                ),
+                Expanded(
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          isRoom ? item.roomName! : user.username!,
+                          style: GoogleFonts.recursive(
+                            fontSize: 16,
+                            color: black,
+                            fontWeight: FontWeight.w400,
                           ),
-                          Text(
-                            items[index].username!,
-                            style: GoogleFonts.roboto(
-                              fontSize: 14,
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                        // Text(
+                        //   isRoom ? items[index].roomName! : user.username!,
+                        //   style: GoogleFonts.roboto(
+                        //     fontSize: 14,
+                        //     color: Colors.grey.shade500,
+                        //   ),
+                        // ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const Text(
-              "Now",
-              style: TextStyle(
-                fontSize: 12,
-                color: primaryColor,
-              ),
+          ),
+          const Text(
+            "Now",
+            style: TextStyle(
+              fontSize: 12,
+              color: primaryColor,
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget buildSearchField() => GetBuilder<ChatController>(
         id: "search",

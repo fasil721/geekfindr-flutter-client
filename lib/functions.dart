@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/views/components/users_list_bottomsheet.dart';
 import 'package:get/get.dart';
@@ -73,6 +74,13 @@ String findMonth(String month) {
     return "Nov";
   }
   return "Dec";
+}
+
+Participant findMy1to1chatUser(MyChatList data) {
+  final currentUser = Boxes.getCurrentUser();
+  final user =
+      data.participants!.firstWhere((element) => element.id != currentUser.id);
+  return user;
 }
 
 Widget loadingIndicator() => const Center(

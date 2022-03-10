@@ -13,9 +13,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatDetailPage extends StatefulWidget {
-  const ChatDetailPage({required this.user, required this.conversationId});
-  final Participant user;
-  final String conversationId;
+  const ChatDetailPage({required this.item});
+  final MyChatList item;
   @override
   _ChatDetailPageState createState() => _ChatDetailPageState();
 }
@@ -50,9 +49,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     socket.onConnect((data) => print('connected ${socket.id}'));
     socket.onDisconnect((data) => print('disconnected'));
     socket.onError((data) => print('error : $data'));
-    socket.emit("join_conversation", {"conversationId": widget.conversationId});
+    socket.emit("join_conversation", {"conversationId": widget.item.id});
     // socket.on("message", (data) => print(data));
-    print(widget.conversationId);
+    print(widget.item.id);
   }
 
   void sendMessage() {
@@ -62,7 +61,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   Future<void> fetchMesseges() async {
     final datas = await chatServices.getMyChatMessages(
-      conversationId: widget.conversationId,
+      conversationId: widget.item.id!,
     );
     messeges = datas.map(
       (e) {
@@ -103,8 +102,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     return Scaffold(
       backgroundColor: secondaryColor,
       appBar: ChatDetailPageAppBar(
-        user: widget.user,
-        conversationId: widget.conversationId,
+        item: widget.item,
       ),
       body: SafeArea(
         child: Column(
@@ -231,13 +229,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 class ChatDetailPageAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   const ChatDetailPageAppBar({
-    required this.user,
-    required this.conversationId,
+    required this.item,
   });
-  final Participant user;
-  final String conversationId;
+  final MyChatList item;
   @override
   Widget build(BuildContext context) {
+    final user = findMy1to1chatUser(item);
+    final isRoom = item.isRoom!;
     final width = MediaQuery.of(context).size.width;
     return AppBar(
       elevation: 0,
@@ -261,35 +259,45 @@ class ChatDetailPageAppBar extends StatelessWidget
                 const SizedBox(
                   width: 2,
                 ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: CachedNetworkImage(
-                    imageUrl: user.avatar!,
-                    fit: BoxFit.fitWidth,
-                    width: width * 0.1,
-                    placeholder: (context, url) => Shimmer.fromColors(
-                      baseColor: Colors.grey.withOpacity(0.3),
-                      highlightColor: white,
-                      period: const Duration(
-                        milliseconds: 1000,
-                      ),
-                      child: Container(
-                        height: width * 0.1,
-                        width: width * 0.1,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(100),
+                if (isRoom)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.asset(
+                      "assets/images/grp icon.png",
+                      fit: BoxFit.fitWidth,
+                      width: width * 0.1,
+                    ),
+                  )
+                else
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: CachedNetworkImage(
+                      imageUrl: user.avatar!,
+                      fit: BoxFit.fitWidth,
+                      width: width * 0.1,
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: Colors.grey.withOpacity(0.3),
+                        highlightColor: white,
+                        period: const Duration(
+                          milliseconds: 1000,
+                        ),
+                        child: Container(
+                          height: width * 0.1,
+                          width: width * 0.1,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
                 const SizedBox(
                   width: 12,
                 ),
                 Expanded(
                   child: Text(
-                    user.username!,
+                    isRoom ? item.roomName! : user.username!,
                     style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
                   ),
                 ),
