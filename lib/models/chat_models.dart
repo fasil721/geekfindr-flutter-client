@@ -117,3 +117,32 @@ class ListenMessage {
         time: DateTime.parse(json["time"] as String),
       );
 }
+
+class CreateChatModel {
+  CreateChatModel({
+    this.participants,
+    this.messages,
+    this.isRoom,
+    this.createdAt,
+    this.updatedAt,
+    this.id,
+  });
+
+  List<String>? participants;
+  List<dynamic>? messages;
+  bool? isRoom;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? id;
+
+  factory CreateChatModel.fromJson(Map<String, dynamic> json) =>
+      CreateChatModel(
+        participants:
+            List<String>.from((json["participants"] as List).map((x) => x)),
+        messages: List<dynamic>.from((json["messages"] as List).map((x) => x)),
+        isRoom: json["isRoom"] as bool,
+        createdAt: DateTime.parse(json["createdAt"] as String),
+        updatedAt: DateTime.parse(json["updatedAt"] as String),
+        id: json["id"] as String,
+      );
+}

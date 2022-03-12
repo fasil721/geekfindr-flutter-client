@@ -23,6 +23,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   final textController = TextEditingController();
   final currentUser = Boxes.getCurrentUser();
   late Socket socket;
+  late double width;
+  late double textFactor;
   List<Message> messeges = [];
   @override
   void initState() {
@@ -89,15 +91,15 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       );
       messeges.add(_messege);
       chatController.update(["messeges"]);
+      print(data.time!.toString());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final textFactor =
-        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
+    textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
 
     return Scaffold(
       backgroundColor: secondaryColor,
@@ -108,50 +110,56 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         child: Column(
           children: [
             Expanded(
-              child: GetBuilder<ChatController>(
-                id: "messeges",
-                builder: (controller) => GroupedListView<Message, DateTime>(
-                  reverse: true,
-                  order: GroupedListOrder.DESC,
-                  elements: messeges,
-                  useStickyGroupSeparators: true,
-                  floatingHeader: true,
-                  groupBy: (msg) => DateTime(
-                    msg.date.year,
-                    msg.date.month,
-                    msg.date.day,
-                  ),
-                  groupHeaderBuilder: (msg) {
-                    final today = DateTime.now();
-                    final diff = today.difference(msg.date).inDays;
-                    late String text;
-                    if (diff == 0) {
-                      text = "Today";
-                    } else if (diff == 1) {
-                      text = "Yesterday";
-                    } else {
-                      text = DateFormat.yMMMd().format(msg.date);
-                    }
-                    return Align(
-                      alignment: Alignment.topCenter,
-                      child: Card(
-                        color: primaryColor,
-                        child: Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Text(
-                            text,
-                            style: GoogleFonts.roboto(
-                              color: white,
-                              fontSize: textFactor * 13,
+              child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: GetBuilder<ChatController>(
+                  id: "messeges",
+                  builder: (controller) => GroupedListView<Message, DateTime>(
+                    reverse: true,
+                    order: GroupedListOrder.DESC,
+                    elements: messeges,
+                    useStickyGroupSeparators: true,
+                    floatingHeader: true,
+                    groupBy: (msg) => DateTime(
+                      msg.date.year,
+                      msg.date.month,
+                      msg.date.day,
+                    ),
+                    groupHeaderBuilder: (msg) {
+                      final today = DateTime.now();
+                      final diff = today.difference(msg.date).inDays;
+                      late String text;
+                      if (diff == 0) {
+                        text = "Today";
+                      } else if (diff == 1) {
+                        text = "Yesterday";
+                      } else {
+                        text = DateFormat.yMMMd().format(msg.date);
+                      }
+                      return Align(
+                        alignment: Alignment.topCenter,
+                        child: Card(
+                          color: primaryColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Text(
+                              text,
+                              style: GoogleFonts.roboto(
+                                color: white,
+                                fontSize: textFactor * 13,
+                                letterSpacing: 1.2,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                  itemBuilder: (context, msg) {
-                    return buildChatBubble(msg);
-                  },
+                      );
+                    },
+                    itemBuilder: (context, msg) {
+                      return buildChatBubble(msg);
+                    },
+                  ),
                 ),
               ),
             ),
@@ -168,10 +176,12 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 15,
-                        vertical: 5,
                       ),
                       child: TextField(
                         controller: textController,
+                        textInputAction: TextInputAction.newline,
+                        maxLines: null,
+                        minLines: 1,
                         decoration: InputDecoration(
                           hintText: "Type message...",
                           hintStyle: GoogleFonts.roboto(
@@ -189,15 +199,19 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   ),
                   IconButton(
                     onPressed: () {
+                      // print(DateFormat.jm().format(DateTime.now()));
                       if (textController.text.isNotEmpty) {
                         sendMessage();
                       }
                     },
                     icon: const Icon(
                       Icons.send_rounded,
-                      size: 30,
+                      size: 25,
                       color: primaryColor,
                     ),
+                  ),
+                  const SizedBox(
+                    width: 3,
                   ),
                 ],
               ),
@@ -211,17 +225,77 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   Widget buildChatBubble(Message message) => Container(
         padding:
             const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
-        child: Align(
-          alignment:
-              !message.isSentByMe ? Alignment.topLeft : Alignment.topRight,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.grey.shade200,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: message.isSentByMe
+                  ? MainAxisAlignment.end
+                  : MainAxisAlignment.start,
+              children: [
+                if (!message.isSentByMe)
+                  buildCircleGravatar(currentUser.avatar!, width * 0.07),
+                const SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  constraints: BoxConstraints(
+                    maxWidth: width * 0.6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: !message.isSentByMe ? primaryColor : white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(16),
+                      topRight: const Radius.circular(16),
+                      bottomLeft: Radius.circular(message.isSentByMe ? 12 : 0),
+                      bottomRight: Radius.circular(message.isSentByMe ? 0 : 12),
+                    ),
+                  ),
+                  child: Text(
+                    message.text,
+                    style: GoogleFonts.roboto(
+                      fontSize: textFactor * 13,
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.w600,
+                      color:
+                          !message.isSentByMe ? Colors.white : Colors.grey[800],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            padding: const EdgeInsets.all(16),
-            child: Text(message.text),
-          ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Row(
+                mainAxisAlignment: message.isSentByMe
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.start,
+                children: [
+                  if (!message.isSentByMe)
+                    const SizedBox(
+                      width: 40,
+                    ),
+                  const Icon(
+                    Icons.done_all,
+                    size: 18,
+                    color: grey,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    DateFormat.jm().format(message.date),
+                    style: GoogleFonts.roboto(
+                      color: const Color(0xffAEABC9),
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       );
 }
@@ -248,6 +322,7 @@ class ChatDetailPageAppBar extends StatelessWidget
             child: Row(
               children: <Widget>[
                 IconButton(
+                  splashRadius: 25,
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -269,29 +344,7 @@ class ChatDetailPageAppBar extends StatelessWidget
                     ),
                   )
                 else
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: CachedNetworkImage(
-                      imageUrl: user.avatar!,
-                      fit: BoxFit.fitWidth,
-                      width: width * 0.1,
-                      placeholder: (context, url) => Shimmer.fromColors(
-                        baseColor: Colors.grey.withOpacity(0.3),
-                        highlightColor: white,
-                        period: const Duration(
-                          milliseconds: 1000,
-                        ),
-                        child: Container(
-                          height: width * 0.1,
-                          width: width * 0.1,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  buildCircleGravatar(user.avatar!, width * 0.1),
                 const SizedBox(
                   width: 12,
                 ),

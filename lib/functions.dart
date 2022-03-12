@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
@@ -6,6 +7,7 @@ import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/views/components/users_list_bottomsheet.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:shimmer/shimmer.dart';
 
 bool checkRequest(List<Join> requests) {
   final currentUser = Boxes.getCurrentUser();
@@ -82,6 +84,30 @@ Participant findMy1to1chatUser(MyChatList data) {
       data.participants!.firstWhere((element) => element.id != currentUser.id);
   return user;
 }
+
+Widget buildCircleGravatar(String avatar, double width) => ClipRRect(
+      borderRadius: BorderRadius.circular(100),
+      child: CachedNetworkImage(
+        imageUrl: avatar,
+        fit: BoxFit.fitWidth,
+        width: width,
+        placeholder: (context, url) => Shimmer.fromColors(
+          baseColor: Colors.grey.withOpacity(0.3),
+          highlightColor: white,
+          period: const Duration(
+            milliseconds: 1000,
+          ),
+          child: Container(
+            height: width,
+            width: width,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+        ),
+      ),
+    );
 
 Widget loadingIndicator() => const Center(
       child: SizedBox(

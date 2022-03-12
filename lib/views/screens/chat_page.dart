@@ -58,52 +58,55 @@ class _ChatPageState extends State<ChatPage> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 GestureDetector(
                   onTap: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        "Chats",
-                        style: GoogleFonts.roboto(
-                          fontSize: textFactor * 23,
-                          fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "Chats",
+                          style: GoogleFonts.roboto(
+                            fontSize: textFactor * 23,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
-                        ),
-                        height: height * 0.04,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: secondaryColor,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            const Icon(
-                              Icons.add,
-                              color: primaryColor,
-                              size: 20,
-                            ),
-                            SizedBox(width: width * 0.01),
-                            Text(
-                              "New",
-                              style: GoogleFonts.roboto(
-                                fontSize: textFactor * 14,
-                                fontWeight: FontWeight.w500,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          height: height * 0.04,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: secondaryColor,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              const Icon(
+                                Icons.add,
+                                color: primaryColor,
+                                size: 20,
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                              SizedBox(width: width * 0.01),
+                              Text(
+                                "New",
+                                style: GoogleFonts.roboto(
+                                  fontSize: textFactor * 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: height * 0.015),
@@ -128,7 +131,7 @@ class _ChatPageState extends State<ChatPage> {
                             datas[index],
                           ),
                           separatorBuilder: (BuildContext context, int index) =>
-                              SizedBox(height: height * 0.02),
+                              SizedBox(height: height * 0.0),
                         );
                       }
                     }
@@ -143,31 +146,34 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _buildLoadingScreen() => ListView.separated(
-        itemCount: 7,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) => Shimmer.fromColors(
-          baseColor: Colors.grey.withOpacity(0.2),
-          highlightColor: white,
-          period: const Duration(milliseconds: 1000),
-          child: Container(
-            height: height * 0.06,
-            width: width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Colors.grey,
+  Widget _buildLoadingScreen() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ListView.separated(
+          itemCount: 7,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) => Shimmer.fromColors(
+            baseColor: Colors.grey.withOpacity(0.2),
+            highlightColor: white,
+            period: const Duration(milliseconds: 1000),
+            child: Container(
+              height: height * 0.06,
+              width: width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.grey,
+              ),
             ),
           ),
+          separatorBuilder: (BuildContext context, int index) =>
+              SizedBox(height: height * 0.015),
         ),
-        separatorBuilder: (BuildContext context, int index) =>
-            SizedBox(height: height * 0.015),
       );
 
   Widget buildUsersTile(MyChatList item) {
     final isRoom = item.isRoom!;
     final user = findMy1to1chatUser(item);
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Get.to(
           () => ChatDetailPage(
@@ -175,84 +181,90 @@ class _ChatPageState extends State<ChatPage> {
           ),
         );
       },
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                if (isRoom)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.asset(
-                      "assets/images/grp icon.png",
-                      fit: BoxFit.fitWidth,
-                      width: width * 0.1,
-                    ),
-                  )
-                else
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: CachedNetworkImage(
-                      imageUrl: user.avatar!,
-                      fit: BoxFit.fitWidth,
-                      width: width * 0.1,
-                      placeholder: (context, url) => Shimmer.fromColors(
-                        baseColor: Colors.grey.withOpacity(0.3),
-                        highlightColor: white,
-                        period: const Duration(
-                          milliseconds: 1000,
-                        ),
-                        child: Container(
-                          height: width * 0.1,
+      child: Ink(
+        child: Padding(
+          padding:
+              EdgeInsets.symmetric(horizontal: 20, vertical: height * 0.01),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    if (isRoom)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.asset(
+                          "assets/images/grp icon.png",
+                          fit: BoxFit.fitWidth,
                           width: width * 0.1,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(100),
+                        ),
+                      )
+                    else
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          imageUrl: user.avatar!,
+                          fit: BoxFit.fitWidth,
+                          width: width * 0.1,
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: Colors.grey.withOpacity(0.3),
+                            highlightColor: white,
+                            period: const Duration(
+                              milliseconds: 1000,
+                            ),
+                            child: Container(
+                              height: width * 0.1,
+                              width: width * 0.1,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                            ),
                           ),
                         ),
                       ),
+                    SizedBox(
+                      width: width * 0.03,
                     ),
-                  ),
-                SizedBox(
-                  width: width * 0.03,
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.transparent,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          isRoom ? item.roomName! : user.username!,
-                          style: GoogleFonts.recursive(
-                            fontSize: 16,
-                            color: black,
-                            fontWeight: FontWeight.w400,
-                          ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              isRoom ? item.roomName! : user.username!,
+                              style: GoogleFonts.recursive(
+                                fontSize: 16,
+                                color: black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            // Text(
+                            //   isRoom ? items[index].roomName! : user.username!,
+                            //   style: GoogleFonts.roboto(
+                            //     fontSize: 14,
+                            //     color: Colors.grey.shade500,
+                            //   ),
+                            // ),
+                          ],
                         ),
-                        // Text(
-                        //   isRoom ? items[index].roomName! : user.username!,
-                        //   style: GoogleFonts.roboto(
-                        //     fontSize: 14,
-                        //     color: Colors.grey.shade500,
-                        //   ),
-                        // ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              const Text(
+                "Now",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: primaryColor,
+                ),
+              ),
+            ],
           ),
-          const Text(
-            "Now",
-            style: TextStyle(
-              fontSize: 12,
-              color: primaryColor,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -261,6 +273,7 @@ class _ChatPageState extends State<ChatPage> {
         id: "search",
         builder: (controller) {
           return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
             height: height * 0.06,
             width: width,
             decoration: BoxDecoration(
@@ -297,7 +310,7 @@ class _ChatPageState extends State<ChatPage> {
                       onPressed: () async {
                         searchController.clear();
                         istexting = false;
-                        SystemChannels.textInput.invokeMethod("TextInput.hide");
+                        FocusScope.of(context).requestFocus(FocusNode());
                         controller.update(["search"]);
                       },
                     ),
@@ -339,9 +352,19 @@ class _ChatPageState extends State<ChatPage> {
                 );
               },
               noItemsFoundBuilder: (context) => const SizedBox(),
-              onSuggestionSelected: (UserDetials? user) {
+              onSuggestionSelected: (UserDetials? user) async {
                 istexting = false;
                 searchController.clear();
+                FocusScope.of(context).requestFocus(FocusNode());
+                // Get.to(
+                //   () => ChatDetailPage(
+                //     item: item,
+                //   ),
+                // );
+                final a = await chatServices.create1to1Conversation(
+                  userId: user!.id!,
+                );
+                print(a!.participants);
                 controller.update(["search"]);
               },
             ),
