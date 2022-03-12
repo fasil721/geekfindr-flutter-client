@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -24,7 +25,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   final currentUser = Boxes.getCurrentUser();
   late Socket socket;
   late double width;
+  late double height;
   late double textFactor;
+  bool isLoading = true;
   List<Message> messeges = [];
   @override
   void initState() {
@@ -75,6 +78,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         );
       },
     ).toList();
+    isLoading = false;
     chatController.update(["messeges"]);
   }
 
@@ -98,7 +102,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    height = MediaQuery.of(context).size.height;
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
 
     return Scaffold(
@@ -110,56 +114,75 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         child: Column(
           children: [
             Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                },
-                child: GetBuilder<ChatController>(
-                  id: "messeges",
-                  builder: (controller) => GroupedListView<Message, DateTime>(
-                    reverse: true,
-                    order: GroupedListOrder.DESC,
-                    elements: messeges,
-                    useStickyGroupSeparators: true,
-                    floatingHeader: true,
-                    groupBy: (msg) => DateTime(
-                      msg.date.year,
-                      msg.date.month,
-                      msg.date.day,
-                    ),
-                    groupHeaderBuilder: (msg) {
-                      final today = DateTime.now();
-                      final diff = today.difference(msg.date).inDays;
-                      late String text;
-                      if (diff == 0) {
-                        text = "Today";
-                      } else if (diff == 1) {
-                        text = "Yesterday";
-                      } else {
-                        text = DateFormat.yMMMd().format(msg.date);
-                      }
-                      return Align(
-                        alignment: Alignment.topCenter,
-                        child: Card(
-                          color: primaryColor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Text(
-                              text,
-                              style: GoogleFonts.roboto(
-                                color: white,
-                                fontSize: textFactor * 13,
-                                letterSpacing: 1.2,
+              child: GetBuilder<ChatController>(
+                id: "messeges",
+                builder: (controller) => Stack(
+                  children: [
+                    if (!isLoading)
+                      GestureDetector(
+                        onTap: () {
+                          FocusScope.of(context).unfocus();
+                        },
+                        child: messeges.isNotEmpty
+                            ? GroupedListView<Message, DateTime>(
+                                reverse: true,
+                                order: GroupedListOrder.DESC,
+                                elements: messeges,
+                                useStickyGroupSeparators: true,
+                                floatingHeader: true,
+                                groupBy: (msg) => DateTime(
+                                  msg.date.year,
+                                  msg.date.month,
+                                  msg.date.day,
+                                ),
+                                groupHeaderBuilder: (msg) {
+                                  final today = DateTime.now();
+                                  final diff =
+                                      today.difference(msg.date).inDays;
+                                  late String text;
+                                  if (diff == 0) {
+                                    text = "Today";
+                                  } else if (diff == 1) {
+                                    text = "Yesterday";
+                                  } else {
+                                    text = DateFormat.yMMMd().format(msg.date);
+                                  }
+                                  return Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Card(
+                                      color: primaryColor,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Text(
+                                          text,
+                                          style: GoogleFonts.roboto(
+                                            color: white,
+                                            fontSize: textFactor * 13,
+                                            letterSpacing: 1.2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemBuilder: (context, msg) =>
+                                    buildChatBubble(msg),
+                              )
+                            : Center(
+                                child: Text(
+                                  "0 messages",
+                                  style: GoogleFonts.roboto(
+                                    fontSize: textFactor * 13,
+                                    letterSpacing: 1,
+                                    fontWeight: FontWeight.w600,
+                                    color: grey,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    itemBuilder: (context, msg) {
-                      return buildChatBubble(msg);
-                    },
-                  ),
+                      )
+                    else
+                      _loadingIndicator()
+                  ],
                 ),
               ),
             ),
@@ -221,6 +244,21 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       ),
     );
   }
+
+  Widget _loadingIndicator() => const Center(
+        child: SizedBox(
+          height: 100,
+          child: LoadingIndicator(
+            indicatorType: Indicator.ballClipRotateMultiple,
+            colors: [
+              grey,
+            ],
+            strokeWidth: 2,
+            backgroundColor: Colors.transparent,
+            pathBackgroundColor: Colors.transparent,
+          ),
+        ),
+      );
 
   Widget buildChatBubble(Message message) => Container(
         padding:
