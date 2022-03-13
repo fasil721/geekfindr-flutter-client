@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geek_findr/constants.dart';
+import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/views/screens/users_profile_page.dart';
 import 'package:get/get.dart';
@@ -46,6 +48,11 @@ class _SearchWidgetState extends State<SearchWidget>
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
+    final currentUser = Boxes.getCurrentUser();
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -85,25 +92,44 @@ class _SearchWidgetState extends State<SearchWidget>
             },
             itemBuilder: (context, UserDetials? suggestion) {
               final user = suggestion!;
-              return ListTile(
-                textColor: secondaryColor,
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.network(
-                    user.avatar!,
-                    width: 30,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: Colors.blue,
-                      height: 130,
-                      width: 130,
-                    ),
+              if (user.id != currentUser.id) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      buildCircleGravatar(
+                        user.avatar!,
+                        width * 0.085,
+                      ),
+                      SizedBox(width: width * 0.03),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.username!,
+                            style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.w400,
+                              fontSize: textFactor * 16,
+                            ),
+                          ),
+                          Visibility(
+                            visible: user.role!.isNotEmpty,
+                            child: Text(
+                              user.role!,
+                              style: GoogleFonts.roboto(
+                                color: grey,
+                                fontWeight: FontWeight.w500,
+                                fontSize: textFactor * 13,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                ),
-                title: Text(
-                  user.username!,
-                  style: GoogleFonts.roboto(color: Colors.black),
-                ),
-              );
+                );
+              }
+              return const SizedBox();
             },
             noItemsFoundBuilder: (context) => const SizedBox(),
             onSuggestionSelected: (UserDetials? user) {

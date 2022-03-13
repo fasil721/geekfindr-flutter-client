@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/views/screens/users_profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
 
 class UsersListView extends StatefulWidget {
   const UsersListView({
@@ -105,30 +103,9 @@ class _UsersListViewState extends State<UsersListView> {
                           },
                           child: Row(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: CachedNetworkImage(
-                                  imageUrl: results[index].avatar!,
-                                  fit: BoxFit.fitWidth,
-                                  width: width * 0.09,
-                                  placeholder: (context, url) =>
-                                      Shimmer.fromColors(
-                                    baseColor: Colors.grey.withOpacity(0.3),
-                                    highlightColor: white,
-                                    period: const Duration(
-                                      milliseconds: 1000,
-                                    ),
-                                    child: Container(
-                                      height: width * 0.09,
-                                      width: width * 0.09,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              buildCircleGravatar(
+                                results[index].avatar!,
+                                width * 0.09,
                               ),
                               SizedBox(width: width * 0.05),
                               Column(

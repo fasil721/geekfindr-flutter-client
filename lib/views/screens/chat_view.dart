@@ -414,34 +414,3 @@ class ChatDetailPageAppBar extends StatelessWidget
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
-
-// class ChatBubble extends StatefulWidget {
-//   const ChatBubble({required this.chatMessage});
-//   final ChatMessage chatMessage;
-//   @override
-//   _ChatBubbleState createState() => _ChatBubbleState();
-// }
-
-
- 
-
-
-// class ChatMessage {
-//   String message;
-//   MessageType type;
-//   ChatMessage({required this.message, required this.type});
-// }
-
-// class SendMenuItems {
-//   String text;
-//   IconData icons;
-//   MaterialColor color;
-//   SendMenuItems({required this.text, required this.icons, required this.color});
-// }
-
-// enum MessageType {
-//   sender,
-//   receiver,
-//}
-
- 
