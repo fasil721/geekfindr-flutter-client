@@ -4,7 +4,6 @@ import 'package:geek_findr/views/screens/login_page.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class DrawerPage extends StatelessWidget {
   const DrawerPage({Key? key}) : super(key: key);
 
@@ -21,14 +20,14 @@ class DrawerPage extends StatelessWidget {
               final pref = await SharedPreferences.getInstance();
               pref.setBool("user", false);
               await Future.delayed(const Duration(milliseconds: 500));
-              Get.offAll(() => const LoginPage());
+              await Get.offAll(() => const LoginPage());
+              await Future.delayed(const Duration(milliseconds: 2000));
               await box.delete("user");
             },
             leading: const Icon(Icons.settings),
             title: const Text('Logout '),
           ),
           const Spacer(),
-          
           DefaultTextStyle(
             style: const TextStyle(
               fontSize: 12,

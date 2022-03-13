@@ -94,14 +94,14 @@ class _SearchWidgetState extends State<SearchWidget>
               final user = suggestion!;
               if (user.id != currentUser.id) {
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     children: [
                       buildCircleGravatar(
                         user.avatar!,
                         width * 0.085,
                       ),
-                      SizedBox(width: width * 0.03),
+                      SizedBox(width: width * 0.04),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

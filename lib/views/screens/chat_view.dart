@@ -22,7 +22,7 @@ class ChatDetailPage extends StatefulWidget {
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
   final textController = TextEditingController();
-  final currentUser = Boxes.getCurrentUser();
+
   late Socket socket;
   late double width;
   late double height;
@@ -46,6 +46,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   void connectSocket() {
+    final currentUser = Boxes.getCurrentUser();
     const path = '/api/v1/chats/socket.io';
     socket = io(prodUrl, <String, dynamic>{
       "path": path,
@@ -67,6 +68,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   Future<void> fetchMesseges() async {
+    final currentUser = Boxes.getCurrentUser();
     final datas = await chatServices.getMyChatMessages(
       conversationId: widget.item.id!,
     );
@@ -86,6 +88,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   void listenMessages() {
+    final currentUser = Boxes.getCurrentUser();
     socket.on("message", (value) {
       final data = ListenMessage.fromJson(
         Map<String, dynamic>.from(value as Map),
