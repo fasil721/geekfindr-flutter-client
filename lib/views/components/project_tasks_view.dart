@@ -3,8 +3,8 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/models/project_model_classes.dart';
@@ -155,15 +155,9 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                       child: IconButton(
                         splashRadius: 25,
                         onPressed: () {
-                          Get.dialog(
-                            _buildAddTaskDialoge(),
-                          );
+                          Get.dialog(_buildAddTaskDialoge());
                         },
-                        icon: Icon(
-                          Icons.add,
-                          size: 25,
-                          color: black,
-                        ),
+                        icon: Icon(Icons.add, size: 25, color: black),
                       ),
                     )
                   ],
@@ -314,9 +308,7 @@ class _ProjectTaskViewState extends State<ProjectTaskView> {
                   ),
                   GetBuilder<AppController>(
                     id: "selected",
-                    builder: (_) {
-                      return buildInputChips(selectedMembers);
-                    },
+                    builder: (_) => buildInputChips(selectedMembers),
                   ),
                   // DropdownButtonHideUnderline(
                   //   child: DropdownButton<String>(

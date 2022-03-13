@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
@@ -29,6 +30,7 @@ class _ChatPageState extends State<ChatPage> {
   List<MyChatList> datas = [];
   List<MyChatList> results = [];
   List<MyChatList> my1to1List = [];
+  List<UserDetials> selectedMembers = [];
   @override
   void initState() {
     Get.put(ChatController());
@@ -84,6 +86,21 @@ class _ChatPageState extends State<ChatPage> {
     return null;
   }
 
+  void checkUser(UserDetials user) {
+    final isEmpty = selectedMembers
+        .where(
+          (element) => element.id == user.id,
+        )
+        .isEmpty;
+    if (isEmpty) {
+      selectedMembers.add(user);
+      searchController2.clear();
+      chatController.update(["selected"]);
+    } else {
+      Fluttertoast.showToast(msg: "You already added");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -113,7 +130,7 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                         ),
                         InkWell(
-                          onTap: () => Get.dialog(_buildOptionSheet()),
+                          onTap: () => Get.dialog(_buildOptionDialoge()),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 10,
@@ -224,11 +241,7 @@ class _ChatPageState extends State<ChatPage> {
         istexting = false;
         searchController1.clear();
         chatController.update(["search"]);
-        Get.to(
-          () => ChatDetailPage(
-            item: item,
-          ),
-        );
+        Get.to(() => ChatDetailPage(item: item));
       },
       child: Ink(
         child: Padding(
@@ -375,8 +388,10 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _buildOptionSheet() {
+  Widget _buildOptionDialoge() {
     bool isRoom = false;
+    selectedMembers = [];
+    titleTextController.clear();
     return GetBuilder<ChatController>(
       id: "newConv",
       builder: (controller) => Column(
@@ -432,7 +447,7 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                   ),
                   SizedBox(height: height * 0.01),
-                  buildSearchDialoge(),
+                  buildSearchDialoge(isRoom: isRoom),
                   Visibility(
                     visible: isRoom,
                     child: TextField(
@@ -453,6 +468,74 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                   ),
+                  GetBuilder<ChatController>(
+                    id: "selected",
+                    builder: (_) => buildInputChips(selectedMembers),
+                  ),
+                  Visibility(
+                    visible: isRoom,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            isRoom = false;
+                            controller.update(["newConv"]);
+                          },
+                          child: Text(
+                            "Cancel",
+                            style: GoogleFonts.roboto(
+                              color: black,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all<double>(3),
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(primaryColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (titleTextController.text.isNotEmpty ||
+                                selectedMembers.isNotEmpty) {
+                              final userIds =
+                                  selectedMembers.map((e) => e.id!).toList();
+                              final data =
+                                  await chatServices.createRoomConversation(
+                                roomName: titleTextController.text,
+                                userIds: userIds,
+                              );
+                              if (data != null) {
+                                Get.to(() => ChatDetailPage(item: data));
+                              } else {
+                                Fluttertoast.showToast(
+                                  msg: "This room already exists",
+                                );
+                              }
+                            } else {
+                              Fluttertoast.showToast(
+                                msg: "users and room name's are required",
+                              );
+                            }
+                          },
+                          child: Text(
+                            "Create",
+                            style: GoogleFonts.roboto(
+                              color: white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5)
+                      ],
+                    ),
+                  ),
                   SizedBox(height: height * 0.01),
                 ],
               ),
@@ -463,9 +546,10 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget buildSearchDialoge() {
+  Widget buildSearchDialoge({required bool isRoom}) {
     final currentUser = Boxes.getCurrentUser();
     searchController2.clear();
+    istexting = false;
     return GetBuilder<ChatController>(
       id: "search2",
       builder: (controller) => Container(
@@ -498,11 +582,7 @@ class _ChatPageState extends State<ChatPage> {
                 visible: istexting,
                 child: IconButton(
                   splashRadius: 20,
-                  icon: const Icon(
-                    Icons.close,
-                    size: 20,
-                    color: primaryColor,
-                  ),
+                  icon: const Icon(Icons.close, size: 20, color: primaryColor),
                   onPressed: () async {
                     searchController2.clear();
                     istexting = false;
@@ -527,9 +607,8 @@ class _ChatPageState extends State<ChatPage> {
           },
           itemBuilder: (context, UserDetials? suggestion) {
             final user = suggestion!;
-            final isNotExist = checkUserExistInMyChat(userId: user.id)!;
-            if (isNotExist) {
-              if (user.id != currentUser.id) {
+            if (user.id != currentUser.id) {
+              if (isRoom) {
                 return Padding(
                   padding: const EdgeInsets.all(10),
                   child: Row(
@@ -565,6 +644,45 @@ class _ChatPageState extends State<ChatPage> {
                     ],
                   ),
                 );
+              } else {
+                final isNotExist = checkUserExistInMyChat(userId: user.id)!;
+                if (isNotExist) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        buildCircleGravatar(
+                          user.avatar!,
+                          width * 0.085,
+                        ),
+                        SizedBox(width: width * 0.04),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              user.username!,
+                              style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w400,
+                                fontSize: textFactor * 16,
+                              ),
+                            ),
+                            Visibility(
+                              visible: user.role!.isNotEmpty,
+                              child: Text(
+                                user.role!,
+                                style: GoogleFonts.roboto(
+                                  color: grey,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: textFactor * 13,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                }
               }
             }
             return const SizedBox();
@@ -575,25 +693,51 @@ class _ChatPageState extends State<ChatPage> {
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Text(
-                  "0 Result found maybe You already chatting with this user",
+                  isRoom
+                      ? "0 Result found"
+                      : "0 Result found maybe You already chatting with this user",
                   style: GoogleFonts.roboto(),
                 ),
               ),
             ),
           ),
           onSuggestionSelected: (UserDetials? user) async {
-            istexting = false;
             searchController2.clear();
-            final data = await chatServices.create1to1Conversation(
-              userId: user!.id!,
-            );
-            Get.to(
-              () => ChatDetailPage(item: data!),
-            );
+            if (isRoom) {
+              checkUser(user!);
+            } else {
+              istexting = false;
+              final data = await chatServices.create1to1Conversation(
+                userId: user!.id!,
+              );
+              Get.to(() => ChatDetailPage(item: data!));
+            }
             controller.update(["search2"]);
           },
         ),
       ),
     );
   }
+
+  Widget buildInputChips(List<UserDetials> members) => Wrap(
+        spacing: 10,
+        children: members
+            .map(
+              (e) => InputChip(
+                avatar: CircleAvatar(
+                  backgroundImage: NetworkImage(e.avatar!),
+                ),
+                label: Text(e.username!),
+                labelStyle: GoogleFonts.roboto(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                onDeleted: () {
+                  selectedMembers.remove(e);
+                  chatController.update(["selected"]);
+                },
+              ),
+            )
+            .toList(),
+      );
 }
