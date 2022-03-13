@@ -51,7 +51,7 @@ class ChatServices {
     return null;
   }
 
-  Future<CreateChatModel?> create1to1Conversation({
+  Future<MyChatList?> create1to1Conversation({
     required String userId,
   }) async {
     final currentUser = Boxes.getCurrentUser();
@@ -72,7 +72,7 @@ class ChatServices {
       print(response.statusCode);
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
-        final datas = CreateChatModel.fromJson(
+        final datas = MyChatList.fromJson(
           Map<String, dynamic>.from(jsonData as Map),
         );
         return datas;

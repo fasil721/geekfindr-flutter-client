@@ -356,15 +356,12 @@ class _ChatPageState extends State<ChatPage> {
                 istexting = false;
                 searchController.clear();
                 FocusScope.of(context).requestFocus(FocusNode());
-                // Get.to(
-                //   () => ChatDetailPage(
-                //     item: item,
-                //   ),
-                // );
-                final a = await chatServices.create1to1Conversation(
+                final data = await chatServices.create1to1Conversation(
                   userId: user!.id!,
                 );
-                print(a!.participants);
+                Get.to(
+                  () => ChatDetailPage(item: data!),
+                );
                 controller.update(["search"]);
               },
             ),

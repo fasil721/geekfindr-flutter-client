@@ -1,4 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
@@ -10,7 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatDetailPage extends StatefulWidget {
@@ -29,11 +29,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   late double textFactor;
   bool isLoading = true;
   List<Message> messeges = [];
+  List<Participant> otherUsers = [];
   @override
   void initState() {
     connectSocket();
     fetchMesseges();
     listenMessages();
+    findParticipants();
     super.initState();
   }
 
@@ -72,6 +74,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       (e) {
         final isSentByMe = e.senderId == currentUser.id;
         return Message(
+          userId: e.senderId!,
           isSentByMe: isSentByMe,
           text: e.message!,
           date: e.createdAt!,
@@ -89,6 +92,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       );
       final isSentByMe = data.userId == currentUser.id;
       final _messege = Message(
+        userId: data.userId!,
         text: data.message!,
         date: data.time!,
         isSentByMe: isSentByMe,
@@ -97,6 +101,12 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       chatController.update(["messeges"]);
       print(data.time!.toString());
     });
+  }
+
+  void findParticipants() {
+    for (final element in widget.item.participants!) {
+      otherUsers.add(element);
+    }
   }
 
   @override
@@ -260,82 +270,83 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         ),
       );
 
-  Widget buildChatBubble(Message message) => Container(
-        padding:
-            const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: message.isSentByMe
-                  ? MainAxisAlignment.end
-                  : MainAxisAlignment.start,
+  Widget buildChatBubble(Message message) {
+    final isSentByMe = message.isSentByMe;
+    final user =
+        otherUsers.firstWhere((element) => element.id == message.userId);
+    return Container(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment:
+                isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children: [
+              if (!message.isSentByMe)
+                buildCircleGravatar(user.avatar!, width * 0.07),
+              const SizedBox(
+                width: 10,
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                constraints: BoxConstraints(
+                  maxWidth: width * 0.6,
+                ),
+                decoration: BoxDecoration(
+                  color: !isSentByMe ? primaryColor : white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(16),
+                    topRight: const Radius.circular(16),
+                    bottomLeft: Radius.circular(isSentByMe ? 12 : 0),
+                    bottomRight: Radius.circular(isSentByMe ? 0 : 12),
+                  ),
+                ),
+                child: Text(
+                  message.text,
+                  style: GoogleFonts.roboto(
+                    fontSize: textFactor * 13,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.w600,
+                    color: !isSentByMe ? Colors.white : Colors.grey[800],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Row(
+              mainAxisAlignment:
+                  isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
               children: [
-                if (!message.isSentByMe)
-                  buildCircleGravatar(currentUser.avatar!, width * 0.07),
+                if (!isSentByMe)
+                  const SizedBox(
+                    width: 40,
+                  ),
+                const Icon(
+                  Icons.done_all,
+                  size: 18,
+                  color: grey,
+                ),
                 const SizedBox(
-                  width: 10,
+                  width: 5,
                 ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  constraints: BoxConstraints(
-                    maxWidth: width * 0.6,
+                Text(
+                  DateFormat.jm().format(message.date),
+                  style: GoogleFonts.roboto(
+                    color: const Color(0xffAEABC9),
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
                   ),
-                  decoration: BoxDecoration(
-                    color: !message.isSentByMe ? primaryColor : white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(16),
-                      topRight: const Radius.circular(16),
-                      bottomLeft: Radius.circular(message.isSentByMe ? 12 : 0),
-                      bottomRight: Radius.circular(message.isSentByMe ? 0 : 12),
-                    ),
-                  ),
-                  child: Text(
-                    message.text,
-                    style: GoogleFonts.roboto(
-                      fontSize: textFactor * 13,
-                      letterSpacing: 1.5,
-                      fontWeight: FontWeight.w600,
-                      color:
-                          !message.isSentByMe ? Colors.white : Colors.grey[800],
-                    ),
-                  ),
-                ),
+                )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: Row(
-                mainAxisAlignment: message.isSentByMe
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
-                children: [
-                  if (!message.isSentByMe)
-                    const SizedBox(
-                      width: 40,
-                    ),
-                  const Icon(
-                    Icons.done_all,
-                    size: 18,
-                    color: grey,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    DateFormat.jm().format(message.date),
-                    style: GoogleFonts.roboto(
-                      color: const Color(0xffAEABC9),
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1,
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      );
+          )
+        ],
+      ),
+    );
+  }
 }
 
 class ChatDetailPageAppBar extends StatelessWidget

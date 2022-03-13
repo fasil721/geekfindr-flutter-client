@@ -93,10 +93,12 @@ class Message {
   final String text;
   final DateTime date;
   final bool isSentByMe;
+  final String userId;
   const Message({
     required this.text,
     required this.date,
     required this.isSentByMe,
+    required this.userId,
   });
 }
 
