@@ -148,3 +148,6 @@ Owner getUserDatAsOwnerModel() {
   _owner.username = currentUser.username;
   return _owner;
 }
+  
+  
+  

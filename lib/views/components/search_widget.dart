@@ -58,6 +58,7 @@ class _SearchWidgetState extends State<SearchWidget>
       children: [
         Container(
           height: 45,
+          alignment: Alignment.topCenter,
           width: animation!.value,
           decoration: const BoxDecoration(
             color: secondaryColor,
@@ -73,15 +74,16 @@ class _SearchWidgetState extends State<SearchWidget>
             textFieldConfiguration: TextFieldConfiguration(
               controller: serchController,
               cursorColor: primaryColor,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 focusColor: primaryColor,
                 iconColor: primaryColor,
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.search,
                   color: primaryColor,
                 ),
                 border: InputBorder.none,
                 hintText: 'Search Username',
+                hintStyle: GoogleFonts.roboto(fontSize: textFactor * 15),
               ),
             ),
             suggestionsCallback: (value) {
@@ -131,9 +133,13 @@ class _SearchWidgetState extends State<SearchWidget>
               }
               return const SizedBox();
             },
-            noItemsFoundBuilder: (context) => const SizedBox(),
+            noItemsFoundBuilder: (context) => const SizedBox(
+              height: 50,
+              child: Center(child: Text("0 Result found")),
+            ),
             onSuggestionSelected: (UserDetials? user) {
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              FocusScope.of(context).unfocus();
               Get.to(() => OtherUserProfile(userId: user!.id!));
               isForward = false;
               serchController.clear();
@@ -162,8 +168,8 @@ class _SearchWidgetState extends State<SearchWidget>
             onPressed: () async {
               if (isForward) {
                 serchController.clear();
+                FocusScope.of(context).unfocus();
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                SystemChannels.textInput.invokeMethod("TextInput.hide");
                 isForward = false;
                 animationController!.reverse();
               } else {

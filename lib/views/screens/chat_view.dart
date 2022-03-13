@@ -376,7 +376,8 @@ class ChatDetailPageAppBar extends StatelessWidget
                 IconButton(
                   splashRadius: 25,
                   onPressed: () {
-                    Navigator.pop(context);
+                    chatController.update(["chatPage"]);
+                    Get.back();
                   },
                   icon: const Icon(
                     Icons.arrow_back,

@@ -6,6 +6,7 @@ import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/error_model.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class ChatServices {
@@ -70,7 +71,9 @@ class ChatServices {
         body: json.encode(body),
       );
       print(response.statusCode);
+
       if (response.statusCode == 200) {
+        Get.back();
         final jsonData = json.decode(response.body);
         final datas = MyChatList.fromJson(
           Map<String, dynamic>.from(jsonData as Map),
@@ -79,6 +82,7 @@ class ChatServices {
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());
+        print(err.toJson());
         for (final element in err.errors!) {
           Fluttertoast.showToast(msg: element.message!);
         }

@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/chat_models.dart';
+import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/views/screens/chat_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,13 +19,16 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final searchController = TextEditingController();
+  final searchController1 = TextEditingController();
+  final searchController2 = TextEditingController();
+  final titleTextController = TextEditingController();
   late double textFactor;
   bool istexting = false;
   late double height;
   late double width;
+  List<MyChatList> datas = [];
   List<MyChatList> results = [];
-
+  List<MyChatList> my1to1List = [];
   @override
   void initState() {
     Get.put(ChatController());
@@ -32,7 +37,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void searchUser(List<MyChatList> datas) {
     final currentUser = Boxes.getCurrentUser();
-    if (searchController.text.isEmpty) {
+    if (searchController1.text.isEmpty) {
       results = datas.toList();
     } else {
       results = [];
@@ -40,7 +45,7 @@ class _ChatPageState extends State<ChatPage> {
         final isRoom = i.isRoom == true;
         if (isRoom) {
           final s = i.roomName!.toLowerCase().contains(
-                searchController.text.toLowerCase(),
+                searchController1.text.toLowerCase(),
               );
           if (s) {
             results.add(i);
@@ -49,7 +54,7 @@ class _ChatPageState extends State<ChatPage> {
           for (final j in i.participants!) {
             if (j.id != currentUser.id) {
               final s = j.username!.toLowerCase().contains(
-                    searchController.text.toLowerCase(),
+                    searchController1.text.toLowerCase(),
                   );
               if (s) {
                 results.add(i);
@@ -60,23 +65,24 @@ class _ChatPageState extends State<ChatPage> {
       }
     }
   }
-  // bool? checkUserExistInMyChat({String? userId}) {
-  //   final currentUser = Boxes.getCurrentUser();
-  //   final List<Participant> chatUsers = [];
-  //   my1to1List = datas.where((element) => element.isRoom == false).toList();
-  //   if (userId != null) {
-  //     for (final e in my1to1List) {
-  //       final user = e.participants!
-  //           .where((element) => element.id != currentUser.id)
-  //           .first;
-  //       chatUsers.add(user);
-  //     }
-  //     final isNotExit =
-  //         chatUsers.where((element) => element.id == userId).isEmpty;
-  //     return isNotExit;
-  //   }
-  //   return null;
-  // }
+
+  bool? checkUserExistInMyChat({String? userId}) {
+    final currentUser = Boxes.getCurrentUser();
+    final List<Participant> chatUsers = [];
+    my1to1List = datas.where((element) => element.isRoom == false).toList();
+    if (userId != null) {
+      for (final e in my1to1List) {
+        final user = e.participants!
+            .where((element) => element.id != currentUser.id)
+            .first;
+        chatUsers.add(user);
+      }
+      final isNotExit =
+          chatUsers.where((element) => element.id == userId).isEmpty;
+      return isNotExit;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,12 +95,12 @@ class _ChatPageState extends State<ChatPage> {
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () {},
-                  child: Padding(
+            child: GetBuilder<ChatController>(
+              id: "chatPage",
+              builder: (controller) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,71 +112,78 @@ class _ChatPageState extends State<ChatPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          height: height * 0.04,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: secondaryColor,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              const Icon(
-                                Icons.add,
-                                color: primaryColor,
-                                size: 20,
+                        InkWell(
+                          onTap: () => Get.dialog(_buildOptionSheet()),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            height: height * 0.04,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: secondaryColor,
+                            ),
+                            child: Ink(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  const Icon(
+                                    Icons.add,
+                                    color: primaryColor,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: width * 0.01),
+                                  Text(
+                                    "New",
+                                    style: GoogleFonts.roboto(
+                                      fontSize: textFactor * 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: width * 0.01),
-                              Text(
-                                "New",
-                                style: GoogleFonts.roboto(
-                                  fontSize: textFactor * 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         )
                       ],
                     ),
                   ),
-                ),
-                SizedBox(height: height * 0.015),
-                buildSearchField(),
-                SizedBox(height: height * 0.02),
-                FutureBuilder<List<MyChatList>?>(
-                  future: chatServices.getMyChats(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return _buildLoadingScreen();
-                    }
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.data != null) {
-                        final datas = snapshot.data!;
-                        return GetBuilder<ChatController>(
-                          id: "chatList",
-                          builder: (controller) {
-                            searchUser(datas);
-                            return ListView.builder(
-                              reverse: true,
-                              itemCount: results.length,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (BuildContext context, int index) =>
-                                  buildUsersTile(results[index]),
-                            );
-                          },
-                        );
+                  SizedBox(height: height * 0.015),
+                  buildSearchField(),
+                  SizedBox(height: height * 0.02),
+                  FutureBuilder<List<MyChatList>?>(
+                    future: chatServices.getMyChats(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return _buildLoadingScreen();
                       }
-                    }
-                    return const SizedBox();
-                  },
-                ),
-              ],
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.data != null) {
+                          datas = snapshot.data!;
+                          return GetBuilder<ChatController>(
+                            id: "chatList",
+                            builder: (controller) {
+                              searchUser(datas);
+                              return ListView.builder(
+                                reverse: true,
+                                itemCount: results.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder:
+                                    (BuildContext context, int index) =>
+                                        buildUsersTile(results[index]),
+                              );
+                            },
+                          );
+                        }
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -209,7 +222,7 @@ class _ChatPageState extends State<ChatPage> {
       onTap: () {
         FocusScope.of(context).unfocus();
         istexting = false;
-        searchController.clear();
+        searchController1.clear();
         chatController.update(["search"]);
         Get.to(
           () => ChatDetailPage(
@@ -323,7 +336,7 @@ class _ChatPageState extends State<ChatPage> {
               controller.update(["search"]);
             },
             onChanged: (val) => controller.update(["chatList"]),
-            controller: searchController,
+            controller: searchController1,
             cursorColor: primaryColor,
             decoration: InputDecoration(
               focusColor: primaryColor,
@@ -342,7 +355,7 @@ class _ChatPageState extends State<ChatPage> {
                     color: primaryColor,
                   ),
                   onPressed: () async {
-                    searchController.clear();
+                    searchController1.clear();
                     istexting = false;
                     FocusScope.of(context).unfocus();
                     controller.update(["search", "chatList"]);
@@ -361,143 +374,226 @@ class _ChatPageState extends State<ChatPage> {
       },
     );
   }
-  // Widget buildSearchField() {
-  //   final currentUser = Boxes.getCurrentUser();
-  //   return GetBuilder<ChatController>(
-  //     id: "search",
-  //     builder: (controller) {
-  //       return Container(
-  //         margin: const EdgeInsets.symmetric(horizontal: 20),
-  //         height: height * 0.06,
-  //         width: width,
-  //         decoration: BoxDecoration(
-  //           color: secondaryColor,
-  //           borderRadius: BorderRadius.circular(50),
-  //         ),
-  //         child: TypeAheadField<UserDetials?>(
-  //           getImmediateSuggestions: true,
-  //           hideSuggestionsOnKeyboardHide: false,
-  //           debounceDuration: const Duration(milliseconds: 500),
-  //           textFieldConfiguration: TextFieldConfiguration(
-  //             onTap: () {
-  //               istexting = true;
-  //               controller.update(["search"]);
-  //             },
-  //             controller: searchController,
-  //             cursorColor: primaryColor,
-  //             decoration: InputDecoration(
-  //               focusColor: primaryColor,
-  //               iconColor: primaryColor,
-  //               prefixIcon: const Icon(
-  //                 Icons.search,
-  //                 color: primaryColor,
-  //               ),
-  //               suffixIcon: Visibility(
-  //                 visible: istexting,
-  //                 child: IconButton(
-  //                   splashRadius: 20,
-  //                   icon: const Icon(
-  //                     Icons.close,
-  //                     size: 20,
-  //                     color: primaryColor,
-  //                   ),
-  //                   onPressed: () async {
-  //                     searchController.clear();
-  //                     istexting = false;
-  //                     FocusScope.of(context).requestFocus(FocusNode());
-  //                     controller.update(["search"]);
-  //                   },
-  //                 ),
-  //               ),
-  //               border: InputBorder.none,
-  //               hintText: "Search",
-  //               hintStyle: GoogleFonts.roboto(
-  //                 fontSize: textFactor * 15,
-  //                 color: Colors.grey,
-  //               ),
-  //             ),
-  //           ),
-  //           suggestionsCallback: (value) {
-  //             if (value.isNotEmpty) {
-  //               return profileServices.searchUsers(text: value);
-  //             }
-  //             return [];
-  //           },
-  //           itemBuilder: (context, UserDetials? suggestion) {
-  //             final user = suggestion!;
-  //             if (user.id != currentUser.id) {
-  //               return Padding(
-  //                 padding: const EdgeInsets.all(10),
-  //                 child: Row(
-  //                   children: [
-  //                     buildCircleGravatar(
-  //                       user.avatar!,
-  //                       width * 0.085,
-  //                     ),
-  //                     SizedBox(width: width * 0.04),
-  //                     Column(
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       children: [
-  //                         Text(
-  //                           user.username!,
-  //                           style: GoogleFonts.roboto(
-  //                             fontWeight: FontWeight.w400,
-  //                             fontSize: textFactor * 16,
-  //                           ),
-  //                         ),
-  //                         Visibility(
-  //                           visible: user.role!.isNotEmpty,
-  //                           child: Text(
-  //                             user.role!,
-  //                             style: GoogleFonts.roboto(
-  //                               color: grey,
-  //                               fontWeight: FontWeight.w500,
-  //                               fontSize: textFactor * 13,
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     )
-  //                   ],
-  //                 ),
-  //               );
-  //             }
-  //             return const SizedBox();
-  //           },
-  //           noItemsFoundBuilder: (context) => const SizedBox(),
-  //           onSuggestionSelected: (UserDetials? user) async {
-  //             user = user!;
-  //             istexting = false;
-  //             searchController.clear();
-  //             FocusScope.of(context).requestFocus(FocusNode());
-  //             final isNotExist = checkUserExistInMyChat(userId: user.id)!;
-  //             print(isNotExist);
-  //             if (isNotExist) {
-  //               final data = await chatServices.create1to1Conversation(
-  //                 userId: user.id!,
-  //               );
-  //               Get.to(
-  //                 () => ChatDetailPage(item: data!),
-  //               );
-  //             } else {
-  //               print(my1to1List.length);
-  //               final data = my1to1List.firstWhere(
-  //                 (element) {
-  //                   final _user = element.participants!
-  //                       .firstWhere((ele) => element.id != currentUser.id);
-  //                   final isUser = _user.id == user!.id;
-  //                   return isUser;
-  //                 },
-  //               );
-  //               Get.to(
-  //                 () => ChatDetailPage(item: data),
-  //               );
-  //             }
-  //             controller.update(["search"]);
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+
+  Widget _buildOptionSheet() {
+    bool isRoom = false;
+    return GetBuilder<ChatController>(
+      id: "newConv",
+      builder: (controller) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Material(
+              color: white,
+              borderRadius: BorderRadius.circular(30),
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: !isRoom,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: height * 0.01),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              isRoom = true;
+                              controller.update(["newConv"]);
+                            },
+                            child: Ink(
+                              child: Row(
+                                children: [
+                                  SizedBox(width: width * 0.005),
+                                  const Icon(
+                                    Icons.add,
+                                    size: 25,
+                                    color: primaryColor,
+                                  ),
+                                  Text(
+                                    "Create a room chat",
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                  SizedBox(width: width * 0.02),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.01),
+                  buildSearchDialoge(),
+                  Visibility(
+                    visible: isRoom,
+                    child: TextField(
+                      controller: titleTextController,
+                      textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Room name",
+                        hintStyle:
+                            GoogleFonts.roboto(fontSize: textFactor * 15),
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.01),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSearchDialoge() {
+    final currentUser = Boxes.getCurrentUser();
+    searchController2.clear();
+    return GetBuilder<ChatController>(
+      id: "search2",
+      builder: (controller) => Container(
+        height: height * 0.06,
+        width: width,
+        decoration: BoxDecoration(
+          color: secondaryColor,
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: TypeAheadField<UserDetials?>(
+          getImmediateSuggestions: true,
+          direction: AxisDirection.up,
+          hideSuggestionsOnKeyboardHide: false,
+          debounceDuration: const Duration(milliseconds: 500),
+          textFieldConfiguration: TextFieldConfiguration(
+            onTap: () {
+              istexting = true;
+              controller.update(["search2"]);
+            },
+            controller: searchController2,
+            cursorColor: primaryColor,
+            decoration: InputDecoration(
+              focusColor: primaryColor,
+              iconColor: primaryColor,
+              prefixIcon: const Icon(
+                Icons.search,
+                color: primaryColor,
+              ),
+              suffixIcon: Visibility(
+                visible: istexting,
+                child: IconButton(
+                  splashRadius: 20,
+                  icon: const Icon(
+                    Icons.close,
+                    size: 20,
+                    color: primaryColor,
+                  ),
+                  onPressed: () async {
+                    searchController2.clear();
+                    istexting = false;
+                    FocusScope.of(context).unfocus();
+                    controller.update(["search2"]);
+                  },
+                ),
+              ),
+              border: InputBorder.none,
+              hintText: "Search and select",
+              hintStyle: GoogleFonts.roboto(
+                fontSize: textFactor * 15,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          suggestionsCallback: (value) {
+            if (value.isNotEmpty) {
+              return profileServices.searchUsers(text: value);
+            }
+            return [];
+          },
+          itemBuilder: (context, UserDetials? suggestion) {
+            final user = suggestion!;
+            final isNotExist = checkUserExistInMyChat(userId: user.id)!;
+            if (isNotExist) {
+              if (user.id != currentUser.id) {
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      buildCircleGravatar(
+                        user.avatar!,
+                        width * 0.085,
+                      ),
+                      SizedBox(width: width * 0.04),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.username!,
+                            style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.w400,
+                              fontSize: textFactor * 16,
+                            ),
+                          ),
+                          Visibility(
+                            visible: user.role!.isNotEmpty,
+                            child: Text(
+                              user.role!,
+                              style: GoogleFonts.roboto(
+                                color: grey,
+                                fontWeight: FontWeight.w500,
+                                fontSize: textFactor * 13,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              }
+            }
+            return const SizedBox();
+          },
+          noItemsFoundBuilder: (context) => SizedBox(
+            height: 60,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  "0 Result found maybe You already chatting with this user",
+                  style: GoogleFonts.roboto(),
+                ),
+              ),
+            ),
+          ),
+          onSuggestionSelected: (UserDetials? user) async {
+            istexting = false;
+            searchController2.clear();
+            final data = await chatServices.create1to1Conversation(
+              userId: user!.id!,
+            );
+            Get.to(
+              () => ChatDetailPage(item: data!),
+            );
+            controller.update(["search2"]);
+          },
+        ),
+      ),
+    );
+  }
 }
