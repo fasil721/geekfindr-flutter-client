@@ -155,3 +155,5 @@ class Join {
         owner: json["owner"],
       );
 }
+
+enum PostType { allPosts, posts, projects }

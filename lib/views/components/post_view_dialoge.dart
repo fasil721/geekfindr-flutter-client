@@ -115,8 +115,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                     width: height * 0.04,
                                     decoration: BoxDecoration(
                                       color: Colors.grey,
-                                      borderRadius:
-                                          BorderRadius.circular(100),
+                                      borderRadius: BorderRadius.circular(100),
                                     ),
                                   ),
                                 ),
@@ -146,21 +145,21 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                         ],
                       ),
                     ),
-                    // Visibility(
-                    //   visible: widget.imageModel.isProject!,
-                    //   child: Container(
-                    //     alignment: Alignment.centerLeft,
-                    //     padding: const EdgeInsets.only(left: 10, bottom: 5),
-                    //     child: Text(
-                    //       widget.imageModel.projectName!,
-                    //       style: GoogleFonts.poppins(
-                    //         fontSize: 13,
-                    //         color: black,
-                    //         fontWeight: FontWeight.w600,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                    Visibility(
+                      visible: widget.imageModel.isProject!,
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.only(left: 10, bottom: 5),
+                        child: Text(
+                          widget.imageModel.projectName!,
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
                     Container(
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.only(left: 10, bottom: 10),
@@ -181,8 +180,7 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                               imageUrl: widget.imageModel.mediaUrl!,
                               fit: BoxFit.fitWidth,
                               width: width,
-                              placeholder: (context, url) =>
-                                  Shimmer.fromColors(
+                              placeholder: (context, url) => Shimmer.fromColors(
                                 baseColor: Colors.grey.withOpacity(0.3),
                                 highlightColor: white,
                                 period: const Duration(
@@ -219,8 +217,8 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                       ),
                       onDoubleTap: () {
                         if (!isLiked) {
-                          postController
-                              .userPostLikesCountList[widget.index] += 1;
+                          postController.userPostLikesCountList[widget.index] +=
+                              1;
                           postServices.postLike(
                             imageId: widget.imageModel.id!,
                           );
@@ -300,7 +298,8 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                 isCurrentUser: isCurrentUser,
                               ),
                               Visibility(
-                                visible: isCurrentUser,
+                                visible: isCurrentUser &&
+                                    !widget.imageModel.isProject!,
                                 child: PopupMenuButton(
                                   itemBuilder: (BuildContext bc) => [
                                     const PopupMenuItem(
@@ -319,6 +318,25 @@ class _PostEditDialogeState extends State<PostViewDialoge> {
                                       );
                                       Get.back();
                                     }
+                                    if (value == "2") {}
+                                  },
+                                  icon: const Icon(
+                                    Icons.more_horiz,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: isCurrentUser &&
+                                    widget.imageModel.isProject!,
+                                child: PopupMenuButton(
+                                  itemBuilder: (BuildContext bc) => [
+                                    const PopupMenuItem(
+                                      value: "2",
+                                      child: Text("edit post"),
+                                    ),
+                                  ],
+                                  onSelected: (value) {
                                     if (value == "2") {}
                                   },
                                   icon: const Icon(

@@ -9,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatDetailPage extends StatefulWidget {
   const ChatDetailPage({required this.item});
@@ -20,30 +19,24 @@ class ChatDetailPage extends StatefulWidget {
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
   final textController = TextEditingController();
-
   late double width;
   late double height;
   late double textFactor;
   bool isLoading = true;
   List<Message> messeges = [];
   List<Participant> otherUsers = [];
+  
   @override
   void initState() {
-    connectSocket();
+    // connectSocket();
+    joinConversation();
     fetchMesseges();
-    listenMessages();
+    // listenMessages();
     findParticipants();
     super.initState();
   }
 
-  @override
-  void dispose() {
-    chatController.socket.close();
-    super.dispose();
-  }
-
-  void connectSocket() {
-    chatController.socket.open();
+  void joinConversation() {
     chatController.socket
         .emit("join_conversation", {"conversationId": widget.item.id});
   }
@@ -65,7 +58,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           userId: e.senderId!,
           isSentByMe: isSentByMe,
           text: e.message!,
-          date: e.createdAt!,
+          date: e.updatedAt!.add(const Duration(minutes: 330)),
         );
       },
     ).toList();
@@ -73,24 +66,23 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     chatController.update(["messeges"]);
   }
 
-  void listenMessages() {
-    final currentUser = Boxes.getCurrentUser();
-    chatController.socket.on("message", (value) {
-      final data = ListenMessage.fromJson(
-        Map<String, dynamic>.from(value as Map),
-      );
-      final isSentByMe = data.userId == currentUser.id;
-      final _messege = Message(
-        userId: data.userId!,
-        text: data.message!,
-        date: data.time!,
-        isSentByMe: isSentByMe,
-      );
-      messeges.add(_messege);
-      chatController.update(["messeges"]);
-      print(data.time!.toString());
-    });
-  }
+  // void listenMessages() {
+  //   final currentUser = Boxes.getCurrentUser();
+  //   chatController.socket.on("message", (value) {
+  //     final data = ListenMessage.fromJson(
+  //       Map<String, dynamic>.from(value as Map),
+  //     );
+  //     final isSentByMe = data.userId == currentUser.id;
+  //     final _messege = Message(
+  //       userId: data.userId!,
+  //       text: data.message!,
+  //       date: data.time!.add(const Duration(minutes: 330)),
+  //       isSentByMe: isSentByMe,
+  //     );
+  //     messeges.add(_messege);
+  //     chatController.update(["messeges"]);
+  //   });
+  // }
 
   void findParticipants() {
     for (final element in widget.item.participants!) {
@@ -135,14 +127,14 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                                   msg.date.day,
                                 ),
                                 groupHeaderBuilder: (msg) {
-                                  final diff = DateTime.now()
-                                      .difference(msg.date)
-                                      .inDays;
-                                  print(diff);
+                                  final today = DateTime.now();
+                                  final diff =
+                                      (today.difference(msg.date).inHours / 24)
+                                          .round();
                                   late String text;
                                   if (diff == 0) {
                                     text = "Today";
-                                  } else if (diff == 2) {
+                                  } else if (diff == 1) {
                                     text = "Yesterday";
                                   } else {
                                     text = DateFormat.yMMMd().format(msg.date);

@@ -8,6 +8,7 @@ import 'package:geek_findr/views/components/users_list_bottomsheet.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 bool checkRequest(List<Join> requests) {
   final currentUser = Boxes.getCurrentUser();
@@ -148,6 +149,19 @@ Owner getUserDatAsOwnerModel() {
   _owner.username = currentUser.username;
   return _owner;
 }
-  
-  
-  
+
+void connectSocket() {
+  final currentUser = Boxes.getCurrentUser();
+  const path = '/api/v1/chats/socket.io';
+  chatController.socket = io(prodUrl, <String, dynamic>{
+    "path": path,
+    'transports': ['websocket'],
+    "auth": {"token": currentUser.token}
+  });
+  chatController.socket.connect();
+  chatController.socket
+      .onConnect((data) => print('connected ${chatController.socket.id}'));
+  chatController.socket.onDisconnect((data) => print('disconnected'));
+  chatController.socket.onError((data) => print('error : $data'));
+  chatController.socket.on("message", (value) => print(value));
+}

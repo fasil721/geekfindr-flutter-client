@@ -550,7 +550,10 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                 Visibility(
                                   maintainState: true,
                                   visible: currentIndex == 1,
-                                  child: UserPosts(userId: user.id!),
+                                  child: UserPosts(
+                                    userId: user.id!,
+                                    type: PostType.allPosts,
+                                  ),
                                 ),
                               ],
                             );

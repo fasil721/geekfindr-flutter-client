@@ -30,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage>
     Get.put(ProfileController());
     profileController.tabController = TabController(
       initialIndex: profileController.currentIndex,
-      length: 2,
+      length: 4,
       vsync: this,
     );
     super.initState();
@@ -215,7 +215,13 @@ class _ProfilePageState extends State<ProfilePage>
                                           text: "About",
                                         ),
                                         Tab(
+                                          text: "All Posts",
+                                        ),
+                                        Tab(
                                           text: "Posts",
+                                        ),
+                                        Tab(
+                                          text: "Projects",
                                         )
                                       ],
                                     ),
@@ -240,6 +246,25 @@ class _ProfilePageState extends State<ProfilePage>
                                               profileController.currentIndex ==
                                                   1,
                                           child: UserPosts(
+                                            type: PostType.allPosts,
+                                            userId: userData.id!,
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              profileController.currentIndex ==
+                                                  2,
+                                          child: UserPosts(
+                                            type: PostType.posts,
+                                            userId: userData.id!,
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              profileController.currentIndex ==
+                                                  3,
+                                          child: UserPosts(
+                                            type: PostType.projects,
                                             userId: userData.id!,
                                           ),
                                         ),

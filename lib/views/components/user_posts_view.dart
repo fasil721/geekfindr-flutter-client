@@ -10,11 +10,10 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 class UserPosts extends StatelessWidget {
-  const UserPosts({
-    Key? key,
-    required this.userId,
-  }) : super(key: key);
+  const UserPosts({Key? key, required this.userId, required this.type})
+      : super(key: key);
   final String userId;
+  final PostType type;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +29,17 @@ class UserPosts extends StatelessWidget {
               return box(width);
             }
             if (snapshot.connectionState == ConnectionState.done) {
-              final data = snapshot.data;
-              if (data != null) {
+              if (snapshot.data != null) {
+                List<ImageModel> data = snapshot.data!;
+                if (type == PostType.projects) {
+                  data = data
+                      .where((element) => element.isProject == true)
+                      .toList();
+                } else if (type == PostType.posts) {
+                  data = data
+                      .where((element) => element.isProject == false)
+                      .toList();
+                }
                 postController.likesAndCommentsCountSetUp(data);
                 return Padding(
                   padding: const EdgeInsets.symmetric(

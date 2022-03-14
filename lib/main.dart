@@ -8,6 +8,8 @@ import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/user_model.dart';
+import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/screens/chat_page.dart';
 import 'package:geek_findr/views/screens/home_page.dart';
@@ -68,21 +70,7 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  void connectSocket() {
-    final currentUser = Boxes.getCurrentUser();
-    const path = '/api/v1/chats/socket.io';
-    chatController.socket = io(prodUrl, <String, dynamic>{
-      "path": path,
-      'transports': ['websocket'],
-      "auth": {"token": currentUser.token}
-    });
-    print(chatController.socket);
-    chatController.socket.connect();
-    chatController.socket
-        .onConnect((data) => print('connected ${chatController.socket.id}'));
-    chatController.socket.onDisconnect((data) => print('disconnected'));
-    chatController.socket.onError((data) => print('error : $data'));
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
