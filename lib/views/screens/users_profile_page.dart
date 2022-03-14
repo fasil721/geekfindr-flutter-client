@@ -1,16 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/views/components/user_about_view.dart';
 import 'package:geek_findr/views/components/user_posts_view.dart';
 import 'package:geek_findr/views/components/users_list_bottomsheet.dart';
+import 'package:geek_findr/views/screens/chat_view.dart';
 import 'package:geek_findr/views/screens/profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
   int currentIndex = 0;
   int followersCount = 0;
   bool isLoading = false;
-
+  List<MyChatList> my1to1List = [];
   @override
   void initState() {
     super.initState();
@@ -38,6 +39,23 @@ class _OtherUserProfileState extends State<OtherUserProfile>
       length: 2,
       vsync: this,
     );
+  }
+
+  Future<bool> checkUserExistInMyChat(String userId) async {
+    final datas = await chatServices.getMyChats();
+    final currentUser = Boxes.getCurrentUser();
+    final List<Participant> chatUsers = [];
+    my1to1List = datas!.where((element) => element.isRoom == false).toList();
+
+    for (final e in my1to1List) {
+      final user = e.participants!
+          .where((element) => element.id != currentUser.id)
+          .first;
+      chatUsers.add(user);
+    }
+    final isNotExit =
+        chatUsers.where((element) => element.id == userId).isEmpty;
+    return isNotExit;
   }
 
   @override
@@ -336,7 +354,28 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () async {
+                                final isNotExist =
+                                    await checkUserExistInMyChat(user.id!);
+                                if (isNotExist) {
+                                  final data =
+                                      await chatServices.create1to1Conversation(
+                                    userId: user.id!,
+                                  );
+                                  Get.to(() => ChatDetailPage(item: data!));
+                                } else {
+                                  for (final i in my1to1List) {
+                                    for (final j in i.participants!) {
+                                      if (j.id != currentUser.id) {
+                                        final s = j.id! == user.id;
+                                        if (s) {
+                                          Get.to(() => ChatDetailPage(item: i));
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
                               child: SizedBox(
                                 height: height * 0.06,
                                 width: width * 0.22,

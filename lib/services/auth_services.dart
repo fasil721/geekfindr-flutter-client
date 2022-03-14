@@ -35,7 +35,7 @@ class AuthServices {
 
         final pref = await SharedPreferences.getInstance();
         await pref.setBool("user", true);
-        Get.offAll(() => const MyApp());
+        await Get.offAll(() => const MyApp());
       } else if (response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final error = ErrorModel.fromJson(errorJson.cast());
@@ -74,8 +74,7 @@ class AuthServices {
         await box.put("user", user);
         final pref = await SharedPreferences.getInstance();
         await pref.setBool("user", true);
-        Get.offAll(() => const MyApp());
-        controller.update(["home"]);
+        await Get.offAll(() => const MyApp());
       } else if (response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final error = ErrorModel.fromJson(errorJson.cast());

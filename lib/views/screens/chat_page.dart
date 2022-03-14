@@ -29,13 +29,7 @@ class _ChatPageState extends State<ChatPage> {
   late double width;
   List<MyChatList> datas = [];
   List<MyChatList> results = [];
-  List<MyChatList> my1to1List = [];
   List<UserDetials> selectedMembers = [];
-  @override
-  void initState() {
-    Get.put(ChatController());
-    super.initState();
-  }
 
   void searchUser(List<MyChatList> datas) {
     final currentUser = Boxes.getCurrentUser();
@@ -68,22 +62,21 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  bool? checkUserExistInMyChat({String? userId}) {
+  bool checkUserExistInMyChat(String userId) {
     final currentUser = Boxes.getCurrentUser();
     final List<Participant> chatUsers = [];
-    my1to1List = datas.where((element) => element.isRoom == false).toList();
-    if (userId != null) {
-      for (final e in my1to1List) {
-        final user = e.participants!
-            .where((element) => element.id != currentUser.id)
-            .first;
-        chatUsers.add(user);
-      }
-      final isNotExit =
-          chatUsers.where((element) => element.id == userId).isEmpty;
-      return isNotExit;
+    final my1to1List =
+        datas.where((element) => element.isRoom == false).toList();
+
+    for (final e in my1to1List) {
+      final user = e.participants!
+          .where((element) => element.id != currentUser.id)
+          .first;
+      chatUsers.add(user);
     }
-    return null;
+    final isNotExit =
+        chatUsers.where((element) => element.id == userId).isEmpty;
+    return isNotExit;
   }
 
   void checkUser(UserDetials user) {
@@ -331,11 +324,9 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget buildSearchField() {
-    return GetBuilder<ChatController>(
-      id: "search",
-      builder: (controller) {
-        return Container(
+  Widget buildSearchField() => GetBuilder<ChatController>(
+        id: "search",
+        builder: (controller) => Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           height: height * 0.06,
           width: width,
@@ -383,10 +374,8 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
 
   Widget _buildOptionDialoge() {
     bool isRoom = false;
@@ -468,9 +457,12 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                   ),
-                  GetBuilder<ChatController>(
-                    id: "selected",
-                    builder: (_) => buildInputChips(selectedMembers),
+                  Visibility(
+                    visible: isRoom,
+                    child: GetBuilder<ChatController>(
+                      id: "selected",
+                      builder: (_) => buildInputChips(selectedMembers),
+                    ),
                   ),
                   Visibility(
                     visible: isRoom,
@@ -645,7 +637,7 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                 );
               } else {
-                final isNotExist = checkUserExistInMyChat(userId: user.id)!;
+                final isNotExist = checkUserExistInMyChat(user.id!);
                 if (isNotExist) {
                   return Padding(
                     padding: const EdgeInsets.all(10),
@@ -707,9 +699,8 @@ class _ChatPageState extends State<ChatPage> {
               checkUser(user!);
             } else {
               istexting = false;
-              final data = await chatServices.create1to1Conversation(
-                userId: user!.id!,
-              );
+              final data =
+                  await chatServices.create1to1Conversation(userId: user!.id!);
               Get.to(() => ChatDetailPage(item: data!));
             }
             controller.update(["search2"]);

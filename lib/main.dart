@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/constants.dart';
+import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
+import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/user_model.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/screens/chat_page.dart';
@@ -16,6 +18,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +34,7 @@ Future<void> main() async {
   final isLoggedIn = pref.getBool("user");
   Get.put(AppController());
   Get.put(PostsController());
+  Get.put(ChatController());
   final mobileTheme = SchedulerBinding.instance!.window.platformBrightness;
 
   runApp(
@@ -52,6 +56,33 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
+  @override
+  void initState() {
+    connectSocket();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    chatController.socket.disconnect();
+    super.dispose();
+  }
+
+  void connectSocket() {
+    final currentUser = Boxes.getCurrentUser();
+    const path = '/api/v1/chats/socket.io';
+    chatController.socket = io(prodUrl, <String, dynamic>{
+      "path": path,
+      'transports': ['websocket'],
+      "auth": {"token": currentUser.token}
+    });
+    print(chatController.socket);
+    chatController.socket.connect();
+    chatController.socket
+        .onConnect((data) => print('connected ${chatController.socket.id}'));
+    chatController.socket.onDisconnect((data) => print('disconnected'));
+    chatController.socket.onError((data) => print('error : $data'));
+  }
 
   @override
   Widget build(BuildContext context) {

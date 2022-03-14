@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
@@ -23,7 +21,6 @@ class ChatDetailPage extends StatefulWidget {
 class _ChatDetailPageState extends State<ChatDetailPage> {
   final textController = TextEditingController();
 
-  late Socket socket;
   late double width;
   late double height;
   late double textFactor;
@@ -41,29 +38,18 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   @override
   void dispose() {
-    socket.disconnect();
+    chatController.socket.close();
     super.dispose();
   }
 
   void connectSocket() {
-    final currentUser = Boxes.getCurrentUser();
-    const path = '/api/v1/chats/socket.io';
-    socket = io(prodUrl, <String, dynamic>{
-      "path": path,
-      'transports': ['websocket'],
-      "auth": {"token": currentUser.token}
-    });
-    socket.connect();
-    socket.onConnect((data) => print('connected ${socket.id}'));
-    socket.onDisconnect((data) => print('disconnected'));
-    socket.onError((data) => print('error : $data'));
-    socket.emit("join_conversation", {"conversationId": widget.item.id});
-    // socket.on("message", (data) => print(data));
-    print(widget.item.id);
+    chatController.socket.open();
+    chatController.socket
+        .emit("join_conversation", {"conversationId": widget.item.id});
   }
 
   void sendMessage() {
-    socket.emit("message", {"message": textController.text});
+    chatController.socket.emit("message", {"message": textController.text});
     textController.clear();
   }
 
@@ -89,7 +75,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   void listenMessages() {
     final currentUser = Boxes.getCurrentUser();
-    socket.on("message", (value) {
+    chatController.socket.on("message", (value) {
       final data = ListenMessage.fromJson(
         Map<String, dynamic>.from(value as Map),
       );
@@ -149,13 +135,14 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                                   msg.date.day,
                                 ),
                                 groupHeaderBuilder: (msg) {
-                                  final today = DateTime.now();
-                                  final diff =
-                                      today.difference(msg.date).inDays;
+                                  final diff = DateTime.now()
+                                      .difference(msg.date)
+                                      .inDays;
+                                  print(diff);
                                   late String text;
                                   if (diff == 0) {
                                     text = "Today";
-                                  } else if (diff == 1) {
+                                  } else if (diff == 2) {
                                     text = "Yesterday";
                                   } else {
                                     text = DateFormat.yMMMd().format(msg.date);
@@ -278,7 +265,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     final user =
         otherUsers.firstWhere((element) => element.id == message.userId);
     return Container(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: Column(
         children: [
           Row(
