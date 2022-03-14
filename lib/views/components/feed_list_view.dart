@@ -106,6 +106,11 @@ class _FeedListState extends State<FeedList> {
     );
   }
 
+  Future<void> refresh() async {
+    datas = await postServices.getMyFeeds();
+    controller.update(["dataList"]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -118,115 +123,120 @@ class _FeedListState extends State<FeedList> {
         }
         if (snapshot.hasData) {
           if (snapshot.data != null) {
-            datas = [];
             datas = snapshot.data!;
             return GetBuilder<AppController>(
               id: "dataList",
               builder: (contoller) {
-                return ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: datas.length,
-                  itemBuilder: (context, index) {
-                    if (isRefresh) {
-                      itemsSetup(datas);
-                      likesSetUp();
-                    }
-                    isRefresh = false;
-                    final postedTime =
-                        findDatesDifferenceFromToday(datas[index].createdAt!);
-                    if (datas[index].isProject!) {
-                      isRequested =
-                          checkRequest(datas[index].teamJoinRequests!);
-                    }
-                    return VisibilityDetector(
-                      onVisibilityChanged: (info) {
-                        if (info.visibleFraction == 1) {
-                          // print("index $index");
+                return RefreshIndicator(
+                  color: primaryColor,
+                  onRefresh: refresh,
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: datas.length,
+                    itemBuilder: (context, index) {
+                      if (isRefresh) {
+                        itemsSetup(datas);
+                        likesSetUp();
+                      }
+                      isRefresh = false;
+                      final postedTime =
+                          findDatesDifferenceFromToday(datas[index].createdAt!);
+                      if (datas[index].isProject!) {
+                        isRequested =
+                            checkRequest(datas[index].teamJoinRequests!);
+                      }
+                      return VisibilityDetector(
+                        onVisibilityChanged: (info) {
+                          if (info.visibleFraction == 1) {
+                            // print("index $index");
 
-                          if (datas.length - 3 <= index &&
-                              !isLoading &&
-                              (dataLength + 2) < index) {
-                            dataLength = index;
-                            // print(dataLength);
-                            mockData(datas.last.id!);
+                            if (datas.length - 3 <= index &&
+                                !isLoading &&
+                                (dataLength + 2) < index) {
+                              dataLength = index;
+                              // print(dataLength);
+                              mockData(datas.last.id!);
+                            }
                           }
-                        }
-                      },
-                      key: UniqueKey(),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: datas[index].isProject!
-                              ? primaryBlue
-                              : secondaryColor,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.symmetric(
-                                          vertical: 5,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          border: Border.all(
-                                            width: 1.5,
-                                            color: white,
+                        },
+                        key: UniqueKey(),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: datas[index].isProject!
+                                ? primaryBlue
+                                : secondaryColor,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                            vertical: 5,
                                           ),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap: () {
-                                                Get.to(
-                                                  () => OtherUserProfile(
-                                                    userId:
-                                                        datas[index].owner!.id!,
-                                                  ),
-                                                );
-                                              },
-                                              autofocus: true,
-                                              highlightColor: Colors.orange,
-                                              splashColor: Colors.red,
-                                              child: CachedNetworkImage(
-                                                imageUrl:
-                                                    "${datas[index].owner!.avatar}&s=${height * 0.04}",
-                                                placeholder: (context, url) =>
-                                                    Shimmer.fromColors(
-                                                  baseColor: Colors.grey
-                                                      .withOpacity(0.3),
-                                                  highlightColor: white,
-                                                  period: const Duration(
-                                                    milliseconds: 1000,
-                                                  ),
-                                                  child: Container(
-                                                    height: height * 0.04,
-                                                    width: height * 0.04,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        100,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            border: Border.all(
+                                              width: 1.5,
+                                              color: white,
+                                            ),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Get.to(
+                                                    () => OtherUserProfile(
+                                                      userId: datas[index]
+                                                          .owner!
+                                                          .id!,
+                                                    ),
+                                                  );
+                                                },
+                                                autofocus: true,
+                                                highlightColor: Colors.orange,
+                                                splashColor: Colors.red,
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      "${datas[index].owner!.avatar}&s=${height * 0.04}",
+                                                  placeholder: (context, url) =>
+                                                      Shimmer.fromColors(
+                                                    baseColor: Colors.grey
+                                                        .withOpacity(0.3),
+                                                    highlightColor: white,
+                                                    period: const Duration(
+                                                      milliseconds: 1000,
+                                                    ),
+                                                    child: Container(
+                                                      height: height * 0.04,
+                                                      width: height * 0.04,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          100,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -235,122 +245,123 @@ class _FeedListState extends State<FeedList> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(width: width * 0.04),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              Get.to(
-                                                () => OtherUserProfile(
-                                                  userId:
-                                                      datas[index].owner!.id!,
+                                        SizedBox(width: width * 0.04),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                Get.to(
+                                                  () => OtherUserProfile(
+                                                    userId:
+                                                        datas[index].owner!.id!,
+                                                  ),
+                                                );
+                                              },
+                                              child: Text(
+                                                datas[index].owner!.username!,
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                              );
-                                            },
-                                            child: Text(
-                                              datas[index].owner!.username!,
-                                              style: GoogleFonts.poppins(
-                                                fontWeight: FontWeight.bold,
                                               ),
+                                            ),
+                                            Text(
+                                              postedTime,
+                                              style: GoogleFonts.roboto(
+                                                fontSize: 10,
+                                                color: black.withOpacity(0.8),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Visibility(
+                                      visible: datas[index].isProject!,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Project",
+                                            style: GoogleFonts.roboto(
+                                              fontSize: 13,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
                                           Text(
-                                            postedTime,
+                                            datas[index].projectName!,
                                             style: GoogleFonts.roboto(
-                                              fontSize: 10,
-                                              color: black.withOpacity(0.8),
+                                              fontSize: 13,
+                                              color: Colors.grey,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                  Visibility(
-                                    visible: datas[index].isProject!,
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "Project",
-                                          style: GoogleFonts.roboto(
-                                            fontSize: 13,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          datas[index].projectName!,
-                                          style: GoogleFonts.roboto(
-                                            fontSize: 13,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                bottom: 10,
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(
+                                  left: 10,
+                                  bottom: 10,
+                                ),
+                                child: ReadMoreText(
+                                  datas[index].description!,
+                                  colorClickableText: primaryColor,
+                                  trimMode: TrimMode.Line,
+                                  style: GoogleFonts.poppins(color: black),
+                                ),
                               ),
-                              child: ReadMoreText(
-                                datas[index].description!,
-                                colorClickableText: primaryColor,
-                                trimMode: TrimMode.Line,
-                                style: GoogleFonts.poppins(color: black),
-                              ),
-                            ),
-                            _buildImage(index, width),
-                            _buildBottomRowItems(index),
-                            GetBuilder<AppController>(
-                              id: "comments",
-                              builder: (_) => Visibility(
-                                visible: isCommenting[index],
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                        splashRadius: 25,
-                                        icon: const Icon(
-                                          Icons.send_rounded,
+                              _buildImage(index, width),
+                              _buildBottomRowItems(index),
+                              GetBuilder<AppController>(
+                                id: "comments",
+                                builder: (_) => Visibility(
+                                  visible: isCommenting[index],
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                          splashRadius: 25,
+                                          icon: const Icon(
+                                            Icons.send_rounded,
+                                          ),
+                                          onPressed: () async {
+                                            if (commmentEditController
+                                                .text.isNotEmpty) {
+                                              await postServices.postComment(
+                                                imageId: datas[index].id!,
+                                                comment:
+                                                    commmentEditController.text,
+                                              );
+                                              postController
+                                                      .feedCommentCountList[
+                                                  index] += 1;
+                                              isCommenting[index] = false;
+                                              controller.update(["comments"]);
+                                            }
+                                          },
                                         ),
-                                        onPressed: () async {
-                                          if (commmentEditController
-                                              .text.isNotEmpty) {
-                                            await postServices.postComment(
-                                              imageId: datas[index].id!,
-                                              comment:
-                                                  commmentEditController.text,
-                                            );
-                                            postController.feedCommentCountList[
-                                                index] += 1;
-                                            isCommenting[index] = false;
-                                            controller.update(["comments"]);
-                                          }
-                                        },
+                                        border: InputBorder.none,
+                                        hintText: 'Add comment',
                                       ),
-                                      border: InputBorder.none,
-                                      hintText: 'Add comment',
+                                      controller: commmentEditController,
                                     ),
-                                    controller: commmentEditController,
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 );
               },
             );

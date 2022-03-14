@@ -28,6 +28,12 @@ class _ProjectViewState extends State<ProjectView> {
   double height = 0;
   double textFactor = 0;
 
+  Future<void> refresh() async {
+    final datas =
+        await projectServices.getProjectDetialsById(id: widget.projectId);
+    controller.update(["projectView"]);
+  }
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -49,11 +55,6 @@ class _ProjectViewState extends State<ProjectView> {
                 final date =
                     findDatesDifferenceFromToday(projectDetials.createdAt!);
                 return Scaffold(
-                  floatingActionButton: FloatingActionButton(
-                    onPressed: () {
-                      controller.update(["projectView"]);
-                    },
-                  ),
                   backgroundColor: secondaryColor,
                   appBar: AppBar(
                     elevation: 0,
@@ -84,6 +85,17 @@ class _ProjectViewState extends State<ProjectView> {
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
+                            ),
+                            PopupMenuItem(
+                              value: "2",
+                              child: Text(
+                                "Refresh Project",
+                                style: GoogleFonts.poppins(
+                                  fontSize: textFactor * 13,
+                                  color: Colors.black.withOpacity(0.9),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             )
                           ],
                           onSelected: (value) async {
@@ -94,6 +106,35 @@ class _ProjectViewState extends State<ProjectView> {
                               );
                               controller.update(["projectList"]);
                               Get.back();
+                            } else if (value == "2") {
+                              controller.update(["projectView"]);
+                            }
+                          },
+                          icon: Icon(
+                            Icons.more_vert,
+                            color: black,
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: projectModel.role! != owner,
+                        child: PopupMenuButton(
+                          itemBuilder: (BuildContext bc) => [
+                            PopupMenuItem(
+                              value: "2",
+                              child: Text(
+                                "Refresh Project",
+                                style: GoogleFonts.poppins(
+                                  fontSize: textFactor * 13,
+                                  color: Colors.black.withOpacity(0.9),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            )
+                          ],
+                          onSelected: (value) async {
+                            if (value == "2") {
+                              controller.update(["projectView"]);
                             }
                           },
                           icon: Icon(
