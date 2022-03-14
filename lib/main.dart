@@ -6,6 +6,7 @@ import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
+import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/user_model.dart';
 import 'package:geek_findr/functions.dart';
@@ -37,6 +38,7 @@ Future<void> main() async {
   Get.put(AppController());
   Get.put(PostsController());
   Get.put(ChatController());
+  Get.put(ProfileController());
   final mobileTheme = SchedulerBinding.instance!.window.platformBrightness;
 
   runApp(
@@ -69,8 +71,6 @@ class _MyAppState extends State<MyApp> {
     chatController.socket.disconnect();
     super.dispose();
   }
-
- 
 
   @override
   Widget build(BuildContext context) {

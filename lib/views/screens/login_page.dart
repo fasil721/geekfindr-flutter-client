@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/constants.dart';
@@ -20,7 +21,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
   bool isVisible = true;
-
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -35,7 +36,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     emailFocusNode.dispose();
   }
 
-  void validator() {
+  Future<void> validator() async {
     String? emailError;
     String? passwordError;
     final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
@@ -87,7 +88,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       );
     }
     if (emailError == null && passwordError == null) {
-      authServices.userSignIn(
+      await Future.delayed(const Duration(seconds: 2));
+      await authServices.userSignIn(
         email: emailController.text,
         password: passwordController.text,
       );
@@ -165,24 +167,45 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         ),
       ),
       onPressed: () async {
-        SystemChannels.textInput.invokeMethod("TextInput.hide");
-        validator();
+        FocusScope.of(context).unfocus();
+        setState(() {
+          isLoading = true;
+        });
+        await validator();
+        setState(() {
+          isLoading = false;
+        });
       },
-      child: SizedBox(
-        height: height * 0.06,
-        width: width * 0.25,
-        child: Center(
-          child: Text(
-            "Login",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: textFactor * 15,
-              color: white,
-              fontWeight: FontWeight.bold,
+      child: isLoading
+          ? SizedBox(
+              height: height * 0.06,
+              width: width * 0.25,
+              child: const Center(
+                child: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+          : SizedBox(
+              height: height * 0.06,
+              width: width * 0.25,
+              child: Center(
+                child: Text(
+                  "Login",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: textFactor * 15,
+                    color: white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
 
     return Scaffold(
@@ -262,32 +285,48 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   passwordField,
                   SizedBox(height: height * 0.02),
                   loginButton,
-                  SizedBox(height: height * 0.02),
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(horizontal: width * 0.01),
-                  //   child: Text(
-                  //     "Or Sign In with social platform",
-                  //     style: GoogleFonts.roboto(
-                  //       fontSize: textFactor * 14,
-                  //       fontWeight: FontWeight.w500,
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(height: height * 0.02),
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     Get.to(() => const SignUpPage());
-                  //   },
-                  //   child: Container(
-                  //     margin: EdgeInsets.symmetric(
-                  //       horizontal: width * 0.01,
-                  //     ),
-                  //     child: Image.asset(
-                  //       'assets/images/github.png',
-                  //       height: height * 0.04,
-                  //     ),
-                  //   ),
-                  // )
+                  SizedBox(height: height * 0.01),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.01),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Don't have an account? ",
+                          style: GoogleFonts.roboto(
+                            fontSize: textFactor * 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  await Future.delayed(
+                                    const Duration(milliseconds: 500),
+                                  );
+                                  await Get.to(() => const SignUpPage());
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Text(
+                                    "Sign up",
+                                    style: GoogleFonts.roboto(
+                                      fontSize: textFactor * 15,
+                                      color: primaryColor,
+                                      decoration: TextDecoration.underline,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                
                 ],
               ),
             ),

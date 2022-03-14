@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/functions.dart';
@@ -27,9 +26,9 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   void initState() {
-    Get.put(ProfileController());
-    profileController.tabController = TabController(
-      initialIndex: profileController.currentIndex,
+    
+    profileController.tabController1 = TabController(
+      initialIndex:   profileController.currentIndextab1,
       length: 4,
       vsync: this,
     );
@@ -196,7 +195,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       ),
                                       unselectedLabelColor: Colors.grey,
                                       controller:
-                                          profileController.tabController,
+                                          profileController.tabController1,
                                       labelStyle: GoogleFonts.roboto(
                                         fontSize: textFactor * 14,
                                         color: Colors.black.withOpacity(0.8),
@@ -231,11 +230,11 @@ class _ProfilePageState extends State<ProfilePage>
                                   id: "tabs",
                                   builder: (controller) {
                                     return IndexedStack(
-                                      index: profileController.currentIndex,
+                                      index: profileController.currentIndextab1,
                                       children: <Widget>[
                                         Visibility(
                                           visible:
-                                              profileController.currentIndex ==
+                                              profileController.currentIndextab1 ==
                                                   0,
                                           child: ProfileAboutView(
                                             userData: userData,
@@ -243,7 +242,7 @@ class _ProfilePageState extends State<ProfilePage>
                                         ),
                                         Visibility(
                                           visible:
-                                              profileController.currentIndex ==
+                                              profileController.currentIndextab1 ==
                                                   1,
                                           child: UserPosts(
                                             type: PostType.allPosts,
@@ -252,7 +251,7 @@ class _ProfilePageState extends State<ProfilePage>
                                         ),
                                         Visibility(
                                           visible:
-                                              profileController.currentIndex ==
+                                              profileController.currentIndextab1 ==
                                                   2,
                                           child: UserPosts(
                                             type: PostType.posts,
@@ -261,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage>
                                         ),
                                         Visibility(
                                           visible:
-                                              profileController.currentIndex ==
+                                              profileController.currentIndextab1 ==
                                                   3,
                                           child: UserPosts(
                                             type: PostType.projects,

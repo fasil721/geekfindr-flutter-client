@@ -26,19 +26,17 @@ class OtherUserProfile extends StatefulWidget {
 
 class _OtherUserProfileState extends State<OtherUserProfile>
     with TickerProviderStateMixin {
-  TabController? tabController;
-  int currentIndex = 0;
   int followersCount = 0;
   bool isLoading = false;
   List<MyChatList> my1to1List = [];
   @override
   void initState() {
-    super.initState();
-    tabController = TabController(
-      initialIndex: currentIndex,
-      length: 2,
+    profileController.tabController2 = TabController(
+      initialIndex: profileController.currentIndextab2,
+      length: 4,
       vsync: this,
     );
+    super.initState();
   }
 
   Future<bool> checkUserExistInMyChat(String userId) async {
@@ -509,7 +507,7 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                 horizontal: 10,
                               ),
                               unselectedLabelColor: Colors.grey,
-                              controller: tabController,
+                              controller: profileController.tabController2,
                               labelStyle: GoogleFonts.roboto(
                                 fontSize: textFactor * 14,
                                 color: Colors.black.withOpacity(0.8),
@@ -528,31 +526,51 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                   text: "About",
                                 ),
                                 Tab(
+                                  text: "All Posts",
+                                ),
+                                Tab(
                                   text: "Posts",
+                                ),
+                                Tab(
+                                  text: "Projects",
                                 )
                               ],
                             ),
                           ),
                         ),
-                        GetBuilder<PostsController>(
+                        GetBuilder<ProfileController>(
                           id: "tabs2",
                           builder: (controller) {
                             return IndexedStack(
-                              index: currentIndex,
+                              index: profileController.currentIndextab2,
                               children: <Widget>[
                                 Visibility(
-                                  maintainState: true,
-                                  visible: currentIndex == 0,
-                                  child: ProfileAboutView(
-                                    userData: user,
-                                  ),
+                                  visible:
+                                      profileController.currentIndextab2 == 0,
+                                  child: ProfileAboutView(userData: user),
                                 ),
                                 Visibility(
-                                  maintainState: true,
-                                  visible: currentIndex == 1,
+                                  visible:
+                                      profileController.currentIndextab2 == 1,
                                   child: UserPosts(
                                     userId: user.id!,
                                     type: PostType.allPosts,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible:
+                                      profileController.currentIndextab2 == 2,
+                                  child: UserPosts(
+                                    type: PostType.posts,
+                                    userId: user.id!,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible:
+                                      profileController.currentIndextab2 == 3,
+                                  child: UserPosts(
+                                    type: PostType.projects,
+                                    userId: user.id!,
                                   ),
                                 ),
                               ],
