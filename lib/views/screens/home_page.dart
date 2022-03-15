@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
 
   void listenScrolling() {
     final position = scrollcontroller.position;
-    // print(position.pixels);
+     // print(position.pixels);
     if (position.userScrollDirection == ScrollDirection.forward &&
         position.pixels > 100) {
       isReversing = true;

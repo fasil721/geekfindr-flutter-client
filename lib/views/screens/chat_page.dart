@@ -101,69 +101,67 @@ class _ChatPageState extends State<ChatPage> {
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: GetBuilder<ChatController>(
-              id: "chatPage",
-              builder: (controller) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Chats",
-                          style: GoogleFonts.roboto(
-                            fontSize: textFactor * 23,
-                            fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: GetBuilder<ChatController>(
+            id: "chatPage",
+            builder: (controller) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Chats",
+                        style: GoogleFonts.roboto(
+                          fontSize: textFactor * 23,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => Get.dialog(_buildOptionDialoge()),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          height: height * 0.04,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: secondaryColor,
+                          ),
+                          child: Ink(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                const Icon(
+                                  Icons.add,
+                                  color: primaryColor,
+                                  size: 20,
+                                ),
+                                SizedBox(width: width * 0.01),
+                                Text(
+                                  "New",
+                                  style: GoogleFonts.roboto(
+                                    fontSize: textFactor * 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        InkWell(
-                          onTap: () => Get.dialog(_buildOptionDialoge()),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            height: height * 0.04,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: secondaryColor,
-                            ),
-                            child: Ink(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  const Icon(
-                                    Icons.add,
-                                    color: primaryColor,
-                                    size: 20,
-                                  ),
-                                  SizedBox(width: width * 0.01),
-                                  Text(
-                                    "New",
-                                    style: GoogleFonts.roboto(
-                                      fontSize: textFactor * 14,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                      )
+                    ],
                   ),
-                  SizedBox(height: height * 0.015),
-                  buildSearchField(),
-                  SizedBox(height: height * 0.02),
-                  FutureBuilder<List<MyChatList>?>(
+                ),
+                SizedBox(height: height * 0.015),
+                buildSearchField(),
+                SizedBox(height: height * 0.02),
+                Expanded(
+                  child: FutureBuilder<List<MyChatList>?>(
                     future: chatServices.getMyChats(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -177,10 +175,9 @@ class _ChatPageState extends State<ChatPage> {
                             builder: (controller) {
                               searchUser(datas);
                               return ListView.builder(
-                                reverse: true,
                                 itemCount: results.length,
                                 shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 itemBuilder:
                                     (BuildContext context, int index) =>
                                         buildUsersTile(results[index]),
@@ -192,8 +189,8 @@ class _ChatPageState extends State<ChatPage> {
                       return const SizedBox();
                     },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

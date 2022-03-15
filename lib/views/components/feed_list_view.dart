@@ -132,7 +132,7 @@ class _FeedListState extends State<FeedList> {
                   color: primaryColor,
                   onRefresh: refresh,
                   child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: datas.length,
                     itemBuilder: (context, index) {

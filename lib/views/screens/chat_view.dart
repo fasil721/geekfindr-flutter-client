@@ -19,6 +19,8 @@ class ChatDetailPage extends StatefulWidget {
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
   final textController = TextEditingController();
+  final scrollcontroller = ScrollController();
+  bool isScrolling = false;
   late double width;
   late double height;
   late double textFactor;
@@ -30,9 +32,21 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   void initState() {
     joinConversation();
     fetchMesseges();
-    // listenMessages();
     findParticipants();
+    // listenMessages();
     super.initState();
+    scrollcontroller.addListener(listenScrolling);
+  }
+
+  void listenScrolling() {
+    final position = scrollcontroller.position;
+    if (position.pixels > 100) {
+      isScrolling = true;
+      chatController.update(["backToBottom"]);
+    } else {
+      isScrolling = false;
+      chatController.update(["backToBottom"]);
+    }
   }
 
   void joinConversation() {
@@ -63,12 +77,12 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     ).toList();
     messeges = data;
     isLoading = false;
-    if (datas.isNotEmpty) {
-      print(datas.last.message);
-      print(datas.length);
-      // print(datas.first.createdAt!.toLocal());
-      // print(datas.first.createdAt!.toUtc());
-    }
+    // if (datas.isNotEmpty) {
+    //   print(datas.last.message);
+    //   print(datas.length);
+    //   // print(datas.first.createdAt!.toLocal());
+    //   // print(datas.first.createdAt!.toUtc());
+    // }
     chatController.update(["messeges"]);
   }
 
@@ -101,12 +115,12 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-    if (messeges.isNotEmpty) {
-      print(messeges.last.text);
-      print(messeges.length);
-      // print(datas.first.createdAt!.toLocal());
-      // print(datas.first.createdAt!.toUtc());
-    }
+    // if (messeges.isNotEmpty) {
+    //   print(messeges.last.text);
+    //   print(messeges.length);
+    //   // print(datas.first.createdAt!.toLocal());
+    //   // print(datas.first.createdAt!.toUtc());
+    // }
     return Scaffold(
       backgroundColor: secondaryColor,
       appBar: ChatDetailPageAppBar(
@@ -116,77 +130,119 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         child: Column(
           children: [
             Expanded(
-              child: GetBuilder<ChatController>(
-                id: "messeges",
-                builder: (controller) => Stack(
-                  children: [
-                    if (!isLoading)
-                      GestureDetector(
-                        onTap: () {
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: messeges.isNotEmpty
-                            ? GroupedListView<Message, DateTime>(
-                                reverse: true,
-                                order: GroupedListOrder.DESC,
-                                elements: messeges,
-                                useStickyGroupSeparators: true,
-                                floatingHeader: true,
-                                groupBy: (msg) => DateTime(
-                                  msg.date.year,
-                                  msg.date.month,
-                                  msg.date.day,
-                                ),
-                                groupHeaderBuilder: (msg) {
-                                  final today = DateTime.now();
-                                  final diff =
-                                      (today.difference(msg.date).inHours / 24)
-                                          .round();
-                                  late String text;
-                                  if (diff == 0) {
-                                    text = "Today";
-                                  } else if (diff == 1) {
-                                    text = "Yesterday";
-                                  } else {
-                                    text = DateFormat.yMMMd().format(msg.date);
-                                  }
-                                  return Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Card(
-                                      color: primaryColor,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Text(
-                                          text,
-                                          style: GoogleFonts.roboto(
-                                            color: white,
-                                            fontSize: textFactor * 13,
-                                            letterSpacing: 1.2,
+              child: Stack(
+                children: [
+                  GetBuilder<ChatController>(
+                    id: "messeges",
+                    builder: (controller) => Stack(
+                      children: [
+                        if (!isLoading)
+                          GestureDetector(
+                            onTap: () {
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: messeges.isNotEmpty
+                                ? GroupedListView<Message, DateTime>(
+                                    controller: scrollcontroller,
+                                    reverse: true,
+                                    order: GroupedListOrder.DESC,
+                                    elements: messeges,
+                                    useStickyGroupSeparators: true,
+                                    floatingHeader: true,
+                                    groupBy: (msg) => DateTime(
+                                      msg.date.year,
+                                      msg.date.month,
+                                      msg.date.day,
+                                    ),
+                                    groupHeaderBuilder: (msg) {
+                                      final today = DateTime.now();
+                                      final diff =
+                                          (today.difference(msg.date).inHours /
+                                                  24)
+                                              .round();
+                                      late String text;
+                                      if (diff == 0) {
+                                        text = "Today";
+                                      } else if (diff == 1) {
+                                        text = "Yesterday";
+                                      } else {
+                                        text =
+                                            DateFormat.yMMMd().format(msg.date);
+                                      }
+                                      return Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Card(
+                                          color: primaryColor,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(
+                                              text,
+                                              style: GoogleFonts.roboto(
+                                                color: white,
+                                                fontSize: textFactor * 13,
+                                                letterSpacing: 1.2,
+                                              ),
+                                            ),
                                           ),
                                         ),
+                                      );
+                                    },
+                                    itemBuilder: (context, msg) =>
+                                        buildChatBubble(msg),
+                                  )
+                                : Center(
+                                    child: Text(
+                                      "0 messages",
+                                      style: GoogleFonts.roboto(
+                                        fontSize: textFactor * 13,
+                                        letterSpacing: 1,
+                                        fontWeight: FontWeight.w600,
+                                        color: grey,
                                       ),
                                     ),
-                                  );
-                                },
-                                itemBuilder: (context, msg) =>
-                                    buildChatBubble(msg),
-                              )
-                            : Center(
-                                child: Text(
-                                  "0 messages",
-                                  style: GoogleFonts.roboto(
-                                    fontSize: textFactor * 13,
-                                    letterSpacing: 1,
-                                    fontWeight: FontWeight.w600,
-                                    color: grey,
                                   ),
-                                ),
+                          )
+                        else
+                          _loadingIndicator()
+                      ],
+                    ),
+                  ),
+                  GetBuilder<ChatController>(
+                    id: "backToBottom",
+                    builder: (controller) => Visibility(
+                      visible: isScrolling,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 10,
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: InkWell(
+                            onTap: () {
+                              scrollcontroller.animateTo(
+                                0,
+                                duration: const Duration(milliseconds: 750),
+                                curve: Curves.easeOut,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
                               ),
-                      )
-                    else
-                      _loadingIndicator()
-                  ],
-                ),
+                              child: const Icon(
+                                Icons.keyboard_double_arrow_down_rounded,
+                                color: primaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
             Container(
@@ -224,11 +280,12 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     height: height * 0,
                   ),
                   IconButton(
+                    splashRadius: 25,
                     onPressed: () {
                       // print(DateFormat.jm().format(DateTime.now()));
-                      if (textController.text.isNotEmpty) {
-                        sendMessage();
-                      }
+                      // if (textController.text.isNotEmpty) {
+                      //   sendMessage();
+                      // }
                     },
                     icon: const Icon(
                       Icons.send_rounded,
