@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 
 class ProjectServices {
   Future<List<ProjectShortModel>?> getMyProjects() async {
+    await Future.delayed(const Duration(seconds: 1));
     final currentUser = Boxes.getCurrentUser();
     const url = "$prodUrl/api/v1/projects/my-projects";
     try {

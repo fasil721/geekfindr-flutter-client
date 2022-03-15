@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:geek_findr/constants.dart';
+import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/views/components/feed_list_view.dart';
 import 'package:geek_findr/views/components/post_upload_dialoge.dart';
 import 'package:geek_findr/views/components/search_widget.dart';
@@ -20,32 +22,27 @@ class _HomePageState extends State<HomePage> {
   final _advancedDrawerController = AdvancedDrawerController();
   double height = 0;
   double width = 0.0;
-  // final scrollcontroller = ScrollController();
-  // bool isReversing = false;
+  final scrollcontroller = ScrollController();
+  bool isReversing = false;
 
   @override
   void initState() {
     super.initState();
-    // scrollcontroller.addListener(() {
-    //   listenScrolling();
-    // });
+    scrollcontroller.addListener(listenScrolling);
   }
 
-  // void listenScrolling() {
-  //   // if (scrollcontroller.position.atEdge) {
-  //   //   final isTop = scrollcontroller.position.pixels == 0;
-  //   // }
-  //   if (scrollcontroller.position.userScrollDirection ==
-  //       ScrollDirection.forward) {
-  //     isReversing = true;
-  //     print("reverse");
-  //   }
-  //   if (scrollcontroller.position.userScrollDirection ==
-  //       ScrollDirection.reverse) {
-  //     isReversing = false;
-  //     print("forward");
-  //   }
-  // }
+  void listenScrolling() {
+    final position = scrollcontroller.position;
+    // print(position.pixels);
+    if (position.userScrollDirection == ScrollDirection.forward &&
+        position.pixels > 100) {
+      isReversing = true;
+      postController.update(["backToTop"]);
+    } else {
+      isReversing = false;
+      postController.update(["backToTop"]);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +69,7 @@ class _HomePageState extends State<HomePage> {
             resizeToAvoidBottomInset: true,
             backgroundColor: white,
             body: NestedScrollView(
-              // controller: scrollcontroller,
+              controller: scrollcontroller,
               physics: const BouncingScrollPhysics(),
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                 SliverAppBar(
@@ -140,7 +137,43 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
-              body: const FeedList(),
+              body: Stack(
+                children: [
+                  const FeedList(),
+                  GetBuilder<PostsController>(
+                    id: "backToTop",
+                    builder: (controller) => Visibility(
+                      visible: isReversing,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: InkWell(
+                            onTap: () {
+                              scrollcontroller.animateTo(
+                                0,
+                                duration: const Duration(milliseconds: 1000),
+                                curve: Curves.easeOut,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: white,
+                              ),
+                              child: const Icon(
+                                Icons.arrow_upward_rounded,
+                                color: primaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

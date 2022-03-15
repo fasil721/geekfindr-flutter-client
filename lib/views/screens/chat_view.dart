@@ -25,10 +25,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   bool isLoading = true;
   List<Message> messeges = [];
   List<Participant> otherUsers = [];
-  
+
   @override
   void initState() {
-    // connectSocket();
     joinConversation();
     fetchMesseges();
     // listenMessages();
@@ -51,18 +50,25 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     final datas = await chatServices.getMyChatMessages(
       conversationId: widget.item.id!,
     );
-    messeges = datas.map(
+    final data = datas.map(
       (e) {
         final isSentByMe = e.senderId == currentUser.id;
         return Message(
           userId: e.senderId!,
           isSentByMe: isSentByMe,
           text: e.message!,
-          date: e.updatedAt!.add(const Duration(minutes: 330)),
+          date: e.updatedAt!.toLocal(),
         );
       },
     ).toList();
+    messeges = data;
     isLoading = false;
+    if (datas.isNotEmpty) {
+      print(datas.last.message);
+      print(datas.length);
+      // print(datas.first.createdAt!.toLocal());
+      // print(datas.first.createdAt!.toUtc());
+    }
     chatController.update(["messeges"]);
   }
 
@@ -76,7 +82,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   //     final _messege = Message(
   //       userId: data.userId!,
   //       text: data.message!,
-  //       date: data.time!.add(const Duration(minutes: 330)),
+  //       date: data.time!.toLocal(),
   //       isSentByMe: isSentByMe,
   //     );
   //     messeges.add(_messege);
@@ -95,7 +101,12 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-
+    if (messeges.isNotEmpty) {
+      print(messeges.last.text);
+      print(messeges.length);
+      // print(datas.first.createdAt!.toLocal());
+      // print(datas.first.createdAt!.toUtc());
+    }
     return Scaffold(
       backgroundColor: secondaryColor,
       appBar: ChatDetailPageAppBar(

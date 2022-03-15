@@ -43,7 +43,7 @@ class _FeedListState extends State<FeedList> {
       likesSetUp();
       controller.update(["dataList"]);
     }
-    print("datas.length ${datas.length}");
+    // print("datas.length ${datas.length}");
     isLoading = false;
     allLoaded = newData.isEmpty;
   }
@@ -109,6 +109,7 @@ class _FeedListState extends State<FeedList> {
   Future<void> refresh() async {
     datas = await postServices.getMyFeeds();
     controller.update(["dataList"]);
+    dataLength = -1;
   }
 
   @override
@@ -131,7 +132,7 @@ class _FeedListState extends State<FeedList> {
                   color: primaryColor,
                   onRefresh: refresh,
                   child: ListView.builder(
-                    physics: const BouncingScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: datas.length,
                     itemBuilder: (context, index) {
