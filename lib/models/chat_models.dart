@@ -111,6 +111,7 @@ class ListenMessage {
 
   String? message;
   String? userId;
+  String? convId;
   DateTime? time;
 
   factory ListenMessage.fromJson(Map<String, dynamic> json) => ListenMessage(

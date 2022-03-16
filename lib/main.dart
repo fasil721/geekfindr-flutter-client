@@ -7,10 +7,7 @@ import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
-import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/user_model.dart';
-import 'package:geek_findr/functions.dart';
-import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/screens/chat_page.dart';
 import 'package:geek_findr/views/screens/home_page.dart';
@@ -19,9 +16,9 @@ import 'package:geek_findr/views/screens/profile_page.dart';
 import 'package:geek_findr/views/screens/project_page.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,12 +57,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
+
   @override
   void initState() {
-    connectSocket();
+    chatController.connectSocket();
     super.initState();
   }
-
   @override
   void dispose() {
     chatController.socket.disconnect();

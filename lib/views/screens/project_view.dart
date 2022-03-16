@@ -29,8 +29,6 @@ class _ProjectViewState extends State<ProjectView> {
   double textFactor = 0;
 
   Future<void> refresh() async {
-    final datas =
-        await projectServices.getProjectDetialsById(id: widget.projectId);
     controller.update(["projectView"]);
   }
 
@@ -61,10 +59,10 @@ class _ProjectViewState extends State<ProjectView> {
                     backgroundColor: white,
                     leading: IconButton(
                       splashRadius: 25,
-                      icon: ImageIcon(
-                        const AssetImage("assets/icons/left.png"),
-                        color: black,
-                        size: 25,
+                      icon: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: black.withOpacity(0.8),
+                        size: 20,
                       ),
                       onPressed: () {
                         Get.back();
@@ -171,7 +169,7 @@ class _ProjectViewState extends State<ProjectView> {
                           ),
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "Started $date",
+                            "Started at $date",
                             style: GoogleFonts.roboto(
                               fontSize: textFactor * 12,
                               fontWeight: FontWeight.w500,

@@ -82,7 +82,6 @@ class ChatServices {
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());
-        print(err.toJson());
         for (final element in err.errors!) {
           Fluttertoast.showToast(msg: element.message!);
         }
@@ -176,7 +175,6 @@ class ChatServices {
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());
-        print(err.toJson());
         for (final element in err.errors!) {
           Fluttertoast.showToast(msg: element.message!);
         }
@@ -193,5 +191,46 @@ class ChatServices {
       Fluttertoast.showToast(msg: e.toString());
     }
     return null;
+  }
+
+  Future<void> addMemberToRoom({
+    required String memberId,
+    required String convId,
+  }) async {
+    final currentUser = Boxes.getCurrentUser();
+    final url =
+        "$prodUrl/api/v1/chats/api/v1/chats/conversations/$convId/participants";
+    final body = {
+      "memberId": memberId,
+    };
+    try {
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: {
+          "Authorization": "Bearer ${currentUser.token}",
+          "Content-Type": "application/json",
+        },
+        body: json.encode(body),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+      } else if (response.statusCode == 422 || response.statusCode == 400) {
+        final errorJson = json.decode(response.body) as Map;
+        final err = ErrorModel.fromJson(errorJson.cast());
+        for (final element in err.errors!) {
+          Fluttertoast.showToast(msg: element.message!);
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Something went wrong");
+      }
+    } on HttpException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on SocketException {
+      Fluttertoast.showToast(msg: "No Internet");
+    } on PlatformException {
+      Fluttertoast.showToast(msg: "Invalid Format");
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
   }
 }

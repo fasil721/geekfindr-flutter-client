@@ -6,6 +6,7 @@ import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/views/components/users_list_bottomsheet.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -45,38 +46,10 @@ String findDatesDifferenceFromToday(DateTime dateTime) {
   } else if (diff.inDays > -1) {
     return "${diff.inHours * -1} hours ago";
   } else if (diff.inDays < -7) {
-    final month = findMonth(dateTime.month.toString());
-    return "${dateTime.day} $month";
+    return DateFormat.MMMd().format(dateTime);
   } else {
     return "${diff.inDays * -1} days ago";
   }
-}
-
-String findMonth(String month) {
-  if (month == "1") {
-    return "Jan";
-  } else if (month == "2") {
-    return "Feb";
-  } else if (month == "3") {
-    return "Mar";
-  } else if (month == "4") {
-    return "Apr";
-  } else if (month == "5") {
-    return "May";
-  } else if (month == "6") {
-    return "Jun";
-  } else if (month == "7") {
-    return "Jul";
-  } else if (month == "8") {
-    return "Aug";
-  } else if (month == "9") {
-    return "Sep";
-  } else if (month == "10") {
-    return "Octr";
-  } else if (month == "11") {
-    return "Nov";
-  }
-  return "Dec";
 }
 
 Participant findMy1to1chatUser(MyChatList data) {
@@ -134,11 +107,7 @@ Future<void> buildLikedUsersBottomSheet(String imageId) async {
   );
   final userList = data!.map((e) => e.owner!).toList();
   Get.back();
-  Get.bottomSheet(
-    UsersListView(
-      userList: userList,
-    ),
-  );
+  Get.bottomSheet(UsersListView(userList: userList));
 }
 
 Owner getUserDatAsOwnerModel() {
@@ -148,20 +117,4 @@ Owner getUserDatAsOwnerModel() {
   _owner.id = currentUser.id;
   _owner.username = currentUser.username;
   return _owner;
-}
-
-void connectSocket() {
-  final currentUser = Boxes.getCurrentUser();
-  const path = '/api/v1/chats/socket.io';
-  chatController.socket = io(prodUrl, <String, dynamic>{
-    "path": path,
-    'transports': ['websocket'],
-    "auth": {"token": currentUser.token}
-  });
-  chatController.socket.connect();
-  chatController.socket
-      .onConnect((data) => print('connected ${chatController.socket.id}'));
-  chatController.socket.onDisconnect((data) => print('disconnected'));
-  chatController.socket.onError((data) => print('error : $data'));
-  chatController.socket.on("message", (value) => print(value));
 }
