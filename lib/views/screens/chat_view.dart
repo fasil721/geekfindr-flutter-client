@@ -382,10 +382,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 }
 
-// ignore: must_be_immutable
 class ChatDetailPageAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  ChatDetailPageAppBar({
+  const ChatDetailPageAppBar({
     required this.item,
     required this.height,
     required this.width,
@@ -395,11 +394,9 @@ class ChatDetailPageAppBar extends StatelessWidget
   final double height;
   final double width;
   final double textFactor;
-  late List<Participant> userList;
 
   @override
   Widget build(BuildContext context) {
-    userList = item.participants!.map((e) => e).toList();
     final user = findMy1to1chatUser(item);
     final isRoom = item.isRoom!;
     final width = MediaQuery.of(context).size.width;
@@ -470,6 +467,7 @@ class ChatDetailPageAppBar extends StatelessWidget
 
   void usersDialoge(BuildContext context) {
     bool isCreating = false;
+    final userList = item.participants!.map((e) => e).toList();
     Get.dialog(
       GetBuilder<ChatController>(
         id: "roomInfo",
@@ -531,7 +529,7 @@ class ChatDetailPageAppBar extends StatelessWidget
                       ),
                       Visibility(
                         visible: isCreating,
-                        child: buildSearchDialoge(context),
+                        child: buildSearchDialoge(context, userList),
                       ),
                       Expanded(
                         child: ListView.builder(
@@ -581,7 +579,7 @@ class ChatDetailPageAppBar extends StatelessWidget
     );
   }
 
-  Widget buildSearchDialoge(BuildContext context) {
+  Widget buildSearchDialoge(BuildContext context, List<Participant> usersList) {
     final currentUser = Boxes.getCurrentUser();
     final searchController = TextEditingController();
     bool istexting = false;
@@ -699,13 +697,11 @@ class ChatDetailPageAppBar extends StatelessWidget
             participan.id = user.id;
             participan.username = user.username;
             istexting = false;
-            userList.add(participan);
+            item.participants!.add(participan);
+            usersList.add(participan);
             controller.update(["roomInfo"]);
             searchController.clear();
-            final a = await chatServices.addMemberToRoom(
-              memberId: user.id!,
-              convId: item.id!,
-            );
+            chatServices.addMemberToRoom(memberId: user.id!, convId: item.id!);
           },
         ),
       ),

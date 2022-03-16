@@ -198,8 +198,7 @@ class ChatServices {
     required String convId,
   }) async {
     final currentUser = Boxes.getCurrentUser();
-    final url =
-        "$prodUrl/api/v1/chats/api/v1/chats/conversations/$convId/participants";
+    final url = "$prodUrl/api/v1/chats/conversations/$convId/participants";
     final body = {
       "memberId": memberId,
     };
@@ -214,6 +213,7 @@ class ChatServices {
       );
       print(response.statusCode);
       if (response.statusCode == 200) {
+        chatController.update(["chatPage"]);
       } else if (response.statusCode == 422 || response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
         final err = ErrorModel.fromJson(errorJson.cast());

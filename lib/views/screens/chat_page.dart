@@ -88,7 +88,7 @@ class _ChatPageState extends State<ChatPage> {
     if (isEmpty) {
       selectedMembers.add(user);
       searchController2.clear();
-      chatController.update(["selected"]);
+      chatController.update(["selected"]);  
     } else {
       Fluttertoast.showToast(msg: "You already added");
     }
