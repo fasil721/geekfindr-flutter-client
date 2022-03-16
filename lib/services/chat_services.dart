@@ -199,9 +199,7 @@ class ChatServices {
   }) async {
     final currentUser = Boxes.getCurrentUser();
     final url = "$prodUrl/api/v1/chats/conversations/$convId/participants";
-    final body = {
-      "memberId": memberId,
-    };
+    final body = {"memberId": memberId};
     try {
       final response = await http.patch(
         Uri.parse(url),

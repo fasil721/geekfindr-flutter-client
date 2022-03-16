@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/main.dart';
 import 'package:geek_findr/database/box_instance.dart';
-import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/database/user_model.dart';
+import 'package:geek_findr/main.dart';
+import 'package:geek_findr/models/error_model.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,6 @@ class AuthServices {
             Map<String, String>.from(json.decode(response.body) as Map);
         final user = UserModel.fromJson(jsonData);
         await box.put("user", user);
-
         final pref = await SharedPreferences.getInstance();
         await pref.setBool("user", true);
         await Get.offAll(() => const MyApp());

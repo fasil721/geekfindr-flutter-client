@@ -99,6 +99,7 @@ class ProfileServices {
               ),
             )
             .toList();
+        userData.removeWhere((element) => element.id == currentUser.id);
         return userData;
       } else if (response.statusCode == 422) {
         final errorJson = json.decode(response.body) as Map;

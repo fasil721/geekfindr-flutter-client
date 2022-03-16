@@ -78,68 +78,64 @@ class _UsersListViewState extends State<UsersListView> {
             ),
             SizedBox(height: height * 0.01),
             _buildSearchInput(textFactor, height),
+            SizedBox(height: height * 0.02),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 20,
-                ),
-                child: GetBuilder<ProfileController>(
-                  id: "searching",
-                  builder: (controller) {
-                    final results = searchUser();
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: results.length,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            Get.back();
-                            Get.back();
-                            Get.to(
-                              () =>
-                                  OtherUserProfile(userId: results[index].id!),
-                            );
-                            searchController.clear();
-                          },
-                          child: Row(
-                            children: [
-                              buildCircleGravatar(
-                                results[index].avatar!,
-                                width * 0.09,
-                              ),
-                              SizedBox(width: width * 0.05),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    results[index].username!,
+              child: GetBuilder<ProfileController>(
+                id: "searching",
+                builder: (controller) {
+                  final results = searchUser();
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: results.length,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Get.back();
+                          Get.back();
+                          Get.to(
+                            () => OtherUserProfile(userId: results[index].id!),
+                          );
+                          searchController.clear();
+                        },
+                        child: Row(
+                          children: [
+                            buildCircleGravatar(
+                              results[index].avatar!,
+                              width * 0.09,
+                            ),
+                            SizedBox(width: width * 0.05),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  results[index].username!,
+                                  style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: textFactor * 17,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: results[index].role!.isNotEmpty,
+                                  child: Text(
+                                    results[index].role!,
                                     style: GoogleFonts.roboto(
+                                      color: grey,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: textFactor * 17,
+                                      fontSize: textFactor * 13,
                                     ),
                                   ),
-                                  Visibility(
-                                    visible: results[index].role!.isNotEmpty,
-                                    child: Text(
-                                      results[index].role!,
-                                      style: GoogleFonts.roboto(
-                                        color: grey,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: textFactor * 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          SizedBox(height: height * 0.02),
-                    );
-                  },
-                ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        SizedBox(height: height * 0.02),
+                  );
+                },
               ),
             ),
           ],

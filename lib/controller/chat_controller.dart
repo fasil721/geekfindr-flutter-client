@@ -8,14 +8,24 @@ class ChatController extends GetxController {
 
   void connectSocket() {
     final currentUser = Boxes.getCurrentUser();
+    print(currentUser.email);
     const path = '/api/v1/chats/socket.io';
     socket = io.io(prodUrl, <String, dynamic>{
       "path": path,
       'transports': ['websocket'],
-      "auth": {"token": currentUser.token}
+      "auth": {"token": currentUser.token},
+      'autoConnect': false,
     });
     socket.connect();
-    socket.onConnect((data) => print('connected ${socket.id}'));
+    socket.onConnect((data) {
+      print('connected ${socket.id}');
+      final auth = Map<String, String>.from(socket.auth as Map);
+      print(auth["token"] == currentUser.token);
+      // if (auth["token"] != currentUser.token) {
+      //   // socket.disconnect().connect();
+      //   controller.update(["home"]);
+      // }
+    });
     socket.onDisconnect((data) => print('disconnected'));
     socket.onError((data) => print('error : $data'));
     socket.on("message", (value) => print(value));

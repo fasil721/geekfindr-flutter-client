@@ -107,6 +107,7 @@ class ListenMessage {
     this.message,
     this.userId,
     this.time,
+    this.convId,
   });
 
   String? message;
@@ -117,6 +118,7 @@ class ListenMessage {
   factory ListenMessage.fromJson(Map<String, dynamic> json) => ListenMessage(
         message: json["message"] as String,
         userId: json["userId"] as String,
+        convId: json["conversationId"] as String,
         time: DateTime.parse(json["time"] as String),
       );
 }

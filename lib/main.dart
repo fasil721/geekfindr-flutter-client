@@ -63,6 +63,7 @@ class _MyAppState extends State<MyApp> {
     chatController.connectSocket();
     super.initState();
   }
+
   @override
   void dispose() {
     chatController.socket.disconnect();
@@ -86,7 +87,7 @@ class _MyAppState extends State<MyApp> {
             children: screens,
           ),
           bottomNavigationBar: SalomonBottomBar(
-            curve: Curves.ease,
+            curve: Curves.easeOut,
             unselectedItemColor: const Color(0xffB954FE),
             duration: const Duration(milliseconds: 300),
             margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
@@ -100,16 +101,12 @@ class _MyAppState extends State<MyApp> {
             items: [
               SalomonBottomBarItem(
                 selectedColor: primaryColor,
-                icon: const ImageIcon(
-                  AssetImage("assets/icons/home.png"),
-                ),
+                icon: const ImageIcon(AssetImage("assets/icons/home.png")),
                 title: const Text('Home'),
               ),
               SalomonBottomBarItem(
                 selectedColor: primaryColor,
-                icon: const ImageIcon(
-                  AssetImage("assets/icons/idea.png"),
-                ),
+                icon: const ImageIcon(AssetImage("assets/icons/idea.png")),
                 title: const Text('Projects'),
               ),
               SalomonBottomBarItem(

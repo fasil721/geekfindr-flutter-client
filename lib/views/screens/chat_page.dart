@@ -88,7 +88,7 @@ class _ChatPageState extends State<ChatPage> {
     if (isEmpty) {
       selectedMembers.add(user);
       searchController2.clear();
-      chatController.update(["selected"]);  
+      chatController.update(["selected"]);
     } else {
       Fluttertoast.showToast(msg: "You already added");
     }
@@ -674,6 +674,7 @@ class _ChatPageState extends State<ChatPage> {
             }
             return const SizedBox();
           },
+          loadingBuilder: (context) => const SizedBox(),
           noItemsFoundBuilder: (context) => SizedBox(
             height: 60,
             child: Center(

@@ -43,20 +43,23 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   void listenMessages() {
+    print("value");
     final currentUser = Boxes.getCurrentUser();
     chatController.socket.on("message", (value) {
       final data = ListenMessage.fromJson(
         Map<String, dynamic>.from(value as Map),
       );
-      final isSentByMe = data.userId == currentUser.id;
-      final _messege = Message(
-        userId: data.userId!,
-        text: data.message!,
-        date: data.time!.toLocal(),
-        isSentByMe: isSentByMe,
-      );
-      messeges.add(_messege);
-      chatController.update(["messeges"]);
+      if (data.convId == widget.item.id) {
+        final isSentByMe = data.userId == currentUser.id;
+        final _messege = Message(
+          userId: data.userId!,
+          text: data.message!,
+          date: data.time!.toLocal(),
+          isSentByMe: isSentByMe,
+        );
+        messeges.add(_messege);
+        chatController.update(["messeges"]);
+      }
     });
   }
 
@@ -117,10 +120,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-    if (messeges.isNotEmpty) {
-      print(messeges.last.text);
-      print(messeges.length);
-    }
+    // if (messeges.isNotEmpty) {
+    //   print(messeges.last.text);
+    //   print(messeges.length);
+    // }
     return Scaffold(
       backgroundColor: secondaryColor,
       appBar: ChatDetailPageAppBar(
