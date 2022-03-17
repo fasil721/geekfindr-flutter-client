@@ -46,8 +46,8 @@ class ChatServices {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+    // } catch (e) {
+    //   Fluttertoast.showToast(msg: e.toString());
     }
     return null;
   }
@@ -94,8 +94,8 @@ class ChatServices {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+    // } catch (e) {
+    //   Fluttertoast.showToast(msg: e.toString());
     }
     return null;
   }

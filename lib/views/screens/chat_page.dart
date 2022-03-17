@@ -11,6 +11,7 @@ import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/views/screens/chat_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ChatPage extends StatefulWidget {
@@ -27,16 +28,16 @@ class _ChatPageState extends State<ChatPage> {
   bool istexting = false;
   late double height;
   late double width;
-  List<MyChatList> datas = [];
   List<MyChatList> results = [];
   List<UserDetials> selectedMembers = [];
 
   void searchUser(List<MyChatList> datas) {
     final currentUser = Boxes.getCurrentUser();
+    List<MyChatList> lists = [];
     if (searchController1.text.isEmpty) {
-      results = datas.toList();
+      lists = datas.toList();
     } else {
-      results = [];
+      //  results = [];
       for (final i in datas) {
         final isRoom = i.isRoom == true;
         if (isRoom) {
@@ -44,7 +45,7 @@ class _ChatPageState extends State<ChatPage> {
                 searchController1.text.toLowerCase(),
               );
           if (s) {
-            results.add(i);
+            lists.add(i);
           }
         } else {
           for (final j in i.participants!) {
@@ -53,20 +54,29 @@ class _ChatPageState extends State<ChatPage> {
                     searchController1.text.toLowerCase(),
                   );
               if (s) {
-                results.add(i);
+                lists.add(i);
               }
             }
           }
         }
       }
     }
+    lists.sort((a, b) {
+      if (a.lastMessage != null && b.lastMessage != null) {
+        return a.lastMessage!.createdAt!.compareTo(b.lastMessage!.createdAt!);
+      }
+      return datas.length - 1;
+    });
+    print(lists.map((e) => e.roomName));
+    results = lists.reversed.toList();
   }
 
   bool checkUserExistInMyChat(String userId) {
     final currentUser = Boxes.getCurrentUser();
     final List<Participant> chatUsers = [];
-    final my1to1List =
-        datas.where((element) => element.isRoom == false).toList();
+    final my1to1List = chatController.myChatList
+        .where((element) => element.isRoom == false)
+        .toList();
 
     for (final e in my1to1List) {
       final user = e.participants!
@@ -95,10 +105,17 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
+  void initState() {
+    chatController.fetchMyChats();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
+
     return Scaffold(
       body: SafeArea(
         child: GetBuilder<ChatController>(
@@ -160,31 +177,28 @@ class _ChatPageState extends State<ChatPage> {
               buildSearchField(),
               SizedBox(height: height * 0.02),
               Expanded(
-                child: FutureBuilder<List<MyChatList>?>(
-                  future: chatServices.getMyChats(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return _buildLoadingScreen();
-                    }
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.data != null) {
-                        datas = snapshot.data!;
-                        return GetBuilder<ChatController>(
-                          id: "chatList",
-                          builder: (controller) {
-                            searchUser(datas);
-                            return ListView.builder(
-                              itemCount: results.length,
-                              shrinkWrap: true,
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (BuildContext context, int index) =>
-                                  buildUsersTile(results[index]),
-                            );
-                          },
-                        );
-                      }
-                    }
-                    return const SizedBox();
+                child: GetBuilder<ChatController>(
+                  id: "chatList",
+                  builder: (controller) {
+                    searchUser(chatController.myChatList);
+
+                    return chatController.isMyChatListLoading
+                        ? _buildLoadingScreen()
+                        : results.isNotEmpty
+                            ? ListView.builder(
+                                itemCount: results.length,
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder:
+                                    (BuildContext context, int index) =>
+                                        buildUsersTile(results[index]),
+                              )
+                            : Center(
+                                child: Text(
+                                  "0 Chat users",
+                                  style: GoogleFonts.roboto(),
+                                ),
+                              );
                   },
                 ),
               ),
@@ -222,13 +236,20 @@ class _ChatPageState extends State<ChatPage> {
   Widget buildUsersTile(MyChatList item) {
     final isRoom = item.isRoom!;
     final user = findMy1to1chatUser(item);
+    String lastMessage = '';
+    String lastMessageTime = '';
+    if (item.lastMessage != null) {
+      lastMessage = item.lastMessage!.message!;
+      lastMessageTime =
+          DateFormat.jm().format(item.lastMessage!.createdAt!.toLocal());
+    }
     return InkWell(
-      onTap: () {
+      onTap: () async {
         FocusScope.of(context).unfocus();
+        await Get.to(() => ChatDetailPage(item: item));
         istexting = false;
         searchController1.clear();
         chatController.update(["search"]);
-        Get.to(() => ChatDetailPage(item: item));
       },
       child: Ink(
         child: Padding(
@@ -290,13 +311,16 @@ class _ChatPageState extends State<ChatPage> {
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                            // Text(
-                            //   isRoom ? items[index].roomName! : user.username!,
-                            //   style: GoogleFonts.roboto(
-                            //     fontSize: 14,
-                            //     color: Colors.grey.shade500,
-                            //   ),
-                            // ),
+                            Visibility(
+                              visible: lastMessage.isNotEmpty,
+                              child: Text(
+                                lastMessage,
+                                style: GoogleFonts.roboto(
+                                  fontSize: 14,
+                                  color: Colors.grey.shade500,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -304,9 +328,9 @@ class _ChatPageState extends State<ChatPage> {
                   ],
                 ),
               ),
-              const Text(
-                "Now",
-                style: TextStyle(
+              Text(
+                lastMessageTime,
+                style: GoogleFonts.roboto(
                   fontSize: 12,
                   color: primaryColor,
                 ),
@@ -500,7 +524,8 @@ class _ChatPageState extends State<ChatPage> {
                               );
                               if (data != null) {
                                 Get.to(() => ChatDetailPage(item: data));
-                                chatController.update(["chatPage"]);
+                                chatController.myChatList.add(data);
+                                controller.update(["chatList"]);
                               } else {
                                 Fluttertoast.showToast(
                                   msg: "This room already exists",
@@ -697,9 +722,10 @@ class _ChatPageState extends State<ChatPage> {
               istexting = false;
               final data =
                   await chatServices.create1to1Conversation(userId: user!.id!);
-              Get.to(() => ChatDetailPage(item: data!));
+              await Get.to(() => ChatDetailPage(item: data!));
+              chatController.myChatList.add(data!);
             }
-            controller.update(["search2"]);
+            controller.update(["chatList"]);
           },
         ),
       ),
