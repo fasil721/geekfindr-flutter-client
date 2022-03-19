@@ -3,6 +3,8 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/database/chat_model.dart';
+import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
@@ -37,18 +39,19 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     fetchMesseges();
     findParticipants();
     listenMessages();
-    super.initState();
     scrollcontroller.addListener(listenScrolling);
+    chatController.currentChating = widget.item.id!;
+    super.initState();
   }
 
   @override
   void dispose() {
-    chatController.fetchMyChats();
+    chatController.markAsRead(widget.item);
+    chatController.currentChating = '';
     super.dispose();
   }
 
   void listenMessages() {
-    print("value");
     final currentUser = Boxes.getCurrentUser();
     chatController.socket.on("message", (value) {
       final data = ListenMessage.fromJson(
@@ -112,6 +115,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
     isLoading = false;
     chatController.update(["messeges"]);
+    final a = BoxChat.getMychats();
+    print(a!.map((e) => e.unreadMessageList!.length));
   }
 
   void findParticipants() {

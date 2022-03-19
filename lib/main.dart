@@ -7,6 +7,9 @@ import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
+import 'package:geek_findr/database/chat_model.dart';
+import 'package:geek_findr/database/lastmessge_model.dart';
+import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/database/user_model.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/screens/chat_page.dart';
@@ -17,28 +20,30 @@ import 'package:geek_findr/views/screens/project_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GestureBinding.instance?.resamplingEnabled = true;
-  await Hive.initFlutter();
-  Hive.registerAdapter(UserModelAdapter());
-  await Hive.openBox<UserModel>('usermodel');
-  final pref = await SharedPreferences.getInstance();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserModelAdapter());
+  await Hive.openBox<UserModel>('usermodel');
+  Hive.registerAdapter(MyChatListAdapter());
+  Hive.registerAdapter(ParticipantAdapter());
+  Hive.registerAdapter(LastMessageAdapter());
+  await Hive.openBox<List<MyChatList>>('chatmodel');
+  final pref = await SharedPreferences.getInstance();
   final isLoggedIn = pref.getBool("user");
   Get.put(AppController());
   Get.put(PostsController());
   Get.put(ChatController());
   Get.put(ProfileController());
   final mobileTheme = SchedulerBinding.instance!.window.platformBrightness;
-
   runApp(
     GetMaterialApp(
       home:

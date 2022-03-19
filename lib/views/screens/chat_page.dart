@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
@@ -13,6 +14,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../database/chat_model.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -106,7 +109,6 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     chatController.fetchMyChats();
-    // chatController.unreadMessageSetup();
     super.initState();
   }
 
@@ -320,7 +322,9 @@ class _ChatPageState extends State<ChatPage> {
                                 lastMessage,
                                 style: GoogleFonts.roboto(
                                   fontSize: 14,
-                                  color: Colors.grey.shade500,
+                                  color: item.unreadMessageList!.isNotEmpty
+                                      ? black
+                                      : Colors.grey.shade500,
                                 ),
                               ),
                             ),

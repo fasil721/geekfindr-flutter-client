@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/database/chat_model.dart';
+import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/views/components/users_list_bottomsheet.dart';

@@ -1,7 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/database/chat_model.dart';
+import 'package:geek_findr/database/lastmessge_model.dart';
 import 'package:geek_findr/models/chat_models.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -11,6 +14,8 @@ class ChatController extends GetxController {
   List<MyChatList>? myChatList = [];
   List<MyChatList> results = [];
   bool isMyChatListLoading = true;
+  String currentChating = "";
+  final _box = BoxChat.getInstance();
 
   void connectSocket() {
     final currentUser = Boxes.getCurrentUser();
@@ -37,23 +42,35 @@ class ChatController extends GetxController {
     socket.onDisconnect((data) => print('disconnected'));
     socket.onError((data) => print('error : $data'));
     socket.on("message", (value) {
-      print(value);
       final data = ListenMessage.fromJson(
         Map<String, dynamic>.from(value as Map),
       );
-      for (int i = 0; i < results.length; i++) {
-        if (results[i].id == data.convId) {
-          final lastmessage = LastMessage();
-          lastmessage.conversationId = data.convId;
-          lastmessage.createdAt = data.time;
-          lastmessage.senderId = data.userId;
-          lastmessage.message = data.message;
-          results[i].lastMessage = lastmessage;
-          results[i].unreadMessageList!.add(lastmessage);
+      if (currentChating.isEmpty || currentChating != data.convId) {
+        print(value);
+        if (myChatList != null) {
+          for (int i = 0; i < myChatList!.length; i++) {
+            if (myChatList![i].id == data.convId) {
+              final lastmessage = LastMessage(
+                conversationId: data.convId,
+                createdAt: data.time,
+                senderId: data.userId,
+                message: data.message,
+              );
+              myChatList![i].lastMessage = lastmessage;
+              myChatList![i].unreadMessageList!.add(lastmessage);
+            }
+            _box.put("chats", myChatList!);
+          }
         }
+        update(["chatList", "navCount"]);
       }
-      update(["chatList", "navCount"]);
     });
+  }
+
+  Future<void> updateChatDB() async {
+    final box = BoxChat.getInstance();
+    final chats = await chatServices.getMyChats();
+    await box.put("chats", chats!);
   }
 
   Future<void> fetchMyChats() async {
@@ -72,10 +89,11 @@ class ChatController extends GetxController {
     return count;
   }
 
-  // void unreadMessageSetup() {
-  //   chatController.unreadMessageList = [];
-  //   for (int i = 0; i < results.length; i++) {
-  //     chatController.unreadMessageList.add([]);
-  //   }
-  // }
+  void markAsRead(MyChatList item) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      final index = results.indexOf(item);
+      results[index].unreadMessageList = [];
+      update(["chatList", "navCount"]);
+    });
+  }
 }

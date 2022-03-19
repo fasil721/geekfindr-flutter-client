@@ -4,6 +4,8 @@ import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/database/chat_model.dart';
+import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/post_models.dart';

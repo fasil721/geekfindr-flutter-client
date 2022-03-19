@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/models/error_model.dart';
-import 'package:geek_findr/models/project_model_classes.dart';
+import 'package:geek_findr/models/project_models.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
