@@ -24,11 +24,11 @@ class _ChatPageState extends State<ChatPage> {
   final searchController1 = TextEditingController();
   final searchController2 = TextEditingController();
   final titleTextController = TextEditingController();
+
   late double textFactor;
   bool istexting = false;
   late double height;
   late double width;
-  List<MyChatList> results = [];
   List<UserDetials> selectedMembers = [];
 
   void searchUser(List<MyChatList> datas) {
@@ -67,14 +67,13 @@ class _ChatPageState extends State<ChatPage> {
       }
       return datas.length - 1;
     });
-    print(lists.map((e) => e.roomName));
-    results = lists.reversed.toList();
+    chatController.results = lists.reversed.toList();
   }
 
   bool checkUserExistInMyChat(String userId) {
     final currentUser = Boxes.getCurrentUser();
     final List<Participant> chatUsers = [];
-    final my1to1List = chatController.myChatList
+    final my1to1List = chatController.myChatList!
         .where((element) => element.isRoom == false)
         .toList();
 
@@ -107,6 +106,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     chatController.fetchMyChats();
+    // chatController.unreadMessageSetup();
     super.initState();
   }
 
@@ -180,18 +180,22 @@ class _ChatPageState extends State<ChatPage> {
                 child: GetBuilder<ChatController>(
                   id: "chatList",
                   builder: (controller) {
-                    searchUser(chatController.myChatList);
+                    searchUser(chatController.myChatList!);
 
                     return chatController.isMyChatListLoading
                         ? _buildLoadingScreen()
-                        : results.isNotEmpty
+                        : chatController.results.isNotEmpty
                             ? ListView.builder(
-                                itemCount: results.length,
+                                itemCount: chatController.results.length,
                                 shrinkWrap: true,
                                 physics: const BouncingScrollPhysics(),
-                                itemBuilder:
-                                    (BuildContext context, int index) =>
-                                        buildUsersTile(results[index]),
+                                itemBuilder: (
+                                  BuildContext context,
+                                  int index,
+                                ) =>
+                                    buildUsersTile(
+                                  chatController.results[index],
+                                ),
                               )
                             : Center(
                                 child: Text(
@@ -243,6 +247,7 @@ class _ChatPageState extends State<ChatPage> {
       lastMessageTime =
           DateFormat.jm().format(item.lastMessage!.createdAt!.toLocal());
     }
+
     return InkWell(
       onTap: () async {
         FocusScope.of(context).unfocus();
@@ -293,9 +298,7 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                         ),
                       ),
-                    SizedBox(
-                      width: width * 0.03,
-                    ),
+                    SizedBox(width: width * 0.03),
                     Expanded(
                       child: Container(
                         color: Colors.transparent,
@@ -328,12 +331,35 @@ class _ChatPageState extends State<ChatPage> {
                   ],
                 ),
               ),
-              Text(
-                lastMessageTime,
-                style: GoogleFonts.roboto(
-                  fontSize: 12,
-                  color: primaryColor,
-                ),
+              Row(
+                children: [
+                  Visibility(
+                    visible: item.unreadMessageList != null &&
+                        item.unreadMessageList!.isNotEmpty,
+                    child: CircleAvatar(
+                      backgroundColor: primaryColor,
+                      radius: 10,
+                      child: Text(
+                        '${item.unreadMessageList!.length}',
+                        style: GoogleFonts.roboto(
+                          fontSize: 13,
+                          color: white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    lastMessageTime,
+                    style: GoogleFonts.roboto(
+                      fontSize: 11,
+                      color: black,
+                      fontWeight: FontWeight.w600,
+                      // letterSpacing: 0.8,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -524,7 +550,7 @@ class _ChatPageState extends State<ChatPage> {
                               );
                               if (data != null) {
                                 Get.to(() => ChatDetailPage(item: data));
-                                chatController.myChatList.add(data);
+                                chatController.myChatList!.add(data);
                                 controller.update(["chatList"]);
                               } else {
                                 Fluttertoast.showToast(
@@ -723,7 +749,7 @@ class _ChatPageState extends State<ChatPage> {
               final data =
                   await chatServices.create1to1Conversation(userId: user!.id!);
               await Get.to(() => ChatDetailPage(item: data!));
-              chatController.myChatList.add(data!);
+              chatController.myChatList!.add(data!);
             }
             controller.update(["chatList"]);
           },

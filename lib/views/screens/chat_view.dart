@@ -185,13 +185,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                                         child: Card(
                                           color: primaryColor,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(5),
+                                            padding: const EdgeInsets.all(3),
                                             child: Text(
                                               text,
                                               style: GoogleFonts.roboto(
                                                 color: white,
-                                                fontSize: textFactor * 13,
-                                                letterSpacing: 1.2,
+                                                fontSize: textFactor * 12,
+                                                letterSpacing: 1,
                                               ),
                                             ),
                                           ),
@@ -356,13 +356,32 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     top: 5,
                     bottom: 5,
                   ),
-                  child: Text(
-                    "${message.text}            ",
-                    style: GoogleFonts.roboto(
-                      fontSize: textFactor * 14,
-                      letterSpacing: 1,
-                      fontWeight: FontWeight.w600,
-                      color: !isSentByMe ? Colors.white : Colors.grey[800],
+                  child: RichText(
+                    text: TextSpan(
+                      style: DefaultTextStyle.of(context).style,
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: message.text,
+                          style: GoogleFonts.roboto(
+                            fontSize: textFactor * 14,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.none,
+                            color:
+                                !isSentByMe ? Colors.white : Colors.grey[800],
+                          ),
+                        ),
+                        TextSpan(
+                          text: "...........",
+                          style: GoogleFonts.roboto(
+                            fontSize: textFactor * 14,
+                            letterSpacing: 1,
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.none,
+                            color: isSentByMe ? Colors.white : primaryColor,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

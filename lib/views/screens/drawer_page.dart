@@ -24,6 +24,9 @@ class DrawerPage extends StatelessWidget {
               await Future.delayed(const Duration(milliseconds: 2000));
               await box.delete("user");
               chatController.socket.disconnect();
+              // chatController.socket.close();
+              // chatController.socket.dispose();
+              // chatController.socket.clearListeners();
             },
             leading: const Icon(Icons.settings),
             title: const Text('Logout '),

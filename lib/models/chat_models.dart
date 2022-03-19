@@ -7,6 +7,7 @@ class MyChatList {
     this.updatedAt,
     this.id,
     this.lastMessage,
+    this.unreadMessageList,
   });
 
   List<Participant>? participants;
@@ -16,6 +17,8 @@ class MyChatList {
   DateTime? updatedAt;
   String? id;
   LastMessage? lastMessage;
+  List<LastMessage>? unreadMessageList;
+
   factory MyChatList.fromJson(Map<String, dynamic> json) => MyChatList(
         participants: List<Participant>.from(
           (json["participants"] as List).map(
@@ -32,6 +35,7 @@ class MyChatList {
                 Map<String, dynamic>.from(json["lastMessage"] as Map),
               ),
         id: json["id"] as String,
+        unreadMessageList: [],
       );
 }
 
@@ -65,21 +69,18 @@ class LastMessage {
     this.message,
     this.conversationId,
     this.createdAt,
-    this.updatedAt,
   });
 
   String? senderId;
   String? message;
   String? conversationId;
   DateTime? createdAt;
-  DateTime? updatedAt;
 
   factory LastMessage.fromJson(Map<String, dynamic> json) => LastMessage(
         senderId: json["senderId"] as String,
         message: json["message"] as String,
         conversationId: json["conversationId"] as String,
         createdAt: DateTime.parse(json["createdAt"] as String),
-        updatedAt: DateTime.parse(json["updatedAt"] as String),
       );
 }
 

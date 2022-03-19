@@ -15,6 +15,7 @@ import 'package:geek_findr/views/screens/login_page.dart';
 import 'package:geek_findr/views/screens/profile_page.dart';
 import 'package:geek_findr/views/screens/project_page.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -111,7 +112,38 @@ class _MyAppState extends State<MyApp> {
               ),
               SalomonBottomBarItem(
                 selectedColor: primaryColor.withOpacity(0.8),
-                icon: const ImageIcon(AssetImage("assets/icons/chat.png")),
+                icon: Stack(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(3.0),
+                      child: ImageIcon(AssetImage("assets/icons/chat.png")),
+                    ),
+                    GetBuilder<ChatController>(
+                      id: 'navCount',
+                      builder: (controller) {
+                        final count = controller.findUnreadNotificationCount();
+                        return Visibility(
+                          visible: count > 0,
+                          child: Positioned(
+                            right: 0,
+                            child: CircleAvatar(
+                              backgroundColor: primaryColor,
+                              radius: 6,
+                              child: Text(
+                                count.toString(),
+                                style: GoogleFonts.roboto(
+                                  fontSize: 9,
+                                  color: white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
                 title: const Text('Chats'),
               ),
               SalomonBottomBarItem(
