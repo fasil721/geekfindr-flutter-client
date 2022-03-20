@@ -48,21 +48,19 @@ class NotificationService {
           'Main Channel',
           sound: RawResourceAndroidNotificationSound(sound.split(".").first),
           channelDescription: 'your channel description',
-          importance: Importance.max,
+          importance: Importance.high,
           // playSound: false,
-          priority: Priority.max,
+          priority: Priority.high,
           largeIcon: FilePathAndroidBitmap(localIconPath),
           // styleInformation: styleInformation,
           icon: '@mipmap/ic_launcher',
         ),
-        iOS: const IOSNotificationDetails(),
+        iOS: const IOSNotificationDetails(), 
       ),
       payload: "fasil",
     );
   }
-
- 
-}
+} 
 
 // ignore: avoid_classes_with_only_static_members
 class Utils {

@@ -38,7 +38,7 @@ Future<void> main() async {
   Hive.registerAdapter(MyChatListAdapter());
   Hive.registerAdapter(ParticipantAdapter());
   Hive.registerAdapter(LastMessageAdapter());
-  final box = await Hive.openBox<List<MyChatList>>('chatmodel');
+  final box = await Hive.openBox('chatmodel');
   if (box.keys.isEmpty) {
     box.put("chats", []);
   }
@@ -72,6 +72,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     chatController.connectSocket();
+    chatController.updateChatDB();
     super.initState();
   }
 

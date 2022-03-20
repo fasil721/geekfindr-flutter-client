@@ -81,8 +81,18 @@ class ChatController extends GetxController {
 
   Future<void> updateChatDB() async {
     final box = BoxChat.getInstance();
-    final chats = await chatServices.getMyChats();
-    await box.put("chats", chats!);
+    final dbDatas = BoxChat.getMyChatDBdatas();
+    print(dbDatas.length);
+    final datas = await chatServices.getMyChats();
+    // print(datas!.length);
+    for (final i in datas!) {
+      final isEmpty = dbDatas.where((element) => element.id == i.id).isEmpty;
+      if (isEmpty) {
+        dbDatas.add(i);
+      }
+    }
+    await box.put("chats", dbDatas);
+    update(["chatList"]);
   }
 
   Future<void> fetchMyChats() async {

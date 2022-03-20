@@ -122,13 +122,17 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final currentUser = Boxes.getCurrentUser();
-          NotificationService().showNotification(
-            1,
-            currentUser.username!,
-            "hello",
-            currentUser.avatar!,
-          );
+          // final currentUser = Boxes.getCurrentUser();
+          // NotificationService().showNotification(
+          //   1,
+          //   currentUser.username!,
+          //   "hello",
+          //   currentUser.avatar!,
+          // );
+          //  final dbDatas = BoxChat.getMychats();
+          //           searchUser(dbDatas!);
+          final a = BoxChat.getMyChatDBdatas();
+          print(a.map((e) => e.roomName));
         },
       ),
       body: SafeArea(
@@ -194,8 +198,7 @@ class _ChatPageState extends State<ChatPage> {
                 child: GetBuilder<ChatController>(
                   id: "chatList",
                   builder: (controller) {
-                    searchUser(chatController.myChatList!);
-
+                    searchUser(BoxChat.getMyChatDBdatas()); 
                     return chatController.isMyChatListLoading
                         ? _buildLoadingScreen()
                         : chatController.results.isNotEmpty

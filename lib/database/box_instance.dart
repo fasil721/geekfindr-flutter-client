@@ -11,7 +11,14 @@ class Boxes {
 }
 
 class BoxChat {
-  static final box = Hive.box<List<MyChatList>>('chatmodel');
-  static Box<List<MyChatList>> getInstance() => box;
-  static List<MyChatList>? getMychats() => box.get("chats");
+  static final box = Hive.box('chatmodel');
+  static Box getInstance() => box;
+  static List<MyChatList> getMyChatDBdatas() {
+    final List<MyChatList> chats = [];
+    final values = box.get('chats');
+    for (final item in values!) {
+      chats.add(item as MyChatList);
+    }
+    return chats;
+  }
 }
