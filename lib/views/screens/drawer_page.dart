@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
+import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/views/screens/login_page.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerPage extends StatelessWidget {
@@ -19,14 +22,13 @@ class DrawerPage extends StatelessWidget {
             onTap: () async {
               final pref = await SharedPreferences.getInstance();
               pref.setBool("user", false);
-              await Future.delayed(const Duration(milliseconds: 500));
-              await Get.offAll(() => const LoginPage());
-              await Future.delayed(const Duration(milliseconds: 2000));
+              final _box = BoxChat.getInstance();
+              await _box.clear();
               await box.delete("user");
+              chatController.myChatList = [];
               chatController.socket.disconnect();
-              // chatController.socket.close();
-              // chatController.socket.dispose();
-              // chatController.socket.clearListeners();
+              await Future.delayed(const Duration(milliseconds: 500));
+              Get.offAll(() => const LoginPage());
             },
             leading: const Icon(Icons.settings),
             title: const Text('Logout '),

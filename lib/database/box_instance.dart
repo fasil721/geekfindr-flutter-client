@@ -5,20 +5,13 @@ import 'package:geek_findr/database/user_model.dart';
 import 'package:hive/hive.dart';
 
 class Boxes {
-  static final box = Hive.box<UserModel>('usermodel');
-  static Box<UserModel> getInstance() => box;
-  static UserModel getCurrentUser() => box.get("user")!;
+  static final _box = Hive.box<UserModel>('usermodel');
+  static Box<UserModel> getInstance() => _box;
+  static UserModel getCurrentUser() => _box.get("user")!;
 }
 
 class BoxChat {
-  static final box = Hive.box('chatmodel');
-  static Box getInstance() => box;
-  static List<MyChatList> getMyChatDBdatas() {
-    final List<MyChatList> chats = [];
-    final values = box.get('chats');
-    for (final item in values!) {
-      chats.add(item as MyChatList);
-    }
-    return chats;
-  }
+  static final _box = Hive.box<MyChatList>('chatmodel');
+  static Box<MyChatList> getInstance() => _box;
+  static List<MyChatList> getMyChats() => _box.values.toList();
 }

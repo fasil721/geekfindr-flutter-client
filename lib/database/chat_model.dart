@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 part 'chat_model.g.dart';
 
 @HiveType(typeId: 2)
-class MyChatList {
+class MyChatList extends HiveObject{
   @HiveField(0)
   List<Participant>? participants;
   @HiveField(1)

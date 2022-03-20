@@ -9,13 +9,11 @@ import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
-import 'package:geek_findr/services/notification_service.dart';
 import 'package:geek_findr/views/screens/chat_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:timezone/data/latest.dart' as tz;
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -76,7 +74,7 @@ class _ChatPageState extends State<ChatPage> {
   bool checkUserExistInMyChat(String userId) {
     final currentUser = Boxes.getCurrentUser();
     final List<Participant> chatUsers = [];
-    final my1to1List = chatController.myChatList!
+    final my1to1List = chatController.myChatList
         .where((element) => element.isRoom == false)
         .toList();
 
@@ -108,8 +106,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    chatController.fetchMyChats();
-    tz.initializeTimeZones();
+    // chatController.fetchMyChats();
     super.initState();
   }
 
@@ -120,21 +117,7 @@ class _ChatPageState extends State<ChatPage> {
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // final currentUser = Boxes.getCurrentUser();
-          // NotificationService().showNotification(
-          //   1,
-          //   currentUser.username!,
-          //   "hello",
-          //   currentUser.avatar!,
-          // );
-          //  final dbDatas = BoxChat.getMychats();
-          //           searchUser(dbDatas!);
-          final a = BoxChat.getMyChatDBdatas();
-          print(a.map((e) => e.roomName));
-        },
-      ),
+    
       body: SafeArea(
         child: GetBuilder<ChatController>(
           id: "chatPage",
@@ -198,7 +181,7 @@ class _ChatPageState extends State<ChatPage> {
                 child: GetBuilder<ChatController>(
                   id: "chatList",
                   builder: (controller) {
-                    searchUser(BoxChat.getMyChatDBdatas()); 
+                    searchUser(chatController.myChatList);
                     return chatController.isMyChatListLoading
                         ? _buildLoadingScreen()
                         : chatController.results.isNotEmpty
@@ -568,7 +551,7 @@ class _ChatPageState extends State<ChatPage> {
                               );
                               if (data != null) {
                                 Get.to(() => ChatDetailPage(item: data));
-                                chatController.myChatList!.add(data);
+                                chatController.myChatList.add(data);
                                 controller.update(["chatList"]);
                               } else {
                                 Fluttertoast.showToast(
@@ -767,7 +750,7 @@ class _ChatPageState extends State<ChatPage> {
               final data =
                   await chatServices.create1to1Conversation(userId: user!.id!);
               await Get.to(() => ChatDetailPage(item: data!));
-              chatController.myChatList!.add(data!);
+              chatController.myChatList.add(data!);
             }
             controller.update(["chatList"]);
           },

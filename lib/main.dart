@@ -38,10 +38,8 @@ Future<void> main() async {
   Hive.registerAdapter(MyChatListAdapter());
   Hive.registerAdapter(ParticipantAdapter());
   Hive.registerAdapter(LastMessageAdapter());
-  final box = await Hive.openBox('chatmodel');
-  if (box.keys.isEmpty) {
-    box.put("chats", []);
-  }
+  await Hive.openBox<MyChatList>('chatmodel');
+
   Get.put(AppController());
   Get.put(PostsController());
   Get.put(ChatController());

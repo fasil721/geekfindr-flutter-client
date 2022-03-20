@@ -12,7 +12,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatController extends GetxController {
   late io.Socket socket;
-  List<MyChatList>? myChatList = [];
+  List<MyChatList> myChatList = [];
   List<MyChatList> results = [];
   bool isMyChatListLoading = true;
   String currentChating = "";
@@ -47,58 +47,65 @@ class ChatController extends GetxController {
 
   void listeningMessegeSetup(dynamic value) {
     print(value);
+    final box = BoxChat.getInstance();
     final data = ListenMessage.fromJson(
       Map<String, dynamic>.from(value as Map),
     );
     if (currentChating.isEmpty || currentChating != data.convId) {
-      if (myChatList != null) {
-        for (int i = 0; i < myChatList!.length; i++) {
-          if (myChatList![i].id == data.convId) {
-            final lastmessage = LastMessage(
-              conversationId: data.convId,
-              createdAt: data.time,
-              senderId: data.userId,
-              message: data.message,
-            );
-            myChatList![i].lastMessage = lastmessage;
-            myChatList![i].unreadMessageList.add(lastmessage);
-            for (final e in myChatList![i].participants!) {
-              if (e.id == data.userId) {
-                final title = myChatList![i].isRoom!
-                    ? myChatList![i].roomName
-                    : e.username;
-                NotificationService()
-                    .showNotification(1, title!, data.message!, e.avatar!);
-              }
+      for (int i = 0; i < myChatList.length; i++) {
+        if (myChatList[i].id == data.convId) {
+          final lastmessage = LastMessage(
+            conversationId: data.convId,
+            createdAt: data.time,
+            senderId: data.userId,
+            message: data.message,
+          );
+          myChatList[i].lastMessage = lastmessage;
+          myChatList[i].unreadMessageList.add(lastmessage);
+          myChatList[i].save();
+          // final a = box.getAt(0);
+          // a!.save();
+          // for (int e = 0; e < box.values.length; e++) {
+          //   final a = box.getAt(e);
+          //   if (myChatList[i].s == a!.id) {}
+          // }
+          for (final e in myChatList[i].participants!) {
+            if (e.id == data.userId) {
+              final title =
+                  myChatList[i].isRoom! ? myChatList[i].roomName : e.username;
+              NotificationService()
+                  .showNotification(1, title!, data.message!, e.avatar!);
             }
           }
-          // _box.put("chats", myChatList!);
         }
+        // _box.put("chats", myChatList!);
       }
+
       update(["chatList", "navCount"]);
     }
   }
 
   Future<void> updateChatDB() async {
     final box = BoxChat.getInstance();
-    final dbDatas = BoxChat.getMyChatDBdatas();
+    final dbDatas = box.values.toList();
     print(dbDatas.length);
     final datas = await chatServices.getMyChats();
-    // print(datas!.length);
-    for (final i in datas!) {
-      final isEmpty = dbDatas.where((element) => element.id == i.id).isEmpty;
+    for (final e in datas!) {
+      final isEmpty = dbDatas.where((element) => element.id == e.id).isEmpty;
       if (isEmpty) {
-        dbDatas.add(i);
+        box.add(e);
+      } else {
+        final index = box.values.toList().indexWhere((j) => j.id == e.id);
+        final temp = box.values.toList()[index].unreadMessageList;
+        if (temp.isEmpty) {
+          box.values.toList()[index].lastMessage = e.lastMessage;
+          box.values.toList()[index].save();
+        }
       }
     }
-    await box.put("chats", dbDatas);
-    update(["chatList"]);
-  }
-
-  Future<void> fetchMyChats() async {
-    myChatList = await chatServices.getMyChats();
+    myChatList = box.values.toList();
     isMyChatListLoading = false;
-    update(["chatList"]);
+    update(["chatList", "navCount"]);
   }
 
   int findUnreadNotificationCount() {
@@ -113,9 +120,10 @@ class ChatController extends GetxController {
 
   void markAsRead(MyChatList item) {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      final index = results.indexOf(item);
-      results[index].unreadMessageList = [];
-      update(["chatList", "navCount"]);
+      final index = myChatList.indexOf(item);
+      myChatList[index].unreadMessageList = [];
+      myChatList[index].save();
+      updateChatDB();
     });
   }
 }
