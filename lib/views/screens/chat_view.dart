@@ -42,10 +42,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     scrollcontroller.addListener(listenScrolling);
     chatController.currentChating = widget.item.id!;
     super.initState();
-    final a = BoxChat.getMychats();
-    if (a != null) {
-      print(a.map((e) => e.unreadMessageList.length));
-    }
+    // final a = BoxChat.getMychats();
+    // if (a != null) {
+    //   print(a.map((e) => e.unreadMessageList.length));
+    // }
   }
 
   @override

@@ -6,6 +6,7 @@ import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/lastmessge_model.dart';
 import 'package:geek_findr/models/chat_models.dart';
+import 'package:geek_findr/services/notification_service.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -15,7 +16,7 @@ class ChatController extends GetxController {
   List<MyChatList> results = [];
   bool isMyChatListLoading = true;
   String currentChating = "";
-  final _box = BoxChat.getInstance();
+  // final _box = BoxChat.getInstance();
 
   void connectSocket() {
     final currentUser = Boxes.getCurrentUser();
@@ -41,30 +42,41 @@ class ChatController extends GetxController {
     });
     socket.onDisconnect((data) => print('disconnected'));
     socket.onError((data) => print('error : $data'));
-    socket.on("message", (value) {
-      print(value);
-      final data = ListenMessage.fromJson(
-        Map<String, dynamic>.from(value as Map),
-      );
-      if (currentChating.isEmpty || currentChating != data.convId) {
-        if (myChatList != null) {
-          for (int i = 0; i < myChatList!.length; i++) {
-            if (myChatList![i].id == data.convId) {
-              final lastmessage = LastMessage(
-                conversationId: data.convId,
-                createdAt: data.time,
-                senderId: data.userId,
-                message: data.message,
-              );
-              myChatList![i].lastMessage = lastmessage;
-              myChatList![i].unreadMessageList.add(lastmessage);
+    socket.on("message", (value) => listeningMessegeSetup(value));
+  }
+
+  void listeningMessegeSetup(dynamic value) {
+    print(value);
+    final data = ListenMessage.fromJson(
+      Map<String, dynamic>.from(value as Map),
+    );
+    if (currentChating.isEmpty || currentChating != data.convId) {
+      if (myChatList != null) {
+        for (int i = 0; i < myChatList!.length; i++) {
+          if (myChatList![i].id == data.convId) {
+            final lastmessage = LastMessage(
+              conversationId: data.convId,
+              createdAt: data.time,
+              senderId: data.userId,
+              message: data.message,
+            );
+            myChatList![i].lastMessage = lastmessage;
+            myChatList![i].unreadMessageList.add(lastmessage);
+            for (final e in myChatList![i].participants!) {
+              if (e.id == data.userId) {
+                final title = myChatList![i].isRoom!
+                    ? myChatList![i].roomName
+                    : e.username;
+                NotificationService()
+                    .showNotification(1, title!, data.message!, e.avatar!);
+              }
             }
-            _box.put("chats", myChatList!);
           }
+          // _box.put("chats", myChatList!);
         }
-        update(["chatList", "navCount"]);
       }
-    });
+      update(["chatList", "navCount"]);
+    }
   }
 
   Future<void> updateChatDB() async {
