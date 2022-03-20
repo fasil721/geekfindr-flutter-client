@@ -11,6 +11,7 @@ import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/lastmessge_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/database/user_model.dart';
+import 'package:geek_findr/services/notification_service.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/screens/chat_page.dart';
 import 'package:geek_findr/views/screens/home_page.dart';
@@ -25,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
   GestureBinding.instance?.resamplingEnabled = true;
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -36,13 +38,16 @@ Future<void> main() async {
   Hive.registerAdapter(MyChatListAdapter());
   Hive.registerAdapter(ParticipantAdapter());
   Hive.registerAdapter(LastMessageAdapter());
-  await Hive.openBox<List<MyChatList>>('chatmodel');
-  final pref = await SharedPreferences.getInstance();
-  final isLoggedIn = pref.getBool("user");
+  final box = await Hive.openBox<List<MyChatList>>('chatmodel');
+  if (box.keys.isEmpty) {
+    box.put("chats", []);
+  }
   Get.put(AppController());
   Get.put(PostsController());
   Get.put(ChatController());
   Get.put(ProfileController());
+  final pref = await SharedPreferences.getInstance();
+  final isLoggedIn = pref.getBool("user");
   final mobileTheme = SchedulerBinding.instance!.window.platformBrightness;
   runApp(
     GetMaterialApp(

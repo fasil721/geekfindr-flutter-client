@@ -5,17 +5,17 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/functions.dart';
-import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
+import 'package:geek_findr/services/notification_service.dart';
 import 'package:geek_findr/views/screens/chat_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../database/chat_model.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -109,6 +109,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     chatController.fetchMyChats();
+    tz.initializeTimeZones();
     super.initState();
   }
 
@@ -119,6 +120,17 @@ class _ChatPageState extends State<ChatPage> {
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final currentUser = Boxes.getCurrentUser();
+          NotificationService().showNotification(
+            1,
+            currentUser.username!,
+            "hello",
+            currentUser.avatar!,
+          );
+        },
+      ),
       body: SafeArea(
         child: GetBuilder<ChatController>(
           id: "chatPage",
@@ -322,7 +334,7 @@ class _ChatPageState extends State<ChatPage> {
                                 lastMessage,
                                 style: GoogleFonts.roboto(
                                   fontSize: 14,
-                                  color: item.unreadMessageList!.isNotEmpty
+                                  color: item.unreadMessageList.isNotEmpty
                                       ? black
                                       : Colors.grey.shade500,
                                 ),
@@ -338,13 +350,12 @@ class _ChatPageState extends State<ChatPage> {
               Row(
                 children: [
                   Visibility(
-                    visible: item.unreadMessageList != null &&
-                        item.unreadMessageList!.isNotEmpty,
+                    visible: item.unreadMessageList.isNotEmpty,
                     child: CircleAvatar(
                       backgroundColor: primaryColor,
                       radius: 10,
                       child: Text(
-                        '${item.unreadMessageList!.length}',
+                        '${item.unreadMessageList.length}',
                         style: GoogleFonts.roboto(
                           fontSize: 13,
                           color: white,

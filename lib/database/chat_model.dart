@@ -20,7 +20,7 @@ class MyChatList {
   @HiveField(6)
   LastMessage? lastMessage;
   @HiveField(7)
-  List<LastMessage>? unreadMessageList;
+  List<LastMessage> unreadMessageList = [];
 
   MyChatList({
     this.participants,
@@ -30,7 +30,6 @@ class MyChatList {
     this.updatedAt,
     this.id,
     this.lastMessage,
-    this.unreadMessageList,
   });
 
   factory MyChatList.fromJson(Map<String, dynamic> json) => MyChatList(
@@ -49,6 +48,5 @@ class MyChatList {
                 Map<String, dynamic>.from(json["lastMessage"] as Map),
               ),
         id: json["id"] as String,
-        unreadMessageList: [],
       );
 }

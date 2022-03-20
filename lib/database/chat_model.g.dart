@@ -24,8 +24,7 @@ class MyChatListAdapter extends TypeAdapter<MyChatList> {
       updatedAt: fields[4] as DateTime?,
       id: fields[5] as String?,
       lastMessage: fields[6] as LastMessage?,
-      unreadMessageList: (fields[7] as List?)?.cast<LastMessage>(),
-    );
+    )..unreadMessageList = (fields[7] as List).cast<LastMessage>();
   }
 
   @override

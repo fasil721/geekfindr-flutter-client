@@ -42,11 +42,11 @@ class ChatController extends GetxController {
     socket.onDisconnect((data) => print('disconnected'));
     socket.onError((data) => print('error : $data'));
     socket.on("message", (value) {
+      print(value);
       final data = ListenMessage.fromJson(
         Map<String, dynamic>.from(value as Map),
       );
       if (currentChating.isEmpty || currentChating != data.convId) {
-        print(value);
         if (myChatList != null) {
           for (int i = 0; i < myChatList!.length; i++) {
             if (myChatList![i].id == data.convId) {
@@ -57,7 +57,7 @@ class ChatController extends GetxController {
                 message: data.message,
               );
               myChatList![i].lastMessage = lastmessage;
-              myChatList![i].unreadMessageList!.add(lastmessage);
+              myChatList![i].unreadMessageList.add(lastmessage);
             }
             _box.put("chats", myChatList!);
           }
@@ -82,8 +82,8 @@ class ChatController extends GetxController {
   int findUnreadNotificationCount() {
     int count = 0;
     for (int i = 0; i < results.length; i++) {
-      if (results[i].unreadMessageList!.isNotEmpty) {
-        count += results[i].unreadMessageList!.length;
+      if (results[i].unreadMessageList.isNotEmpty) {
+        count += results[i].unreadMessageList.length;
       }
     }
     return count;
