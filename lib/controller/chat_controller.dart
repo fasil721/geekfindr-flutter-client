@@ -118,7 +118,7 @@ class ChatController extends GetxController {
     return count;
   }
 
-  void markAsRead(MyChatList item) {
+  Future<void> markAsRead(MyChatList item) async {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       final index = myChatList.indexOf(item);
       myChatList[index].unreadMessageList = [];

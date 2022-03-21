@@ -38,7 +38,6 @@ class _ChatPageState extends State<ChatPage> {
     if (searchController1.text.isEmpty) {
       lists = datas.toList();
     } else {
-      //  results = [];
       for (final i in datas) {
         final isRoom = i.isRoom == true;
         if (isRoom) {
@@ -105,19 +104,12 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
-  void initState() {
-    // chatController.fetchMyChats();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
 
     return Scaffold(
-    
       body: SafeArea(
         child: GetBuilder<ChatController>(
           id: "chatPage",
@@ -550,9 +542,12 @@ class _ChatPageState extends State<ChatPage> {
                                 userIds: userIds,
                               );
                               if (data != null) {
-                                Get.to(() => ChatDetailPage(item: data));
+                                chatController.socket.disconnect().connect();
+                                final box = BoxChat.getInstance();
+                                await box.add(data);
                                 chatController.myChatList.add(data);
-                                controller.update(["chatList"]);
+                                Get.to(() => ChatDetailPage(item: data));
+                                // controller.update(["chatList"]);
                               } else {
                                 Fluttertoast.showToast(
                                   msg: "This room already exists",
@@ -749,10 +744,14 @@ class _ChatPageState extends State<ChatPage> {
               istexting = false;
               final data =
                   await chatServices.create1to1Conversation(userId: user!.id!);
-              await Get.to(() => ChatDetailPage(item: data!));
-              chatController.myChatList.add(data!);
+              if (data != null) {
+                chatController.socket.disconnect().connect();
+                final box = BoxChat.getInstance();
+                await box.add(data);
+                chatController.myChatList.add(data);
+                Get.to(() => ChatDetailPage(item: data));
+              }
             }
-            controller.update(["chatList"]);
           },
         ),
       ),

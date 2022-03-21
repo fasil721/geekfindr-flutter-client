@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/chat_model.dart';
@@ -28,7 +31,15 @@ class DrawerPage extends StatelessWidget {
               chatController.myChatList = [];
               chatController.socket.disconnect();
               await Future.delayed(const Duration(milliseconds: 500));
-              Get.offAll(() => const LoginPage());
+              // Get.offAll(() => const LoginPage());
+              SystemNavigator.pop(animated: true);
+              // SystemChannels.platform
+              //     .invokeMethod<void>('SystemNavigator.pop', true);
+              // try {
+              //   SystemNavigator.pop(); // sometimes it cant exit app
+              // } catch (e) {
+              //   exit(0); // so i am giving crash to app ... sad :(
+              // }
             },
             leading: const Icon(Icons.settings),
             title: const Text('Logout '),

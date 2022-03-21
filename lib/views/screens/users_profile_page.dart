@@ -362,7 +362,15 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                       await chatServices.create1to1Conversation(
                                     userId: user.id!,
                                   );
-                                  Get.to(() => ChatDetailPage(item: data!));
+                                  if (data != null) {
+                                    chatController.socket
+                                        .disconnect()
+                                        .connect();
+                                    final box = BoxChat.getInstance();
+                                    await box.add(data);
+                                    chatController.myChatList.add(data);
+                                    Get.to(() => ChatDetailPage(item: data));
+                                  }
                                 } else {
                                   for (final i in my1to1List) {
                                     for (final j in i.participants!) {
