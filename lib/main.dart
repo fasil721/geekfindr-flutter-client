@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -11,6 +14,8 @@ import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/lastmessge_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/database/user_model.dart';
+import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/services/connectivity_service.dart';
 import 'package:geek_findr/services/notification_service.dart';
 import 'package:geek_findr/theme.dart';
 import 'package:geek_findr/views/screens/chat_page.dart';
@@ -66,9 +71,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
-
   @override
   void initState() {
+    checkConnection();
     chatController.connectSocket();
     chatController.updateChatDB();
     super.initState();

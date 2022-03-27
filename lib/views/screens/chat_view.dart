@@ -55,87 +55,11 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     super.dispose();
   }
 
-  void listenMessages() {
-    final currentUser = Boxes.getCurrentUser();
-    chatController.socket.on("message", (value) {
-      final data = ListenMessage.fromJson(
-        Map<String, dynamic>.from(value as Map),
-      );
-      if (data.convId == widget.item.id) {
-        final isSentByMe = data.userId == currentUser.id;
-        final _messege = Message(
-          userId: data.userId!,
-          text: data.message!,
-          date: data.time!.toLocal(),
-          isSentByMe: isSentByMe,
-        );
-        messeges.add(_messege);
-        chatController.update(["messeges"]);
-      }
-    });
-  }
-
-  void listenScrolling() {
-    final position = scrollcontroller.position;
-    if (position.pixels > 100) {
-      isScrolling = true;
-      chatController.update(["backToBottom"]);
-    } else {
-      isScrolling = false;
-      chatController.update(["backToBottom"]);
-    }
-  }
-
-  void joinConversation() {
-    chatController.socket
-        .emit("join_conversation", {"conversationId": widget.item.id});
-  }
-
-  void sendMessage() {
-    if (textController.text.isNotEmpty) {
-      chatController.socket.emit("message", {
-        "message": textController.text,
-        "conversationId": widget.item.id,
-      });
-      textController.clear();
-    }
-  }
-
-  Future<void> fetchMesseges() async {
-    final currentUser = Boxes.getCurrentUser();
-    final datas =
-        await chatServices.getMyChatMessages(conversationId: widget.item.id!);
-    messeges = datas.map(
-      (e) {
-        final isSentByMe = e.senderId == currentUser.id;
-        return Message(
-          userId: e.senderId!,
-          isSentByMe: isSentByMe,
-          text: e.message!,
-          date: e.updatedAt!.toLocal(),
-        );
-      },
-    ).toList();
-
-    isLoading = false;
-    chatController.update(["messeges"]);
-  }
-
-  void findParticipants() {
-    for (final element in widget.item.participants!) {
-      otherUsers.add(element);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     textFactor = textfactorCustomize(MediaQuery.textScaleFactorOf(context));
-    // if (messeges.isNotEmpty) {
-    //   print(messeges.last.text);
-    //   print(messeges.length);
-    // }
     return Scaffold(
       backgroundColor: secondaryColor,
       appBar: ChatDetailPageAppBar(
@@ -311,6 +235,78 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         ),
       ),
     );
+  }
+
+  void listenMessages() {
+    final currentUser = Boxes.getCurrentUser();
+    chatController.socket.on("message", (value) {
+      final data = ListenMessage.fromJson(
+        Map<String, dynamic>.from(value as Map),
+      );
+      if (data.convId == widget.item.id) {
+        final isSentByMe = data.userId == currentUser.id;
+        final _messege = Message(
+          userId: data.userId!,
+          text: data.message!,
+          date: data.time!.toLocal(),
+          isSentByMe: isSentByMe,
+        );
+        messeges.add(_messege);
+        chatController.update(["messeges"]);
+      }
+    });
+  }
+
+  void listenScrolling() {
+    final position = scrollcontroller.position;
+    if (position.pixels > 100) {
+      isScrolling = true;
+      chatController.update(["backToBottom"]);
+    } else {
+      isScrolling = false;
+      chatController.update(["backToBottom"]);
+    }
+  }
+
+  void joinConversation() {
+    chatController.socket
+        .emit("join_conversation", {"conversationId": widget.item.id});
+  }
+
+  void sendMessage() {
+    if (textController.text.isNotEmpty) {
+      chatController.socket.emit("message", {
+        "message": textController.text,
+        "conversationId": widget.item.id,
+      });
+      textController.clear();
+    }
+  }
+
+  Future<void> fetchMesseges() async {
+    final currentUser = Boxes.getCurrentUser();
+    final datas =
+        await chatServices.getMyChatMessages(conversationId: widget.item.id!);
+    messeges = datas.map(
+      (e) {
+        final isSentByMe = e.senderId == currentUser.id;
+        return Message(
+          userId: e.senderId!,
+          isSentByMe: isSentByMe,
+          text: e.message!,
+          date: e.updatedAt!.toLocal(),
+        );
+      },
+    ).toList();
+
+    isLoading = false;
+    chatController.update(["messeges"]);
+  }
+
+  void findParticipants() {
+    for (final element in widget.item.participants!) {
+      otherUsers.add(element);
+    }
   }
 
   Widget _loadingIndicator() => const Center(

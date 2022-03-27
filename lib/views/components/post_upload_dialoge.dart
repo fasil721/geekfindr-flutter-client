@@ -209,7 +209,7 @@ Future<File?> pickImage({required ImageSource source}) async {
   final imagePicker = ImagePicker();
   final image = await imagePicker.pickImage(source: source);
   if (image != null) {
-    final croppedFile = await ImageCropper.cropImage(
+    final croppedFile = await ImageCropper().cropImage(
       sourcePath: image.path,
       aspectRatioPresets: [
         CropAspectRatioPreset.square,

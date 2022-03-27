@@ -1,13 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/functions.dart';
-import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
 import 'package:geek_findr/views/components/user_about_view.dart';
@@ -372,9 +370,10 @@ class _OtherUserProfileState extends State<OtherUserProfile>
                                     Get.to(() => ChatDetailPage(item: data));
                                   }
                                 } else {
-                                  for (final i in my1to1List) {
+                                  for (final i in chatController.myChatList) {
                                     for (final j in i.participants!) {
-                                      if (j.id != currentUser.id) {
+                                      if (j.id != currentUser.id &&
+                                          i.isRoom == false) {
                                         final s = j.id! == user.id;
                                         if (s) {
                                           Get.to(() => ChatDetailPage(item: i));

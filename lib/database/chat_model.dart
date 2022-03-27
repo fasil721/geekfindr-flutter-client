@@ -17,7 +17,7 @@ class MyChatList extends HiveObject{
   DateTime? updatedAt;
   @HiveField(5)
   String? id;
-  @HiveField(6)
+  @HiveField(6) 
   LastMessage? lastMessage;
   @HiveField(7)
   List<LastMessage> unreadMessageList = [];

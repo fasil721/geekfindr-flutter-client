@@ -33,13 +33,13 @@ class PostServices {
         body: image.readAsBytesSync(),
       );
       if (response2.statusCode == 200) {
-        final imageModel = ImageModel();
-        imageModel.projectName = projectName;
-        imageModel.description = description;
-        imageModel.isOrganization = false;
-        imageModel.isProject = isProject;
-        imageModel.mediaUrl = data.key;
-        imageModel.mediaType = "image";
+        final imageModel = ImageModel()
+          ..projectName = projectName
+          ..description = description
+          ..isOrganization = false
+          ..isProject = isProject
+          ..mediaUrl = data.key
+          ..mediaType = "image";
 
         final response3 = await http.post(
           Uri.parse(postUrl),

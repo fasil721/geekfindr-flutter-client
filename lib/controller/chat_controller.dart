@@ -47,7 +47,6 @@ class ChatController extends GetxController {
 
   void listeningMessegeSetup(dynamic value) {
     print(value);
-    final box = BoxChat.getInstance();
     final data = ListenMessage.fromJson(
       Map<String, dynamic>.from(value as Map),
     );
@@ -90,16 +89,18 @@ class ChatController extends GetxController {
     final dbDatas = box.values.toList();
     print(dbDatas.length);
     final datas = await chatServices.getMyChats();
-    for (final e in datas!) {
-      final isEmpty = dbDatas.where((element) => element.id == e.id).isEmpty;
-      if (isEmpty) {
-        box.add(e);
-      } else {
-        final index = box.values.toList().indexWhere((j) => j.id == e.id);
-        final temp = box.values.toList()[index].unreadMessageList;
-        if (temp.isEmpty) {
-          box.values.toList()[index].lastMessage = e.lastMessage;
-          box.values.toList()[index].save();
+    if (datas != null) {
+      for (final e in datas) {
+        final isEmpty = dbDatas.where((element) => element.id == e.id).isEmpty;
+        if (isEmpty) {
+          box.add(e);
+        } else {
+          final index = box.values.toList().indexWhere((j) => j.id == e.id);
+          final temp = box.values.toList()[index].unreadMessageList;
+          if (temp.isEmpty) {
+            box.values.toList()[index].lastMessage = e.lastMessage;
+            box.values.toList()[index].save();
+          }
         }
       }
     }

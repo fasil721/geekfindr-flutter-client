@@ -1,17 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
-import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/post_models.dart';
+import 'package:geek_findr/services/connectivity_service.dart';
 import 'package:geek_findr/views/components/users_list_bottomsheet.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 bool checkRequest(List<Join> requests) {
   final currentUser = Boxes.getCurrentUser();
@@ -119,4 +119,16 @@ Owner getUserDatAsOwnerModel() {
   _owner.id = currentUser.id;
   _owner.username = currentUser.username;
   return _owner;
+}
+
+void checkConnection() {
+  final _connectivityService = ConnectivityService();
+  _connectivityService.connectivityStream.stream.listen((event) {
+    print(event);
+    if (event == ConnectivityResult.none) {
+      print('no internet');
+    } else {
+      print('yes internet');
+    }
+  });
 }
