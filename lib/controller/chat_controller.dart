@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
@@ -20,7 +18,6 @@ class ChatController extends GetxController {
 
   void connectSocket() {
     final currentUser = Boxes.getCurrentUser();
-    print(currentUser.email);
     const path = '/api/v1/chats/socket.io';
     socket = io.io(prodUrl, <String, dynamic>{
       "path": path,
@@ -31,22 +28,21 @@ class ChatController extends GetxController {
     socket.connect();
     // if (socket.connected == false) {
     // }
-    socket.onConnect((data) {
-      print('connected ${socket.id}');
-      final auth = Map<String, String>.from(socket.auth as Map);
-      print(auth["token"] == currentUser.token);
-      // if (auth["token"] != currentUser.token) {
-      //   // socket.disconnect().connect();
-      //   controller.update(["home"]);
-      // }
-    });
-    socket.onDisconnect((data) => print('disconnected'));
-    socket.onError((data) => print('error : $data'));
-    socket.on("message", (value) => listeningMessegeSetup(value));
+    // socket.onConnect((data) {
+    // print('connected ${socket.id}');
+    // final auth = Map<String, String>.from(socket.auth as Map);
+    // print(auth["token"] == currentUser.token);
+    // if (auth["token"] != currentUser.token) {
+    //   // socket.disconnect().connect();
+    //   controller.update(["home"]);
+    // }
+    // });
+    // socket.onDisconnect((data) => print('disconnected'));
+    // socket.onError((data) => print('error : $data'));
+    // socket.on("message", (value) => listeningMessegeSetup(value));
   }
 
   void listeningMessegeSetup(dynamic value) {
-    print(value);
     final data = ListenMessage.fromJson(
       Map<String, dynamic>.from(value as Map),
     );
@@ -87,7 +83,6 @@ class ChatController extends GetxController {
   Future<void> updateChatDB() async {
     final box = BoxChat.getInstance();
     final dbDatas = box.values.toList();
-    print(dbDatas.length);
     final datas = await chatServices.getMyChats();
     if (datas != null) {
       for (final e in datas) {

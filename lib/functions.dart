@@ -120,15 +120,3 @@ Owner getUserDatAsOwnerModel() {
   _owner.username = currentUser.username;
   return _owner;
 }
-
-void checkConnection() {
-  final _connectivityService = ConnectivityService();
-  _connectivityService.connectivityStream.stream.listen((event) {
-    print(event);
-    if (event == ConnectivityResult.none) {
-      print('no internet');
-    } else {
-      print('yes internet');
-    }
-  });
-}

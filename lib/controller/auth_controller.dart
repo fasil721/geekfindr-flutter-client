@@ -124,9 +124,7 @@ class AuthController extends GetxController {
           ],
         ),
         confirm: ElevatedButton(
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: () => Get.back(),
           child: const Text("ok"),
         ),
       );

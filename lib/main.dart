@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
@@ -14,10 +13,10 @@ import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/lastmessge_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/database/user_model.dart';
-import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/connectivity_service.dart';
 import 'package:geek_findr/services/notification_service.dart';
 import 'package:geek_findr/theme.dart';
+import 'package:geek_findr/views/components/no_interner_page.dart';
 import 'package:geek_findr/views/screens/chat_page.dart';
 import 'package:geek_findr/views/screens/home_page.dart';
 import 'package:geek_findr/views/screens/login_page.dart';
@@ -30,7 +29,8 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   NotificationService().initNotification();
   GestureBinding.instance?.resamplingEnabled = true;
   await SystemChrome.setPreferredOrientations([
@@ -49,15 +49,15 @@ Future<void> main() async {
   Get.put(PostsController());
   Get.put(ChatController());
   Get.put(ProfileController());
+
   final pref = await SharedPreferences.getInstance();
   final isLoggedIn = pref.getBool("user");
-  final mobileTheme = SchedulerBinding.instance!.window.platformBrightness;
   runApp(
     GetMaterialApp(
       home:
           isLoggedIn == null || !isLoggedIn ? const LoginPage() : const MyApp(),
       debugShowCheckedModeBanner: false,
-      theme: mobileTheme == Brightness.light ? AppTheme.light : AppTheme.light,
+      theme: AppTheme.light,
     ),
   );
 }
@@ -70,19 +70,31 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int currentIndex = 0;
   @override
   void initState() {
-    checkConnection();
-    chatController.connectSocket();
-    chatController.updateChatDB();
     super.initState();
+    initialization();
   }
 
   @override
   void dispose() {
     chatController.socket.disconnect();
     super.dispose();
+  }
+
+  Future<void> initialization() async {
+    // This is where you can initialize the resources needed by your app while
+    // the splash screen is displayed.  Remove the following example because
+    // delaying the user experience is a bad design practice!
+    // ignore_for_file: avoid_print
+    // print('ready in 3...');
+    // await Future.delayed(const Duration(seconds: 1));
+    // print('ready in 2...');
+    // await Future.delayed(const Duration(seconds: 1));
+    // print('ready in 1...');
+    // await Future.delayed(const Duration(seconds: 5));
+    print('go!');
+    FlutterNativeSplash.remove();
   }
 
   @override
@@ -93,13 +105,27 @@ class _MyAppState extends State<MyApp> {
       ChatPage(),
       ProfilePage(),
     ];
+    ConnectivityService().checkConnection();
     return GetBuilder<AppController>(
       id: "home",
       builder: (controller) {
+        if (controller.isOffline) {
+          return const NoConnectionScreen();
+        }
+        chatController.connectSocket();
+        chatController.updateChatDB();
         return Scaffold(
-          body: IndexedStack(
-            index: currentIndex,
-            children: screens,
+          body: Stack(
+            children: [
+              IndexedStack(
+                index: controller.currentIndex,
+                children: screens,
+              ),
+              // Visibility(
+              //   visible: controller.isOffline,
+              //   child: const NoConnectionScreen(),
+              // )
+            ],
           ),
           bottomNavigationBar: SalomonBottomBar(
             curve: Curves.easeOut,
@@ -108,9 +134,9 @@ class _MyAppState extends State<MyApp> {
             margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
             itemPadding:
                 const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            currentIndex: currentIndex,
+            currentIndex: controller.currentIndex,
             onTap: (index) {
-              currentIndex = index;
+              controller.currentIndex = index;
               controller.update(["home"]);
             },
             items: [
