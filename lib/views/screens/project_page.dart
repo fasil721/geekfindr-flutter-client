@@ -50,13 +50,11 @@ class MyProjectList extends StatelessWidget {
                           child: ListView.separated(
                             itemCount: datas.length,
                             itemBuilder: (context, index) => GestureDetector(
-                              onTap: () {
-                                Get.to(
+                              onTap: () => Get.to(
                                   () => ProjectView(
                                     projectId: datas[index].project!.id!,
                                   ),
-                                );
-                              },
+                                ),
                               child: Container(
                                 height: height * 0.15,
                                 decoration: BoxDecoration(
@@ -91,16 +89,18 @@ class MyProjectList extends StatelessWidget {
                                               ),
                                             ),
                                             SizedBox(height: height * 0.005),
-                                            Text(
-                                              datas[index]
-                                                  .project!
-                                                  .description!,
-                                              maxLines: 3,
-                                              style: GoogleFonts.poppins(
-                                                fontSize: textFactor * 13,
-                                                color: Colors.black
-                                                    .withOpacity(0.9),
-                                                fontWeight: FontWeight.w400,
+                                            Expanded(
+                                              child: Text(
+                                                datas[index]
+                                                    .project!
+                                                    .description!,
+                                                maxLines: 3,
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: textFactor * 13,
+                                                  color: Colors.black
+                                                      .withOpacity(0.9),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                               ),
                                             ),
                                           ],

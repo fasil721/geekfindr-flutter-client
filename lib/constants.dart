@@ -1,9 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/auth_services.dart';
 import 'package:geek_findr/services/chat_services.dart';
 import 'package:geek_findr/services/post_services.dart';
@@ -32,6 +34,7 @@ final profileServices = ProfileServices();
 final chatServices = ChatServices();
 final authServices = AuthServices();
 final projectServices = ProjectServices();
+
 const categories = [
   {"name": "Info", 'iconPath': 'assets/icons/info.png'},
   {'name': 'Teams', 'iconPath': 'assets/icons/team.png'},

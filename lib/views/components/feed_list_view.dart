@@ -116,6 +116,8 @@ class _FeedListState extends State<FeedList> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return FutureBuilder<List<ImageModel>>(
       future: postServices.getMyFeeds(),
       builder: (context, snapshot) {
@@ -264,13 +266,14 @@ class _FeedListState extends State<FeedList> {
                                                 datas[index].owner!.username!,
                                                 style: GoogleFonts.poppins(
                                                   fontWeight: FontWeight.bold,
+                                                  fontSize: textFactor * 13,
                                                 ),
                                               ),
                                             ),
                                             Text(
                                               postedTime,
                                               style: GoogleFonts.roboto(
-                                                fontSize: 10,
+                                                fontSize: textFactor * 10,
                                                 color: black.withOpacity(0.8),
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -286,7 +289,7 @@ class _FeedListState extends State<FeedList> {
                                           Text(
                                             "Project",
                                             style: GoogleFonts.roboto(
-                                              fontSize: 13,
+                                              fontSize: textFactor * 13,
                                               color: Colors.grey,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -294,7 +297,7 @@ class _FeedListState extends State<FeedList> {
                                           Text(
                                             datas[index].projectName!,
                                             style: GoogleFonts.roboto(
-                                              fontSize: 13,
+                                              fontSize: textFactor * 13,
                                               color: Colors.grey,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -315,7 +318,10 @@ class _FeedListState extends State<FeedList> {
                                   datas[index].description!,
                                   colorClickableText: primaryColor,
                                   trimMode: TrimMode.Line,
-                                  style: GoogleFonts.poppins(color: black),
+                                  style: GoogleFonts.poppins(
+                                    color: black,
+                                    fontSize: textFactor * 14,
+                                  ),
                                 ),
                               ),
                               _buildImage(index, width),
@@ -374,6 +380,8 @@ class _FeedListState extends State<FeedList> {
   }
 
   Widget _buildBottomRowItems(int index) {
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -382,135 +390,148 @@ class _FeedListState extends State<FeedList> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              GetBuilder<AppController>(
-                id: "likes",
-                builder: (_) => InkWell(
-                  onTap: () {
-                    if (0 < postController.feedLikesCountList[index]) {
-                      buildLikedUsersBottomSheet(
-                        datas[index].id!,
-                      );
-                    }
-                  },
-                  child: Ink(
-                    padding: const EdgeInsets.all(
-                      5,
-                    ),
-                    child: Text(
-                      "${postController.feedLikesCountList[index]} Likes",
-                      style: GoogleFonts.roboto(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+          Expanded(
+            flex: 4,
+            child: Row(
+              children: [
+                GetBuilder<AppController>(
+                  id: "likes",
+                  builder: (_) => InkWell(
+                    onTap: () {
+                      if (0 < postController.feedLikesCountList[index]) {
+                        buildLikedUsersBottomSheet(
+                          datas[index].id!,
+                        );
+                      }
+                    },
+                    child: Ink(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        "${postController.feedLikesCountList[index]} Likes   ",
+                        style: GoogleFonts.roboto(
+                          fontSize: textFactor * 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
                       ),
                     ),
                   ),
                 ),
-              ),
-              GetBuilder<AppController>(
-                id: "commentCount",
-                builder: (_) => InkWell(
-                  onTap: () {
-                    if (0 < postController.feedCommentCountList[index]) {
-                      _buildCommentBottomSheet(
-                        datas[index].id!,
-                        index,
-                      );
-                    }
-                  },
-                  child: Ink(
-                    padding: const EdgeInsets.all(
-                      5,
-                    ),
-                    child: Text(
-                      "${postController.feedCommentCountList[index]} Comments",
-                      style: GoogleFonts.roboto(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                GetBuilder<AppController>(
+                  id: "commentCount",
+                  builder: (_) => InkWell(
+                    onTap: () {
+                      if (0 < postController.feedCommentCountList[index]) {
+                        _buildCommentBottomSheet(
+                          datas[index].id!,
+                          index,
+                        );
+                      }
+                    },
+                    child: Ink(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        "${postController.feedCommentCountList[index]} Comments",
+                        style: GoogleFonts.roboto(
+                          fontSize: textFactor * 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          Row(
-            children: [
-              GetBuilder<AppController>(
-                id: "Like",
-                builder: (_) {
-                  final icon = isLikedList[index]
-                      ? Icons.favorite
-                      : Icons.favorite_border_outlined;
-                  final color = isLikedList[index] ? primaryColor : black;
-                  return HeartAnimationWidget(
-                    isAnimating: isLikedList[index],
+          Expanded(
+            flex: 3,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Visibility(
+                    visible: datas[index].isProject! && !isRequested,
                     child: IconButton(
-                      splashRadius: 28,
-                      onPressed: () {
-                        if (!isLikedList[index]) {
-                          postController.feedLikesCountList[index] += 1;
-                          postServices.postLike(
-                            imageId: datas[index].id!,
-                          );
-                        }
-                        isLikedList[index] = true;
-                        controller.update(["Like"]);
-                      },
-                      icon: Icon(
-                        icon,
-                        color: color,
-                        size: 28,
+                      icon: ImageIcon(
+                        const AssetImage(
+                          "assets/icons/people.png",
+                        ),
+                        color: black,
+                        size: 23,
                       ),
+                      splashRadius: 28,
+                      tooltip: 'join request',
+                      onPressed: () {
+                        postServices.sendJoinRequest(
+                          projectName: datas[index].projectName!,
+                          projectId: datas[index].id!,
+                        );
+                        isRequested = false;
+                        controller.update(["dataList"]);
+                      },
                     ),
-                  );
-                },
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.mode_comment_outlined,
-                  color: black,
-                  size: 28,
-                ),
-                splashRadius: 25,
-                tooltip: 'comment',
-                onPressed: () {
-                  if (isCommenting[index]) {
-                    isCommenting[index] = false;
-                  } else {
-                    for (int i = 0; i < isCommenting.length; i++) {
-                      isCommenting[i] = false;
-                    }
-                    isCommenting[index] = true;
-                  }
-                  controller.update(["comments"]);
-                  commmentEditController.clear();
-                },
-              ),
-              Visibility(
-                visible: datas[index].isProject! && !isRequested,
-                child: IconButton(
-                  icon: ImageIcon(
-                    const AssetImage(
-                      "assets/icons/people.png",
-                    ),
-                    color: black,
-                    size: 23,
                   ),
-                  splashRadius: 25,
-                  tooltip: 'join request',
-                  onPressed: () {
-                    postServices.sendJoinRequest(
-                      projectName: datas[index].projectName!,
-                      projectId: datas[index].id!,
-                    );
-                    isRequested = false;
-                    controller.update(["dataList"]);
-                  },
                 ),
-              ),
-            ],
+                Expanded(
+                  child: GetBuilder<AppController>(
+                    id: "Like",
+                    builder: (_) {
+                      final icon = isLikedList[index]
+                          ? Icons.favorite
+                          : Icons.favorite_border_outlined;
+                      final color = isLikedList[index] ? primaryColor : black;
+                      return HeartAnimationWidget(
+                        isAnimating: isLikedList[index],
+                        child: IconButton(
+                          splashRadius: 28,
+                          onPressed: () {
+                            if (!isLikedList[index]) {
+                              postController.feedLikesCountList[index] += 1;
+                              postServices.postLike(
+                                imageId: datas[index].id!,
+                              );
+                            }
+                            isLikedList[index] = true;
+                            controller.update(["Like"]);
+                          },
+                          icon: Icon(
+                            icon,
+                            color: color,
+                            size: 28,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.mode_comment_outlined,
+                      color: black,
+                      size: 28,
+                    ),
+                    splashRadius: 25,
+                    tooltip: 'comment',
+                    onPressed: () {
+                      if (isCommenting[index]) {
+                        isCommenting[index] = false;
+                      } else {
+                        for (int i = 0; i < isCommenting.length; i++) {
+                          isCommenting[i] = false;
+                        }
+                        isCommenting[index] = true;
+                      }
+                      controller.update(["comments"]);
+                      commmentEditController.clear();
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

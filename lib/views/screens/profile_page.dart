@@ -26,9 +26,8 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   void initState() {
-    
     profileController.tabController1 = TabController(
-      initialIndex:   profileController.currentIndextab1,
+      initialIndex: profileController.currentIndextab1,
       length: 4,
       vsync: this,
     );
@@ -233,35 +232,35 @@ class _ProfilePageState extends State<ProfilePage>
                                       index: profileController.currentIndextab1,
                                       children: <Widget>[
                                         Visibility(
-                                          visible:
-                                              profileController.currentIndextab1 ==
-                                                  0,
+                                          visible: profileController
+                                                  .currentIndextab1 ==
+                                              0,
                                           child: ProfileAboutView(
                                             userData: userData,
                                           ),
                                         ),
                                         Visibility(
-                                          visible:
-                                              profileController.currentIndextab1 ==
-                                                  1,
+                                          visible: profileController
+                                                  .currentIndextab1 ==
+                                              1,
                                           child: UserPosts(
                                             type: PostType.allPosts,
                                             userId: userData.id!,
                                           ),
                                         ),
                                         Visibility(
-                                          visible:
-                                              profileController.currentIndextab1 ==
-                                                  2,
+                                          visible: profileController
+                                                  .currentIndextab1 ==
+                                              2,
                                           child: UserPosts(
                                             type: PostType.posts,
                                             userId: userData.id!,
                                           ),
                                         ),
                                         Visibility(
-                                          visible:
-                                              profileController.currentIndextab1 ==
-                                                  3,
+                                          visible: profileController
+                                                  .currentIndextab1 ==
+                                              3,
                                           child: UserPosts(
                                             type: PostType.projects,
                                             userId: userData.id!,
@@ -449,9 +448,7 @@ class _ProfilePageState extends State<ProfilePage>
           children: [
             Expanded(
               child: InkWell(
-                onTap: () {
-                  profileController.updateTabIndex(1);
-                },
+                onTap: () => profileController.updateTabIndex(1),
                 child: Ink(
                   padding: const EdgeInsets.all(10),
                   child: Column(
@@ -504,8 +501,8 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             Container(
               color: Colors.grey,
-              margin: const EdgeInsets.symmetric(
-                horizontal: 25,
+              margin: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.05,
               ),
               height: 20,
               width: 1.5,
@@ -532,7 +529,7 @@ class _ProfilePageState extends State<ProfilePage>
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      Text(
+                      Text(       
                         userData.followersCount.toString(),
                         style: GoogleFonts.poppins(
                           fontSize: textFactor * 17,
@@ -540,8 +537,10 @@ class _ProfilePageState extends State<ProfilePage>
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Text(
-                        " Followers",
+                      Text (
+                        "Followers",
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
                         style: GoogleFonts.roboto(
                           fontSize: textFactor * 13,
                           color: Colors.black.withOpacity(0.8),
@@ -555,8 +554,8 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             Container(
               color: Colors.grey,
-              margin: const EdgeInsets.symmetric(
-                horizontal: 25,
+              margin: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.05,
               ),
               height: 20,
               width: 1.5,
@@ -593,6 +592,8 @@ class _ProfilePageState extends State<ProfilePage>
                       ),
                       Text(
                         "Followings",
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
                         style: GoogleFonts.roboto(
                           fontSize: textFactor * 12,
                           color: Colors.black.withOpacity(0.8),

@@ -333,33 +333,33 @@ class _ProjectViewState extends State<ProjectView> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Tab(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      element["iconPath"]!,
-                      height: 30,
-                      width: 30,
-                      color: categories[_currentIndex] == element
-                          ? white
-                          : Colors.grey[700],
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(
-                        top: 3,
+                child: FittedBox(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        element["iconPath"]!,
+                        height: 30,
+                        width: 30,
+                        color: categories[_currentIndex] == element
+                            ? white
+                            : Colors.grey[700],
                       ),
-                      child: Text(
-                        element['name']!,
-                        style: GoogleFonts.poppins(
-                          color: categories[_currentIndex] == element
-                              ? white
-                              : Colors.grey[700],
-                          fontWeight: FontWeight.w500,
-                          fontSize: textFactor * 11,
+                      Container(
+                        margin: const EdgeInsets.only(top: 3),
+                        child: Text(
+                          element['name']!,
+                          style: GoogleFonts.poppins(
+                            color: categories[_currentIndex] == element
+                                ? white
+                                : Colors.grey[700],
+                            fontWeight: FontWeight.w500,
+                            fontSize: textFactor * 11,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

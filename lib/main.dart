@@ -13,6 +13,7 @@ import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/lastmessge_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/database/user_model.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/services/connectivity_service.dart';
 import 'package:geek_findr/services/notification_service.dart';
 import 'package:geek_findr/theme.dart';
@@ -30,7 +31,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   NotificationService().initNotification();
   GestureBinding.instance?.resamplingEnabled = true;
   await SystemChrome.setPreferredOrientations([
@@ -73,7 +74,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initialization();
+    // initialization();
   }
 
   @override
@@ -105,6 +106,8 @@ class _MyAppState extends State<MyApp> {
       ChatPage(),
       ProfilePage(),
     ];
+    final textFactor =
+        textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     ConnectivityService().checkConnection();
     return GetBuilder<AppController>(
       id: "home",
@@ -115,17 +118,9 @@ class _MyAppState extends State<MyApp> {
         chatController.connectSocket();
         chatController.updateChatDB();
         return Scaffold(
-          body: Stack(
-            children: [
-              IndexedStack(
-                index: controller.currentIndex,
-                children: screens,
-              ),
-              // Visibility(
-              //   visible: controller.isOffline,
-              //   child: const NoConnectionScreen(),
-              // )
-            ],
+          body: IndexedStack(
+            index: controller.currentIndex,
+            children: screens,
           ),
           bottomNavigationBar: SalomonBottomBar(
             curve: Curves.easeOut,
@@ -143,12 +138,18 @@ class _MyAppState extends State<MyApp> {
               SalomonBottomBarItem(
                 selectedColor: primaryColor,
                 icon: const ImageIcon(AssetImage("assets/icons/home.png")),
-                title: const Text('Home'),
+                title: Text(
+                  'Home',
+                  style: GoogleFonts.roboto(fontSize: textFactor * 12),
+                ),
               ),
               SalomonBottomBarItem(
                 selectedColor: primaryColor,
                 icon: const ImageIcon(AssetImage("assets/icons/idea.png")),
-                title: const Text('Projects'),
+                title: Text(
+                  'Projects',
+                  style: GoogleFonts.roboto(fontSize: textFactor * 12),
+                ),
               ),
               SalomonBottomBarItem(
                 selectedColor: primaryColor.withOpacity(0.8),
@@ -161,7 +162,8 @@ class _MyAppState extends State<MyApp> {
                     GetBuilder<ChatController>(
                       id: 'navCount',
                       builder: (controller) {
-                        final count = controller.findUnreadNotificationCount();
+                        final count =
+                            controller.findUnreadNotificationCount();
                         return Visibility(
                           visible: count > 0,
                           child: Positioned(
@@ -184,12 +186,18 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ],
                 ),
-                title: const Text('Chats'),
+                title: Text(
+                  'Chats',
+                  style: GoogleFonts.roboto(fontSize: textFactor * 12),
+                ),
               ),
               SalomonBottomBarItem(
                 selectedColor: primaryColor,
                 icon: const ImageIcon(AssetImage("assets/icons/account.png")),
-                title: const Text('Profile'),
+                title: Text(
+                  'Profile',
+                  style: GoogleFonts.roboto(fontSize: textFactor * 12),
+                ),
               ),
             ],
           ),
