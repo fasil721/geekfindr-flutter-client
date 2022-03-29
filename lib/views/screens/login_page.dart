@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/views/screens/signup_page.dart';
@@ -54,38 +55,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     if (passwordController.text.isEmpty) {
       passwordError = "Enter Your Password";
     }
-
-    if (emailError != null || passwordError != null) {
-      Get.defaultDialog(
-        title: "Validation",
-        content: Column(
-          children: [
-            if (emailError != null)
-              Text(
-                emailError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-            const SizedBox(height: 5),
-            if (passwordError != null)
-              Text(
-                passwordError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-          ],
-        ),
-        confirm: ElevatedButton(
-          onPressed: () {
-            passwordFocusNode.unfocus();
-            emailFocusNode.unfocus();
-            Get.back();
-          },
-          child: const Text("ok"),
-        ),
-      );
+    if (emailError != null) {
+      Fluttertoast.showToast(msg: emailError);
+    } else if (passwordError != null) {
+      Fluttertoast.showToast(msg: passwordError);
     }
     if (emailError == null && passwordError == null) {
       await Future.delayed(const Duration(seconds: 2));
@@ -326,7 +299,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
-                
                 ],
               ),
             ),

@@ -192,7 +192,7 @@ class _ChatPageState extends State<ChatPage> {
                             : Center(
                                 child: Text(
                                   "0 Chat users",
-                                  style: GoogleFonts.roboto(),
+                                  style: GoogleFonts.rubik(),
                                 ),
                               );
                   },

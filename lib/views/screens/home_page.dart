@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                       child: ListTile(
                         title: Text(
                           "Add your new post",
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.rubik(
                             fontSize: 17,
                             color: Colors.black,
                             fontWeight: FontWeight.w600,

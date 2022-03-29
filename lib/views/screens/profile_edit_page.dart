@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/functions.dart';
@@ -300,9 +298,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: bioField,
                 ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
+                SizedBox(height: height * 0.02),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
@@ -317,9 +313,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: height * 0.01,
-                ),
+                SizedBox(height: height * 0.01),
                 Container(
                   alignment: Alignment.topCenter,
                   decoration: BoxDecoration(
@@ -390,9 +384,22 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     },
                   ),
                 ),
-                SizedBox(
-                  height: height * 0.01,
+                SizedBox(height: height * 0.02),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Text(
+                      "Skills",
+                      style: GoogleFonts.roboto(
+                        fontSize: textFactor * 15,
+                        color: Colors.black.withOpacity(0.99),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ),
+                SizedBox(height: height * 0.01),
                 Container(
                   alignment: Alignment.topCenter,
                   decoration: BoxDecoration(

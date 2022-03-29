@@ -36,6 +36,14 @@ class MyProjectList extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.data != null) {
                 final datas = snapshot.data!.reversed.toList();
+                if (datas.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "0 Projects",
+                      style: GoogleFonts.rubik(),
+                    ),
+                  );
+                }
                 return Scaffold(
                   backgroundColor: secondaryColor,
                   body: SafeArea(
@@ -51,10 +59,10 @@ class MyProjectList extends StatelessWidget {
                             itemCount: datas.length,
                             itemBuilder: (context, index) => GestureDetector(
                               onTap: () => Get.to(
-                                  () => ProjectView(
-                                    projectId: datas[index].project!.id!,
-                                  ),
+                                () => ProjectView(
+                                  projectId: datas[index].project!.id!,
                                 ),
+                              ),
                               child: Container(
                                 height: height * 0.15,
                                 decoration: BoxDecoration(

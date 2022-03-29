@@ -765,62 +765,48 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
-  shared_preferences:
+  share_plus:
     dependency: "direct main"
     description:
-      name: shared_preferences
+      name: share_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.13"
-  shared_preferences_android:
+    version: "4.0.3"
+  share_plus_linux:
     dependency: transitive
     description:
-      name: shared_preferences_android
+      name: share_plus_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.11"
-  shared_preferences_ios:
+    version: "3.0.0"
+  share_plus_macos:
     dependency: transitive
     description:
-      name: shared_preferences_ios
+      name: share_plus_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
-  shared_preferences_linux:
+    version: "3.0.0"
+  share_plus_platform_interface:
     dependency: transitive
     description:
-      name: shared_preferences_linux
+      name: share_plus_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
-  shared_preferences_macos:
+    version: "3.0.2"
+  share_plus_web:
     dependency: transitive
     description:
-      name: shared_preferences_macos
+      name: share_plus_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
-  shared_preferences_platform_interface:
+    version: "3.0.0"
+  share_plus_windows:
     dependency: transitive
     description:
-      name: shared_preferences_platform_interface
+      name: share_plus_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
-  shared_preferences_web:
-    dependency: transitive
-    description:
-      name: shared_preferences_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.3"
-  shared_preferences_windows:
-    dependency: transitive
-    description:
-      name: shared_preferences_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
+    version: "3.0.0"
   shelf:
     dependency: transitive
     description:

@@ -130,6 +130,14 @@ class _FeedListState extends State<FeedList> {
             return GetBuilder<AppController>(
               id: "dataList",
               builder: (contoller) {
+                if (datas.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "0 Feeds",
+                      style: GoogleFonts.rubik(),
+                    ),
+                  );
+                }
                 return RefreshIndicator(
                   color: primaryColor,
                   onRefresh: refresh,
@@ -266,7 +274,7 @@ class _FeedListState extends State<FeedList> {
                                                 datas[index].owner!.username!,
                                                 style: GoogleFonts.poppins(
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: textFactor * 13,
+                                                  fontSize: textFactor * 15,
                                                 ),
                                               ),
                                             ),

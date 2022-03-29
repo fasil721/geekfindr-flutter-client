@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/views/screens/login_page.dart';
@@ -51,51 +52,17 @@ class _SignUpPageState extends State<SignUpPage> {
       passwordError = "Enter Your Password";
     }
     if (!regexpass.hasMatch(userNameController.text)) {
-      usernameError = "Enter username(Min. 4 Character)";
+      usernameError = "Enter username (Min. 4 Character)";
     }
     if (userNameController.text.isEmpty) {
       usernameError = "Enter Your username";
     }
-
-    if (emailError != null || passwordError != null || usernameError != null) {
-      Get.defaultDialog(
-        title: "Validation",
-        content: Column(
-          children: [
-            if (usernameError != null)
-              Text(
-                usernameError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-            const SizedBox(height: 5),
-            if (emailError != null)
-              Text(
-                emailError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-            const SizedBox(height: 5),
-            if (passwordError != null)
-              Text(
-                passwordError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-          ],
-        ),
-        confirm: ElevatedButton(
-          onPressed: () {
-            passwordFocusNode.unfocus();
-            emailFocusNode.unfocus();
-            Get.back();
-          },
-          child: const Text("ok"),
-        ),
-      );
+    if (usernameError != null) {
+      Fluttertoast.showToast(msg: usernameError);
+    } else if (emailError != null) {
+      Fluttertoast.showToast(msg: emailError);
+    } else if (passwordError != null) {
+      Fluttertoast.showToast(msg: passwordError);
     }
     if (emailError == null && passwordError == null && usernameError == null) {
       await Future.delayed(const Duration(seconds: 2));

@@ -27,7 +27,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +39,7 @@ Future<void> main() async {
   ]);
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
-  await Hive.openBox<UserModel>('usermodel');
+  final a = await Hive.openBox<UserModel>('usermodel');
   Hive.registerAdapter(MyChatListAdapter());
   Hive.registerAdapter(ParticipantAdapter());
   Hive.registerAdapter(LastMessageAdapter());
@@ -51,18 +50,16 @@ Future<void> main() async {
   Get.put(ChatController());
   Get.put(ProfileController());
 
-  final pref = await SharedPreferences.getInstance();
-  final isLoggedIn = pref.getBool("user");
   runApp(
     GetMaterialApp(
-      home:
-          isLoggedIn == null || !isLoggedIn ? const LoginPage() : const MyApp(),
+      home: a.keys.isEmpty ? const LoginPage() : const MyApp(),
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
     ),
   );
 }
 
+// isLoggedIn == null || !isLoggedIn
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -162,8 +159,7 @@ class _MyAppState extends State<MyApp> {
                     GetBuilder<ChatController>(
                       id: 'navCount',
                       builder: (controller) {
-                        final count =
-                            controller.findUnreadNotificationCount();
+                        final count = controller.findUnreadNotificationCount();
                         return Visibility(
                           visible: count > 0,
                           child: Positioned(

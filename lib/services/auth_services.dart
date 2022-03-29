@@ -11,7 +11,6 @@ import 'package:geek_findr/models/error_model.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices {
   final box = Boxes.getInstance();
@@ -33,8 +32,6 @@ class AuthServices {
             Map<String, String>.from(json.decode(response.body) as Map);
         final user = UserModel.fromJson(jsonData);
         await box.put("user", user);
-        final pref = await SharedPreferences.getInstance();
-        await pref.setBool("user", true);
         await Get.offAll(() => const MyApp());
       } else if (response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
@@ -72,8 +69,6 @@ class AuthServices {
             Map<String, String>.from(json.decode(response.body) as Map);
         final user = UserModel.fromJson(jsonData);
         await box.put("user", user);
-        final pref = await SharedPreferences.getInstance();
-        await pref.setBool("user", true);
         await Get.offAll(() => const MyApp());
       } else if (response.statusCode == 400) {
         final errorJson = json.decode(response.body) as Map;
