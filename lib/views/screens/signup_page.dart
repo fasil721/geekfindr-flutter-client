@@ -16,9 +16,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final userNameController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
   final userNameFocusNode = FocusNode();
@@ -30,48 +27,6 @@ class _SignUpPageState extends State<SignUpPage> {
     emailFocusNode.dispose();
     userNameFocusNode.dispose();
     super.dispose();
-  }
-
-  Future<void> validator() async {
-    String? emailError;
-    String? passwordError;
-    String? usernameError;
-    final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
-    final regexpass = RegExp(r'^.{4,}$');
-
-    if (!regex.hasMatch(emailController.text)) {
-      emailError = "Enter a valid email";
-    }
-    if (emailController.text.isEmpty) {
-      emailError = "Enter Your Email";
-    }
-    if (!regexpass.hasMatch(passwordController.text)) {
-      passwordError = "Enter Valid Password(Min. 4 Character)";
-    }
-    if (passwordController.text.isEmpty) {
-      passwordError = "Enter Your Password";
-    }
-    if (!regexpass.hasMatch(userNameController.text)) {
-      usernameError = "Enter username (Min. 4 Character)";
-    }
-    if (userNameController.text.isEmpty) {
-      usernameError = "Enter Your username";
-    }
-    if (usernameError != null) {
-      Fluttertoast.showToast(msg: usernameError);
-    } else if (emailError != null) {
-      Fluttertoast.showToast(msg: emailError);
-    } else if (passwordError != null) {
-      Fluttertoast.showToast(msg: passwordError);
-    }
-    if (emailError == null && passwordError == null && usernameError == null) {
-      await Future.delayed(const Duration(seconds: 2));
-      await authServices.userSignUp(
-        email: emailController.text,
-        password: passwordController.text,
-        username: userNameController.text,
-      );
-    }
   }
 
   @override
@@ -88,7 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     final userNameField = TextField(
       focusNode: userNameFocusNode,
-      controller: userNameController,
+      controller: authController.signUpUserNameController,
       keyboardType: TextInputType.name,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -111,7 +66,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
 
     final emailField = TextField(
-      controller: emailController,
+      controller: authController.signUpEmailController,
       focusNode: emailFocusNode,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -135,7 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
 
     final passwordField = TextField(
-      controller: passwordController,
+      controller: authController.signUpPasswordController,
       focusNode: passwordFocusNode,
       obscureText: true,
       textInputAction: TextInputAction.done,
@@ -168,12 +123,12 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
       ),
-      onPressed: () async {
+      onPressed: () {
         FocusScope.of(context).unfocus();
         setState(() {
           isLoading = true;
         });
-        await validator();
+        authController.validateSignUp();
         setState(() {
           isLoading = false;
         });

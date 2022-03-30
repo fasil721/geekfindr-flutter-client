@@ -16,8 +16,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
   bool isVisible = true;
@@ -36,38 +34,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     emailFocusNode.dispose();
   }
 
-  Future<void> validator() async {
-    String? emailError;
-    String? passwordError;
-    final regex = RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]");
-    final regexpass = RegExp(r'^.{4,}$');
-
-    if (!regex.hasMatch(emailController.text)) {
-      emailError = "Enter a valid email";
-    }
-    if (emailController.text.isEmpty) {
-      emailError = "Enter Your Email";
-    }
-    if (!regexpass.hasMatch(passwordController.text)) {
-      passwordError = "Enter Valid Password(Min. 4 Character)";
-    }
-    if (passwordController.text.isEmpty) {
-      passwordError = "Enter Your Password";
-    }
-    if (emailError != null) {
-      Fluttertoast.showToast(msg: emailError);
-    } else if (passwordError != null) {
-      Fluttertoast.showToast(msg: passwordError);
-    }
-    if (emailError == null && passwordError == null) {
-      await Future.delayed(const Duration(seconds: 2));
-      await authServices.userSignIn(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -81,7 +47,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       isVisible = true;
     }
     final emailField = TextField(
-      controller: emailController,
+      controller: authController.loginEmailController,
       focusNode: emailFocusNode,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -105,7 +71,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
 
     final passwordField = TextField(
-      controller: passwordController,
+      controller: authController.loginPasswordController,
       focusNode: passwordFocusNode,
       obscureText: true,
       textInputAction: TextInputAction.done,
@@ -138,12 +104,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ),
         ),
       ),
-      onPressed: () async {
+      onPressed: () {
         FocusScope.of(context).unfocus();
         setState(() {
           isLoading = true;
         });
-        await validator();
+        authController.validateLogin();
         setState(() {
           isLoading = false;
         });

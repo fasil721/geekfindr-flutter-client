@@ -1,4 +1,4 @@
-
+import 'package:geek_findr/controller/auth_controller.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
@@ -20,6 +20,7 @@ final controller = Get.find<AppController>();
 final postController = Get.find<PostsController>();
 final chatController = Get.find<ChatController>();
 final profileController = Get.find<ProfileController>();
+final authController = Get.find<AuthController>();
 final box = Boxes.getInstance();
 final postServices = PostServices();
 final profileServices = ProfileServices();

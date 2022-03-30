@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/resources/constants.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AuthController extends GetxController {
   final loginEmailController = TextEditingController();
@@ -28,36 +28,10 @@ class AuthController extends GetxController {
     if (loginPasswordController.text.isEmpty) {
       passwordError = "Enter Your Password";
     }
-
-    if (emailError != null || passwordError != null) {
-      Get.defaultDialog(
-        title: "Validation",
-        content: Column(
-          children: [
-            if (emailError != null)
-              Text(
-                emailError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-            const SizedBox(height: 5),
-            if (passwordError != null)
-              Text(
-                passwordError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-          ],
-        ),
-        confirm: ElevatedButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: const Text("ok"),
-        ),
-      );
+    if (emailError != null) {
+      Fluttertoast.showToast(msg: emailError);
+    } else if (passwordError != null) {
+      Fluttertoast.showToast(msg: passwordError);
     }
     if (emailError == null && passwordError == null) {
       authServices.userSignIn(
@@ -92,42 +66,12 @@ class AuthController extends GetxController {
     if (signUpUserNameController.text.isEmpty) {
       usernameError = "Enter Your username";
     }
-
-    if (emailError != null || passwordError != null || usernameError != null) {
-      Get.defaultDialog(
-        title: "Validation",
-        content: Column(
-          children: [
-            if (usernameError != null)
-              Text(
-                usernameError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-            const SizedBox(height: 5),
-            if (emailError != null)
-              Text(
-                emailError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-            const SizedBox(height: 5),
-            if (passwordError != null)
-              Text(
-                passwordError,
-                style: GoogleFonts.roboto(
-                  color: Colors.red,
-                ),
-              ),
-          ],
-        ),
-        confirm: ElevatedButton(
-          onPressed: () => Get.back(),
-          child: const Text("ok"),
-        ),
-      );
+    if (usernameError != null) {
+      Fluttertoast.showToast(msg: usernameError);
+    } else if (emailError != null) {
+      Fluttertoast.showToast(msg: emailError);
+    } else if (passwordError != null) {
+      Fluttertoast.showToast(msg: passwordError);
     }
     if (emailError == null && passwordError == null && usernameError == null) {
       authServices.userSignUp(
