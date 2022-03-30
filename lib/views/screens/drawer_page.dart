@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:share_plus/share_plus.dart';
 
@@ -58,15 +59,7 @@ class DrawerPage extends StatelessWidget {
                       ),
                     ),
                     ListTile(
-                      onTap: () async {
-                        final _box = BoxChat.getInstance();
-                        await _box.clear();
-                        await box.delete("user");
-                        chatController.myChatList = [];
-                        chatController.socket.disconnect();
-                        await Future.delayed(const Duration(milliseconds: 500));
-                        SystemNavigator.pop(animated: true);
-                      },
+                      onTap:logoutUser,
                       leading: const Icon(Icons.logout_outlined),
                       title: Text(
                         'Logout ',

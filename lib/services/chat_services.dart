@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/chat_model.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:get/get.dart';
@@ -21,7 +23,7 @@ class ChatServices {
           "Authorization": "Bearer ${currentUser.token}",
         },
       );
-      print(response.statusCode);
+    
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
         final datas = jsonData
@@ -38,17 +40,15 @@ class ChatServices {
         for (final element in err.errors!) {
           Fluttertoast.showToast(msg: element.message!);
         }
-      } else {
-        Fluttertoast.showToast(msg: "Something went wrong");
-      }
+      } 
     } on HttpException {
       Fluttertoast.showToast(msg: "No Internet");
     } on SocketException {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-    // } catch (e) {
-    //   Fluttertoast.showToast(msg: e.toString());
+      // } catch (e) {
+      //   Fluttertoast.showToast(msg: e.toString());
     }
     return null;
   }
@@ -71,7 +71,6 @@ class ChatServices {
         },
         body: json.encode(body),
       );
-      print(response.statusCode);
 
       if (response.statusCode == 200) {
         Get.back();
@@ -86,17 +85,15 @@ class ChatServices {
         for (final element in err.errors!) {
           Fluttertoast.showToast(msg: element.message!);
         }
-      } else {
-        Fluttertoast.showToast(msg: "Something went wrong");
-      }
+      } 
     } on HttpException {
       Fluttertoast.showToast(msg: "No Internet");
     } on SocketException {
       Fluttertoast.showToast(msg: "No Internet");
     } on PlatformException {
       Fluttertoast.showToast(msg: "Invalid Format");
-    // } catch (e) {
-    //   Fluttertoast.showToast(msg: e.toString());
+      // } catch (e) {
+      //   Fluttertoast.showToast(msg: e.toString());
     }
     return null;
   }
@@ -113,7 +110,6 @@ class ChatServices {
           "Authorization": "Bearer ${currentUser.token}",
         },
       );
-      print(response.statusCode);
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
         final datas = jsonData
@@ -130,9 +126,7 @@ class ChatServices {
         for (final element in err.errors!) {
           Fluttertoast.showToast(msg: element.message!);
         }
-      } else {
-        Fluttertoast.showToast(msg: "Something went wrong");
-      }
+      } 
     } on HttpException {
       Fluttertoast.showToast(msg: "No Internet");
     } on SocketException {
@@ -165,7 +159,6 @@ class ChatServices {
         },
         body: json.encode(body),
       );
-      print(response.statusCode);
       if (response.statusCode == 200) {
         Get.back();
         final jsonData = json.decode(response.body);
@@ -179,9 +172,7 @@ class ChatServices {
         for (final element in err.errors!) {
           Fluttertoast.showToast(msg: element.message!);
         }
-      } else {
-        Fluttertoast.showToast(msg: "Something went wrong");
-      }
+      } 
     } on HttpException {
       Fluttertoast.showToast(msg: "No Internet");
     } on SocketException {
@@ -210,7 +201,6 @@ class ChatServices {
         },
         body: json.encode(body),
       );
-      print(response.statusCode);
       if (response.statusCode == 200) {
         chatController.update(["chatPage"]);
       } else if (response.statusCode == 422 || response.statusCode == 400) {

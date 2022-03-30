@@ -285,9 +285,7 @@ class _ProfileUpatePageState extends State<ProfileUpatePage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: height * 0.005,
-                ),
+                SizedBox(height: height * 0.005),
                 Container(
                   height: height * .15,
                   alignment: Alignment.topCenter,

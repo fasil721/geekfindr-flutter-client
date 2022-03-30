@@ -154,7 +154,8 @@ class _MyAppState extends State<MyApp> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.all(3.0),
-                      child: ImageIcon(AssetImage("assets/icons/chat.png")),
+                      child:
+                          ImageIcon(AssetImage("assets/icons/messenger.png")),
                     ),
                     GetBuilder<ChatController>(
                       id: 'navCount',

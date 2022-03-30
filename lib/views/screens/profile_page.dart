@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/post_controller.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
+import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
@@ -68,10 +70,28 @@ class _ProfilePageState extends State<ProfilePage>
                       ),
                       const SizedBox(width: 12)
                     ],
-                    leading: IconButton(
-                      onPressed: () {},
+                    leading: PopupMenuButton(
+                      itemBuilder: (BuildContext bc) => [
+                        PopupMenuItem(
+                          value: "2",
+                          child: Text(
+                            "Logout",
+                            style: GoogleFonts.rubik(
+                              fontSize: textFactor * 14,
+                              color: Colors.black.withOpacity(0.9),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        )
+                      ],
+                      onSelected: (value) async {
+                        if (value == "2") {
+                          logoutUser();
+                        }
+                      },
                       icon: const Icon(
                         Icons.more_vert,
+                        color: white,
                       ),
                     ),
                   ),
@@ -529,7 +549,7 @@ class _ProfilePageState extends State<ProfilePage>
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      Text(       
+                      Text(
                         userData.followersCount.toString(),
                         style: GoogleFonts.poppins(
                           fontSize: textFactor * 17,
@@ -537,7 +557,7 @@ class _ProfilePageState extends State<ProfilePage>
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Text (
+                      Text(
                         "Followers",
                         maxLines: 1,
                         overflow: TextOverflow.fade,

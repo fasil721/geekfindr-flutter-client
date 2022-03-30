@@ -55,6 +55,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     super.dispose();
   }
 
+ 
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;

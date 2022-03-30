@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/chat_model.dart';
@@ -119,4 +120,14 @@ Owner getUserDatAsOwnerModel() {
   _owner.id = currentUser.id;
   _owner.username = currentUser.username;
   return _owner;
+}
+
+Future<void> logoutUser() async {
+  final _box = BoxChat.getInstance();
+  await _box.clear();
+  await box.delete("user");
+  chatController.myChatList = [];
+  chatController.socket.disconnect();
+  await Future.delayed(const Duration(milliseconds: 500));
+  SystemNavigator.pop(animated: true);
 }

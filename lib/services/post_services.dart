@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
+import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/error_model.dart';
 import 'package:geek_findr/models/post_models.dart';
 import 'package:get/get.dart';
@@ -133,6 +134,9 @@ class PostServices {
         Uri.parse(url),
         headers: {"Authorization": "Bearer ${currentUser.token}"},
       );
+      if (response.statusCode == 401) {
+        logoutUser();
+      }
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as List;
         final data = jsonData

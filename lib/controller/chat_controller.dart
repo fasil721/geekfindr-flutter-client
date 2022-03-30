@@ -26,6 +26,7 @@ class ChatController extends GetxController {
       'autoConnect': false,
     });
     socket.connect();
+    socket.on("message", (value) => listeningMessegeSetup(value));
     // if (socket.connected == false) {
     // }
     // socket.onConnect((data) {
@@ -39,7 +40,6 @@ class ChatController extends GetxController {
     // });
     // socket.onDisconnect((data) => print('disconnected'));
     // socket.onError((data) => print('error : $data'));
-    // socket.on("message", (value) => listeningMessegeSetup(value));
   }
 
   void listeningMessegeSetup(dynamic value) {
@@ -49,21 +49,20 @@ class ChatController extends GetxController {
     if (currentChating.isEmpty || currentChating != data.convId) {
       for (int i = 0; i < myChatList.length; i++) {
         if (myChatList[i].id == data.convId) {
-          final lastmessage = LastMessage(
-            conversationId: data.convId,
-            createdAt: data.time,
-            senderId: data.userId,
-            message: data.message,
-          );
+          final lastmessage = LastMessage()
+            ..conversationId = data.convId
+            ..createdAt = data.time
+            ..senderId = data.userId
+            ..message = data.message;
+
           myChatList[i].lastMessage = lastmessage;
-          myChatList[i].unreadMessageList.add(lastmessage);
+          myChatList[i].unreadMessageList.addIf(
+                !myChatList[i].unreadMessageList.any(
+                      (element) => element.createdAt == lastmessage.createdAt,
+                    ),
+                lastmessage,
+              );
           myChatList[i].save();
-          // final a = box.getAt(0);
-          // a!.save();
-          // for (int e = 0; e < box.values.length; e++) {
-          //   final a = box.getAt(e);
-          //   if (myChatList[i].s == a!.id) {}
-          // }
           for (final e in myChatList[i].participants!) {
             if (e.id == data.userId) {
               final title =
@@ -73,9 +72,7 @@ class ChatController extends GetxController {
             }
           }
         }
-        // _box.put("chats", myChatList!);
       }
-
       update(["chatList", "navCount"]);
     }
   }
