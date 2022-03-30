@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
-import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/chat_models.dart';
 import 'package:geek_findr/models/profile_model.dart';
+import 'package:geek_findr/resources/colors.dart';
+import 'package:geek_findr/resources/constants.dart';
+import 'package:geek_findr/resources/functions.dart';
 import 'package:geek_findr/views/screens/users_profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

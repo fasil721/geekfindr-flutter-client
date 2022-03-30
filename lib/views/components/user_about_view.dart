@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
+import 'package:geek_findr/resources/colors.dart';
+import 'package:geek_findr/resources/functions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';

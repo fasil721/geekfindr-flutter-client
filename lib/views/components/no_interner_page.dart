@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/constants.dart';
+import 'package:geek_findr/resources/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NoConnectionScreen extends StatelessWidget {

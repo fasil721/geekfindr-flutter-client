@@ -1,13 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/models/post_models.dart';
-import 'package:geek_findr/services/connectivity_service.dart';
+import 'package:geek_findr/resources/colors.dart';
+import 'package:geek_findr/resources/constants.dart';
 import 'package:geek_findr/views/components/users_list_bottomsheet.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';

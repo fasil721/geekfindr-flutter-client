@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/constants.dart';
+import 'package:geek_findr/resources/constants.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 

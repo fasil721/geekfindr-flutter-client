@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/database/box_instance.dart';
-import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
+import 'package:geek_findr/resources/colors.dart';
+import 'package:geek_findr/resources/constants.dart';
+import 'package:geek_findr/resources/functions.dart';
 import 'package:geek_findr/views/screens/users_profile_page.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -49,7 +49,6 @@ class _SearchWidgetState extends State<SearchWidget>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     final textFactor =
         textfactorCustomize(MediaQuery.textScaleFactorOf(context));
     final currentUser = Boxes.getCurrentUser();

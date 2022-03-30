@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/controller.dart';
-import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/database/box_instance.dart';
 import 'package:geek_findr/models/post_models.dart';
+import 'package:geek_findr/resources/colors.dart';
+import 'package:geek_findr/resources/constants.dart';
+import 'package:geek_findr/resources/functions.dart';
 import 'package:geek_findr/views/components/comments_bottomsheet.dart';
 import 'package:geek_findr/views/components/heart_animation_widget.dart';
 import 'package:get/get.dart';

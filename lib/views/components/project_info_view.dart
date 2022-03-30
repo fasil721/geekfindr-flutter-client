@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/project_models.dart';
+import 'package:geek_findr/resources/colors.dart';
+import 'package:geek_findr/resources/constants.dart';
+import 'package:geek_findr/resources/functions.dart';
 import 'package:geek_findr/services/project_services.dart';
 import 'package:geek_findr/views/screens/users_profile_page.dart';
 import 'package:get/get.dart';

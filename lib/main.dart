@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
@@ -13,7 +12,9 @@ import 'package:geek_findr/database/chat_model.dart';
 import 'package:geek_findr/database/lastmessge_model.dart';
 import 'package:geek_findr/database/participant_model.dart';
 import 'package:geek_findr/database/user_model.dart';
-import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/resources/colors.dart';
+import 'package:geek_findr/resources/constants.dart';
+import 'package:geek_findr/resources/functions.dart';
 import 'package:geek_findr/services/connectivity_service.dart';
 import 'package:geek_findr/services/notification_service.dart';
 import 'package:geek_findr/theme.dart';
@@ -29,7 +30,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 Future<void> main() async {
-  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // final widgetsBinding =
+  WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   NotificationService().initNotification();
   GestureBinding.instance?.resamplingEnabled = true;

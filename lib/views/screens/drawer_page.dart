@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/database/box_instance.dart';
-import 'package:geek_findr/functions.dart';
+import 'package:geek_findr/resources/functions.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:share_plus/share_plus.dart';
 

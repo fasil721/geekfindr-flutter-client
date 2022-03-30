@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:geek_findr/constants.dart';
 import 'package:geek_findr/controller/profile_controller.dart';
 import 'package:geek_findr/database/box_instance.dart';
-import 'package:geek_findr/functions.dart';
 import 'package:geek_findr/models/profile_model.dart';
+import 'package:geek_findr/resources/colors.dart';
+import 'package:geek_findr/resources/constants.dart';
+import 'package:geek_findr/resources/functions.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 

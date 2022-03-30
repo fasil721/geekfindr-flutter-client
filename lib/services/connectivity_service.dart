@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:geek_findr/constants.dart';
-import 'package:geek_findr/main.dart';
-import 'package:geek_findr/views/components/no_interner_page.dart';
-import 'package:get/get.dart';
+import 'package:geek_findr/resources/constants.dart';
 
 class ConnectivityService {
   final _connectivity = Connectivity();
