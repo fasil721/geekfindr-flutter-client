@@ -122,8 +122,9 @@ Owner getUserDatAsOwnerModel() {
 }
 
 Future<void> logoutUser() async {
-  final _box = BoxChat.getInstance();
-  await _box.clear();
+  final box = Boxes.getInstance();
+  final _chatBox = BoxChat.getInstance();
+  await _chatBox.clear();
   await box.delete("user");
   chatController.myChatList = [];
   chatController.socket.disconnect();

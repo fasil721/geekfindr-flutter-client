@@ -1,6 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geek_findr/resources/colors.dart';
 import 'package:geek_findr/resources/constants.dart';
 import 'package:geek_findr/resources/functions.dart';

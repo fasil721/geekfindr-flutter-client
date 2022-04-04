@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:geek_findr/controller/auth_controller.dart';
 import 'package:geek_findr/controller/chat_controller.dart';
 import 'package:geek_findr/controller/controller.dart';
 import 'package:geek_findr/controller/post_controller.dart';
@@ -50,6 +51,7 @@ Future<void> main() async {
   Get.put(AppController());
   Get.put(PostsController());
   Get.put(ChatController());
+  Get.put(AuthController());
   Get.put(ProfileController());
 
   runApp(
@@ -61,7 +63,6 @@ Future<void> main() async {
   );
 }
 
-// isLoggedIn == null || !isLoggedIn
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
