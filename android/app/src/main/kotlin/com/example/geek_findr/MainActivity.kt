@@ -1,4 +1,4 @@
-package com.example.geek_findr
+package com.muhammedfasil.geekfindr
 
 import io.flutter.embedding.android.FlutterActivity
 
