@@ -35,7 +35,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   NotificationService().initNotification();
-  GestureBinding.instance?.resamplingEnabled = true;
+  GestureBinding.instance.resamplingEnabled = true;
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
